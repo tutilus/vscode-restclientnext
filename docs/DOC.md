@@ -78,7 +78,7 @@ content-type: application/json
     "time": "Wed, 21 Oct 2015 18:27:50 GMT"
 }
 ```
-To send a prepared request, you have several options. The easiest way is to click the `Send Request` link above the request. This link will appear automatically if the file's language mode is set to `HTTP`. You can also use the shortcut `Ctrl+Alt+R`(`Cmd+Alt+R` for macOS), right-click in the editor and select `Send Request` from the context menu, or press `F1` and select/type `Rest Client: Send Request`.
+To send a prepared request, you have several options. The easiest way is to click the `Send Request` link above the request. This link will appear automatically if the file's language mode is set to `HTTP`. You can also use the shortcut `Ctrl+Alt+R`(`Cmd+Option+R` for macOS), right-click in the editor and select `Send Request` from the context menu, or press `F1` and select/type `Rest Client: Send Request`.
 
 The response will be previewed in a separate webview panel inside Visual Studio Code. If you prefer to use the full power of searching, selecting, or manipulating in Visual Studio Code, you can preview the response in an untitled document by setting `rest-client.previewResponseInUntitledDocument` to `true`.
 
@@ -277,14 +277,14 @@ We add the capability to directly run [curl request](https://curl.haxx.se/) in R
 If you need to quickly obtain the curl format of an HTTP request and save it to your clipboard, you can use a handy shortcut. Simply hit `F1` and select/type `Rest Client: Copy Request As cURL`. Alternatively, you can right-click in the editor and select `Copy Request As cURL.`
 
 ## Cancel Request
-If you want to cancel a processing request, click the waiting spin icon or use shortcut `Ctrl+Alt+K`(`Cmd+Alt+K` for macOS), or press `F1` and then select/type `Rest Client: Cancel Request`.
+If you want to cancel a processing request, click the waiting spin icon or use shortcut `Ctrl+Alt+K`(`Cmd+Option+K` for macOS), or press `F1` and then select/type `Rest Client: Cancel Request`.
 
 ## Rerun Last Request
-Sometimes you may want to refresh the API response, now you could do it simply using shortcut `Ctrl+Alt+L`(`Cmd+Alt+L` for macOS), or press `F1` and then select/type `Rest Client: Rerun Last Request` to rerun the last request.
+Sometimes you may want to refresh the API response, now you could do it simply using shortcut `Ctrl+Alt+L`(`Cmd+Option+L` for macOS), or press `F1` and then select/type `Rest Client: Rerun Last Request` to rerun the last request.
 
 ## Request History
 ![request-history](https://raw.githubusercontent.com/Huachao/vscode-restclient/master/images/request-history.png)
-Every time you send an http request, the request details, including method, url, headers, and body, are saved into a file for future reference. To access this content, you can use the shortcut `Ctrl+Alt+H`(`Cmd+Alt+H` for macOS), or press `F1` and then select/type `Rest Client: Request History`. This will allow you to view the last __50__ request items in time reversing order, displaying the method, url, and request time for each one. After specified request history item is selected, the request details would be displayed in a temp file, you can view the request details or follow previous step to trigger the request again.
+Every time you send an http request, the request details, including method, url, headers, and body, are saved into a file for future reference. To access this content, you can use the shortcut `Ctrl+Alt+H`(`Cmd+Option+H` for macOS), or press `F1` and then select/type `Rest Client: Request History`. This will allow you to view the last __50__ request items in time reversing order, displaying the method, url, and request time for each one. After specified request history item is selected, the request details would be displayed in a temp file, you can view the request details or follow previous step to trigger the request again.
 
 You can also clear request history by pressing `F1` and then selecting/typing `Rest Client: Clear Request History`.
 
@@ -398,7 +398,7 @@ Authorization: COGNITO <Username> <Password> <Region> <UserPoolId> <ClientId>
 
 ## Generate Code Snippet
 ![Generate Code Snippet](https://raw.githubusercontent.com/Huachao/vscode-restclient/master/images/code-snippet.gif)
-Once you’ve finalized your request in REST Client extension, you might want to make the same request from your source code. We allow you to generate snippets of code in various languages and libraries that will help you achieve this. Once you prepared a request as previously, use shortcut `Ctrl+Alt+C`(`Cmd+Alt+C` for macOS), or right-click in the editor and then select `Generate Code Snippet` in the menu, or press `F1` and then select/type `Rest Client: Generate Code Snippet`, it will pop up the language pick list, as well as library list. After you selected the code snippet language/library you want, the generated code snippet will be previewed in a separate panel of Visual Studio Code, you can click the `Copy Code Snippet` icon in the tab title to copy it to clipboard.
+Once you’ve finalized your request in REST Client extension, you might want to make the same request from your source code. We allow you to generate snippets of code in various languages and libraries that will help you achieve this. Once you prepared a request as previously, use shortcut `Ctrl+Alt+C`(`Cmd+Option+C` for macOS), or right-click in the editor and then select `Generate Code Snippet` in the menu, or press `F1` and then select/type `Rest Client: Generate Code Snippet`, it will pop up the language pick list, as well as library list. After you selected the code snippet language/library you want, the generated code snippet will be previewed in a separate panel of Visual Studio Code, you can click the `Copy Code Snippet` icon in the tab title to copy it to clipboard.
 
 ## HTTP Language
 Add language support for HTTP request, with features like __syntax highlight__, __auto completion__, __code lens__ and __comment support__, when writing HTTP request in Visual Studio Code. By default, the language association will be automatically activated in two cases:
@@ -425,7 +425,7 @@ A single `http` file may define lots of requests and file level custom variables
 ![Goto Symbols](https://raw.githubusercontent.com/Huachao/vscode-restclient/master/images/navigate.png)
 
 ## Environments
-Environments give you the ability to customize requests using variables, and you can easily switch environment without changing requests in `http` file. A common usage is having different configurations for different web service environments, like devbox, sandbox, and production. We also support the __shared__ environment(identified by special environment name _$shared_) to provide a set of variables that are available in all environments. And you can define the same name variable in your specified environment to overwrite the value in shared environment. Currently, active environment's name is displayed at the right bottom of `Visual Studio Code`, when you click it, you can switch environment in the pop-up list. And you can also switch environment using shortcut `Ctrl+Alt+E`(`Cmd+Alt+E` for macOS), or press `F1` and then select/type `Rest Client: Switch Environment`.
+Environments give you the ability to customize requests using variables, and you can easily switch environment without changing requests in `http` file. A common usage is having different configurations for different web service environments, like devbox, sandbox, and production. We also support the __shared__ environment(identified by special environment name _$shared_) to provide a set of variables that are available in all environments. And you can define the same name variable in your specified environment to overwrite the value in shared environment. Currently, active environment's name is displayed at the right bottom of `Visual Studio Code`, when you click it, you can switch environment in the pop-up list. And you can also switch environment using shortcut `Ctrl+Alt+E`(`Cmd+Option+E` for macOS), or press `F1` and then select/type `Rest Client: Switch Environment`.
 
 Environments and including variables are defined directly in `Visual Studio Code` setting file, so you can create/update/delete environments and variables at any time you wish. If you __DO NOT__ want to use any environment, you can choose `No Environment` in the environment list. Notice that if you select `No Environment`, variables defined in shared environment are still available. See [Environment Variables](#environment-variables) for more details about environment variables.
 
