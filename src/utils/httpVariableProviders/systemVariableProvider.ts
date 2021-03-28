@@ -33,7 +33,7 @@ export class SystemVariableProvider implements HttpVariableProvider {
     private readonly dotenvRegex: RegExp = new RegExp(`\\${Constants.DotenvVariableName}\\s(\\%)?([\\w-.]+)`);
 
     private readonly oidcRegex: RegExp = new RegExp(`\\s*(\\${Constants.OidcVariableName})(?:\\s+(${Constants.OIdcForceNewOption}))?(?:\\s*clientId:([\\w|.|:|/|_|-]+))?(?:\\s*issuer:([\\w|.|:|/]+))?(?:\\s*callbackDomain:([\\w|.|:|/|_|-]+))?(?:\\s*callbackPort:([\\w|_]+))?(?:\\s*authorizeEndpoint:([\\w|.|:|/|_|-]+))?(?:\\s*tokenEndpoint:([\\w|.|:|/|_|-]+))?(?:\\s*scopes:([\\w|.|:|/|_|-]+))?(?:\\s*audience:([\\w|.|:|/|_|-]+))?`);
-    private readonly fakerRegex: RegExp = new RegExp(`\\${Constants.FakerVariableName}\\.([\\w.]+)(?:\\s+(.*))?`);
+    private readonly fakerRegex: RegExp = new RegExp(`\\${Constants.FakerVariableName}\\s+([\\w.]+)(?:\\s+(.*))?`);
 
     private readonly innerSettingsEnvironmentVariableProvider: EnvironmentVariableProvider =  EnvironmentVariableProvider.Instance;
     private static _instance: SystemVariableProvider;
@@ -294,7 +294,7 @@ export class SystemVariableProvider implements HttpVariableProvider {
                         return { value: String(target) };
                     }
                 } catch (error) {
-                    return { warning: `Faker error: ${error.message}` };
+                    return { warning: `Faker error: ${error instanceof Error ? error.message : "Unknown error"}` };
                 }
             }
             return { warning: ResolveWarningMessage.IncorrectFakerVariableFormat };
