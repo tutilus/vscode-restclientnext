@@ -47,3 +47,12 @@ X-User-Id: {{testGetXml.response.body.asXml.//slideshow/slide[1]/title}}
 GET {{host}}/basic-auth/admin/it's a total eclipse
 Content-type: application/json
 Authorization: Basic admin:it's a total eclipse
+
+### Faker
+POST {{host}}/post
+Content-Type: application/json
+
+{
+    "name": "{{$faker name.firstName}}",
+    "email": "{{$faker internet.email}}"
+}

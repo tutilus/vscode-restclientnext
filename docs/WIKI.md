@@ -41,6 +41,7 @@ REST Client Next allows you to send HTTP request and view the response in Visual
       + `{{$processEnv [%]envVarName}}`
       + `{{$dotenv [%]variableName}}`
       + `{{$oidcAccessToken  [new]  [<clientId:<clientId>] [<callbackPort:<callbackPort>] [authorizeEndpoint:<authorizeEndpoint}] [tokenEndpoint:<tokenEndpoint}] [scopes:<scopes}] [audience:<audience}]}`
+      + `{{$faker <module>.<property> [<param>]}}`
     - Easily create/update/delete environments and environment variables in setting file
     - File variables can reference both custom and system variables
     - Support environment switch
@@ -610,6 +611,7 @@ System variables provide a pre-defined set of variables that can be used in any 
   `audience:<audience>`: Optional.
    
 * `{{$guid}}`: Add a RFC 4122 v4 UUID
+* 
 * `{{$processEnv [%]envVarName}}`: Allows the resolution of a local machine environment variable to a string value. A typical use case is for secret keys that you don't want to commit to source control.
 For example: Define a shell environment variable in `.bashrc` or similar on windows
   ```bash
@@ -670,6 +672,8 @@ m      | Minute
 s      | Second
 ms     | Millisecond
 
+* `{{$faker <module>.<property> [param1]}}`: Generate fake data using [Faker.js](https://fakerjs.dev/). Useful for testing APIs with realistic data. Examples: `{{$faker internet.email}}`, `{{$faker name.fullName}}`, `{{$faker address.city}}`, `{{$faker phone.number}}`, `{{$faker lorem.paragraph}}`. You can pass optional parameters to some faker methods, e.g. `{{$faker string.alphanumeric 10}}` generates a 10-character string.
+
 Below is a example using system variables:
 ```http
 POST https://api.example.com/comments HTTP/1.1
@@ -683,6 +687,7 @@ Date: {{$datetime rfc1123}}
     "created_at": "{{$timestamp -1 d}}",
     "review_count": "{{$randomInt 5 200}}",
     "custom_date": "{{$datetime 'YYYY-MM-DD'}}",
+    "email": "{{$faker internet.email}}",
     "local_custom_date": "{{$localDatetime 'YYYY-MM-DD'}}"
 }
 ```

@@ -166,11 +166,11 @@ export class HttpElementFactory {
 
         popularFakerMethods.forEach(({ path, desc, snippet }) => {
             originalElements.push(new HttpElement(
-                `${Constants.FakerVariableName}.${path}`,
+                `${Constants.FakerVariableName} ${path}`,
                 ElementType.SystemVariable,
                 null,
                 desc,
-                new SnippetString(`{{$faker.${snippet || path}}}`)
+                new SnippetString(`{{$\${name:${Constants.FakerVariableName.slice(1)} ${snippet || path}}}}`)
             ));
         });
 
