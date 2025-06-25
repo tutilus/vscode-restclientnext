@@ -694,9 +694,18 @@
   },
   "standard-version": {
     "types": [
-      { "type": "feat", "section": "Features" },
-      { "type": "fix", "section": "Bug Fixes" },
-      { "type": "chore", "section": "Maintenance" }
+      {
+        "type": "feat",
+        "section": "Features"
+      },
+      {
+        "type": "fix",
+        "section": "Bug Fixes"
+      },
+      {
+        "type": "chore",
+        "section": "Maintenance"
+      }
     ]
   },
   "scripts": {
@@ -763,6 +772,7 @@
     "sanitize-html": "^2.17.1",
     "tough-cookie": "^6.0.0",
     "tough-cookie-file-store": "^3.3.0",
+    "uuid": "^13.0.0",
     "xpath": "^0.0.34",
     "yargs-parser": "^22.0.0"
   }

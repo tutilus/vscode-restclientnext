@@ -1,8 +1,7 @@
 import { md5 } from '../misc';
+import { v4 as uuidv4 } from 'uuid';
 
 import { AfterResponseHook, } from 'got';
-
-const uuidv4 = require('uuid/v4');
 
 export function digest(user: string, pass: string): AfterResponseHook {
     return (response, retryWithMergedOptions) => {
