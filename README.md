@@ -90,9 +90,7 @@ npm run package
 
 ## Documentation
 
-Full documentation is available in the project Wiki:
-
-👉 https://github.com/tutilus/vscode-restclientnext/wiki
+Full documentation is available in [Documentation](./docs/DOC.md)
 
 ------------------------------------------------------------------------
 
