@@ -438,7 +438,7 @@ The reference syntax of system and custom variables types has a subtle differenc
 Custom variables can cover different user scenarios with the benefit of environment variables, file variables, and request variables. Environment variables are mainly used for storing values that may vary in different environments. Since environment variables are directly defined in Visual Studio Code setting file, they can be referenced across different `http` files. File variables are mainly used for representing values that are constant throughout the `http` file. Request variables are used for the chaining requests scenarios which means a request needs to reference some part(header or body) of another request/response in the _same_ `http` file, imagine we need to retrieve the auth token dynamically from the login response, request variable fits the case well. Both file and request variables are defined in the `http` file and only have __File Scope__.
 
 #### Environment Variables
-For environment variables, each environment comprises a set of key value pairs defined in setting file, key and value are variable name and value respectively. Only variables defined in selected environment and shared environment are available to you. You can also reference the variables in shared environment with `{{$shared variableName}}` syntax in your active environment. Below is a sample piece of setting file for custom environments and environment level variables:
+For environment variables, each environment comprises a set of key value pairs defined in the settings file (typically the [Workspace Settings](https://code.visualstudio.com/docs/configure/settings#_workspace-settings) file located at `.vscode/settings.json`), key and value are variable name and value respectively. Only variables defined in selected environment and shared environment are available to you. You can also reference the variables in shared environment with `{{$shared variableName}}` syntax in your active environment. Below is a sample piece of setting file for custom environments and environment level variables:
 ```json
 "rest-client.environmentVariables": {
     "$shared": {
@@ -611,7 +611,6 @@ System variables provide a pre-defined set of variables that can be used in any 
   `audience:<audience>`: Optional.
    
 * `{{$guid}}`: Add a RFC 4122 v4 UUID
-* 
 * `{{$processEnv [%]envVarName}}`: Allows the resolution of a local machine environment variable to a string value. A typical use case is for secret keys that you don't want to commit to source control.
 For example: Define a shell environment variable in `.bashrc` or similar on windows
   ```bash
@@ -687,10 +686,10 @@ Date: {{$datetime rfc1123}}
     "created_at": "{{$timestamp -1 d}}",
     "review_count": "{{$randomInt 5 200}}",
     "custom_date": "{{$datetime 'YYYY-MM-DD'}}",
-    "email": "{{$faker internet.email}}",
     "local_custom_date": "{{$localDatetime 'YYYY-MM-DD'}}"
 }
 ```
+> More details about `aadToken` (Azure Active Directory Token) can be found on [Wiki](https://github.com/Huachao/vscode-restclient/wiki/Azure-Active-Directory-Authentication-Samples)
 
 ## Customize Response Preview
 REST Client Extension adds the ability to control the font family, size and weight used in the response preview.
@@ -705,6 +704,7 @@ body     | Only the response body is previewed
 exchange | Preview the whole HTTP exchange(request and response)
 
 ## Settings
+These settings can either be set on your [User or in the Workspace Settings](https://code.visualstudio.com/docs/configure/settings) (in the `.vscode/settings.json` file):
 * `rest-client.followredirect`: Follow HTTP 3xx responses as redirects. (Default is __true__)
 * `rest-client.defaultHeaders`: If particular headers are omitted in request header, these will be added as headers for each request. (Default is `{ "User-Agent": "vscode-restclient", "Accept-Encoding": "gzip" }`)
 * `rest-client.timeoutinmilliseconds`: Timeout in milliseconds. 0 for infinity. (Default is __0__)
@@ -749,3 +749,15 @@ no-redirect | `# @no-redirect` | Don't follow the 3XX response as redirects
 no-cookie-jar | `# @no-cookie-jar` | Don't save cookies in the cookie jar
 
 > All the above leading `#` can be replaced with `//`
+
+## License
+[MIT License](LICENSE)
+
+## Change Log
+See CHANGELOG [here](CHANGELOG.md)
+
+## Special Thanks
+All the amazing [contributors](https://github.com/Huachao/vscode-restclient/graphs/contributors)❤️
+
+## Feedback
+Please provide feedback through the [GitHub Issue](https://github.com/Huachao/vscode-restclient/issues) system, or fork the repository and submit PR.
