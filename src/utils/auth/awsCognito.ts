@@ -1,10 +1,10 @@
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import type { BeforeRequestHook } from "got";
+import { signIn, fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 
 async function login(
   username: string,
   password: string,
-  region: string,
   userPoolId: string,
   clientId: string
 ): Promise<{
@@ -14,37 +14,48 @@ async function login(
 }> {
   Amplify.configure({
     Auth: {
-      region,
-      userPoolId,
-      userPoolWebClientId: clientId,
+      Cognito: {  
+        userPoolId,
+        userPoolClientId: clientId,
+        loginWith: {
+          username: true,
+        }
+      }
     },
   });
 
-  const user = await Auth.signIn(username, password);
-  const authId = user?.username;
-  const idToken = user?.signInUserSession?.idToken?.jwtToken;
-  const accessToken = user?.signInUserSession?.accessToken?.jwtToken;
+  const user = await signIn({username, password});
+  if (user.isSignedIn) {
+    const session = await fetchAuthSession();
+    const authUser = await getCurrentUser();
 
-  if (!idToken || !accessToken) {
-    throw Error(`Invalid auth response: ${JSON.stringify(user, null, 2)}`);
+    const authId = authUser.username;
+    const idToken = session.tokens?.idToken?.toString();
+    const accessToken = session.tokens?.accessToken?.toString();    
+
+    if (!idToken || !accessToken) {
+      throw Error(`Invalid auth response: ${JSON.stringify(user, null, 2)}`);
+    }
+
+    return {
+      authId,
+      idToken,
+      accessToken,
+    };
+
+  } else {
+    throw Error(`Failed to sign in: ${JSON.stringify(user, null, 2)}`);
   }
-
-  return {
-    authId,
-    idToken,
-    accessToken,
-  };
 }
 
 export async function awsCognito(
   authorization: string
 ): Promise<BeforeRequestHook> {
-  const [, username, password, region, userPoolId, clientId] = authorization.split(/\s+/);
+  const [, username, password, userPoolId, clientId] = authorization.split(/\s+/);
 
   const { accessToken } = await login(
     username,
     password,
-    region,
     userPoolId,
     clientId
   );

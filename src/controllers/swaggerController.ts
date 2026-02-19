@@ -85,7 +85,7 @@ export class SwaggerController {
             });
             vscode.window.showTextDocument(newFile);
         } catch (error) {
-            vscode.window.showErrorMessage(error.message);
+            vscode.window.showErrorMessage(error instanceof Error ? error.message : String(error));
         }
     }
 }

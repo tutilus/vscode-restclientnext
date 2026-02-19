@@ -19,7 +19,7 @@ export class RequestController {
     private _httpClient: HttpClient;
     private _webview: HttpResponseWebview;
     private _textDocumentView: HttpResponseTextDocumentView;
-    private _lastRequestSettingTuple: [HttpRequest, IRestClientSettings];
+    private _lastRequestSettingTuple!: [HttpRequest, IRestClientSettings];
     private _lastPendingRequest?: HttpRequest;
 
     public constructor(context: ExtensionContext) {
@@ -85,7 +85,8 @@ export class RequestController {
         try {
             await this._httpClient.clearCookies();
         } catch (error) {
-            window.showErrorMessage(`Error clearing cookies:${error?.message}`);
+            const errMsg = error instanceof Error ? error.message : String(error);
+            window.showErrorMessage(`Error clearing cookies:${errMsg}`);
         }
     }
 
@@ -124,7 +125,7 @@ export class RequestController {
                 }
             } catch (reason) {
                 Logger.error('Unable to preview response:', reason);
-                window.showErrorMessage(reason);
+                window.showErrorMessage(String(reason));
             }
 
             // persist to history json file
@@ -135,16 +136,26 @@ export class RequestController {
                 return;
             }
 
-            if (error.code === 'ETIMEDOUT') {
-                error.message = `Request timed out. Double-check your network connection and/or raise the timeout duration (currently set to ${settings.timeoutInMilliseconds}ms) as needed: 'rest-client.timeoutinmilliseconds'. Details: ${error}.`;
-            } else if (error.code === 'ECONNREFUSED') {
-                error.message = `The connection was rejected. Either the requested service isn’t running on the requested server/port, the proxy settings in vscode are misconfigured, or a firewall is blocking requests. Details: ${error}.`;
-            } else if (error.code === 'ENETUNREACH') {
-                error.message = `You don't seem to be connected to a network. Details: ${error}`;
+            let message = 'An unexpected error occurred.';
+
+            if (error instanceof Error) {
+
+                const err = error as Error & { code?: string };
+
+                if (err.code === 'ETIMEDOUT') {
+                    message = `Request timed out. Double-check your network connection and/or raise the timeout duration (currently set to ${settings.timeoutInMilliseconds}ms) as needed: 'rest-client.timeoutinmilliseconds'. Details: ${error}.`;
+                } else if (err.code === 'ECONNREFUSED') {
+                    message = `The connection was rejected. Either the requested service isn’t running on the requested server/port, the proxy settings in vscode are misconfigured, or a firewall is blocking requests. Details: ${error}.`;
+                } else if (err.code === 'ENETUNREACH') {
+                    message = `You don't seem to be connected to a network. Details: ${error}`;
+                }
+            } else {
+                message = String(error);
             }
+    
             this._requestStatusEntry.update({ state: RequestState.Error });
             Logger.error('Failed to send request:', error);
-            window.showErrorMessage(error.message);
+            window.showErrorMessage(message);
         } finally {
             if (this._lastPendingRequest === httpRequest) {
                 this._lastPendingRequest = undefined;

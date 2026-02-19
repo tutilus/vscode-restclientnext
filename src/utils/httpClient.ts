@@ -17,8 +17,8 @@ import { convertBufferToStream, convertStreamToBuffer } from './streamUtility';
 import { UserDataManager } from './userDataManager';
 import { getCurrentHttpFileName, getWorkspaceRootPath } from './workspaceUtility';
 
+import got from 'got';
 import { CancelableRequest, Headers, Method, OptionsOfBufferResponseBody, Response } from 'got';
-import got = require('got');
 
 const encodeUrl = require('encodeurl');
 const CookieFileStore = require('tough-cookie-file-store').FileCookieStore;

@@ -22,7 +22,7 @@ export class HARParam implements HARNameValue {
 }
 
 export class HARPostData {
-    public params: HARParam[];
+    public params: HARParam[] = [];
     public constructor(public mimeType: string, public text: string) {
         if (mimeType === 'application/x-www-form-urlencoded') {
             if (text) {

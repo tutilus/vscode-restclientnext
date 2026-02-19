@@ -1,44 +1,8 @@
 # Merge NEXT Client
 
-## Add dependencies
-  "devDependencies": {
-    "@types/aws4": "^1.5.1",
-    "@types/fs-extra": "^5.0.4",
-    "@types/jws": "^3.2.10",
-    "@types/node-fetch": "^2.6.11",
-    "ts-loader": "^7.0.5",
-  },
-  "dependencies": {
-    "adal-node": "^0.2.4",
-    "applicationinsights": "^1.0.5",
-    "aws-amplify": "^5.0.3",
-    "aws4": "^1.9.1",
-    "code-highlight-linenums": "^0.2.1",
-    "combined-stream": "^1.0.5",
-    "content-disposition": "^0.5.3",
-    "dayjs": "^1.8.20",
-    "dotenv": "^8.2.0",
-    "encodeurl": "^1.0.1",
-    "filesize": "^3.3.0",
-    "fs-extra": "^5.0.0",
-    "got": "^11.8.6",
-    "highlight.js": "^10.4.1",
-    "http-proxy-agent": "^2.1.0",
-    "https-proxy-agent": "^2.2.3",
-    "httpsnippet": "^1.22.0",
-    "iconv-lite": "^0.4.15",
-    "jsonc-parser": "^2.0.2",
-    "jsonpath-plus": "^0.20.1",
-    "mime-types": "^2.1.14",
-    "node-fetch": "^2.6.7",
-    "node-jws": "^0.1.4",
-    "open": "^10.1.0",
-    "pretty-data": "^0.40.0",
-    "sanitize-html": "^2.13.0",
-    "tough-cookie": "^4.1.3",
-    "tough-cookie-file-store": "^2.0.3",
-    "uuid": "^3.3.2",
-    "xmldom": "^0.5.0",
-    "xpath": "^0.0.27",
-    "yargs-parser": "^21.1.1"
-  }
+- [x] Add all dependencies updated version
+- [ ] Fix errors
+- [ ] Check everything is working
+- [ ] Add minimum tests 
+- [ ] Stand first version
+- [ ] Add PR and milestones

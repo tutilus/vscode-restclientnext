@@ -1,18 +1,17 @@
-import * as url from 'url';
 import { md5 } from '../misc';
 
-import got = require('got');
+import { AfterResponseHook, } from 'got';
 
 const uuidv4 = require('uuid/v4');
 
-export function digest(user: string, pass: string): got.AfterResponseHook {
+export function digest(user: string, pass: string): AfterResponseHook {
     return (response, retryWithMergedOptions) => {
         if (response.statusCode === 401
             && response.headers['www-authenticate']
             && response.headers['www-authenticate'].split(' ')[0].toLowerCase() === 'digest') {
             const authHeader = response.headers['www-authenticate'];
             const method = (response as any).request.options.method;
-            const path = url.parse(response.url).path;
+            const path = new URL(response.url).pathname;
             const challenge = {
                 qop: '',
                 algorithm: '',

@@ -53,39 +53,39 @@ export interface IRestClientSettings {
 }
 
 export class SystemSettings implements IRestClientSettings {
-    private _followRedirect: boolean;
-    private _defaultHeaders: RequestHeaders;
-    private _timeoutInMilliseconds: number;
-    private _showResponseInDifferentTab: boolean;
-    private _requestNameAsResponseTabTitle: boolean;
+    private _followRedirect: boolean = false;
+    private _defaultHeaders: RequestHeaders = { "User-Agent": "vscode-restclient" };
+    private _timeoutInMilliseconds: number = 0;
+    private _showResponseInDifferentTab: boolean = false;
+    private _requestNameAsResponseTabTitle: boolean = false;
     private _proxy?: string;
-    private _proxyStrictSSL: boolean;
-    private _rememberCookiesForSubsequentRequests: boolean;
-    private _enableTelemetry: boolean;
-    private _excludeHostsForProxy: string[];
+    private _proxyStrictSSL: boolean = false;
+    private _rememberCookiesForSubsequentRequests: boolean = true;
+    private _enableTelemetry: boolean = false;
+    private _excludeHostsForProxy: string[] = [];
     private _fontSize?: number;
     private _fontFamily?: string;
     private _fontWeight?: string;
-    private _environmentVariables: { [key: string]: { [key: string]: string } };
-    private _mimeAndFileExtensionMapping: { [key: string]: string };
-    private _previewResponseInUntitledDocument: boolean;
-    private _hostCertificates: HostCertificates;
-    private _oidcCertificates: HostCertificates;
-    private _oidcScopes: string[];
-    private _suppressResponseBodyContentTypeValidationWarning: boolean;
-    private _previewOption: PreviewOption;
-    private _disableHighlightResponseBodyForLargeResponse: boolean;
-    private _disableAddingHrefLinkForLargeResponse: boolean;
-    private _largeResponseBodySizeLimitInMB: number;
-    private _previewColumn: ViewColumn;
-    private _previewResponsePanelTakeFocus: boolean;
-    private _formParamEncodingStrategy: FormParamEncodingStrategy;
-    private _addRequestBodyLineIndentationAroundBrackets: boolean;
-    private _decodeEscapedUnicodeCharacters: boolean;
-    private _logLevel: LogLevel;
-    private _enableSendRequestCodeLens: boolean;
-    private _enableCustomVariableReferencesCodeLens: boolean;
-    private _useContentDispositionFilename: boolean;
+    private _environmentVariables!: { [key: string]: { [key: string]: string } };
+    private _mimeAndFileExtensionMapping!: { [key: string]: string };
+    private _previewResponseInUntitledDocument: boolean = false;
+    private _hostCertificates!: HostCertificates;
+    private _oidcCertificates!: HostCertificates;
+    private _oidcScopes: string[] = [];
+    private _suppressResponseBodyContentTypeValidationWarning: boolean = false;
+    private _previewOption: PreviewOption = PreviewOption.Full;
+    private _disableHighlightResponseBodyForLargeResponse: boolean = false;
+    private _disableAddingHrefLinkForLargeResponse: boolean = false;
+    private _largeResponseBodySizeLimitInMB: number = 0;
+    private _previewColumn!: ViewColumn;
+    private _previewResponsePanelTakeFocus: boolean = false;
+    private _formParamEncodingStrategy!: FormParamEncodingStrategy;
+    private _addRequestBodyLineIndentationAroundBrackets: boolean = false;
+    private _decodeEscapedUnicodeCharacters: boolean = false;
+    private _logLevel: LogLevel = LogLevel.Error;
+    private _enableSendRequestCodeLens: boolean = false;
+    private _enableCustomVariableReferencesCodeLens: boolean = false;
+    private _useContentDispositionFilename: boolean = false;
 
     public get followRedirect() {
         return this._followRedirect;

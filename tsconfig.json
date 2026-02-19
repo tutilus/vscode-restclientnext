@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "Node16",
-    "moduleResolution": "Node16",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "target": "ES2022",
     "lib": [
         "ES2022"
@@ -15,7 +15,7 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
+//    "esModuleInterop": true,
     "experimentalDecorators": true,
     "incremental": true
   },
