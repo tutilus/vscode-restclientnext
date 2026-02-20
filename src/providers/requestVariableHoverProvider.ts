@@ -4,7 +4,7 @@ import { VariableUtility } from '../utils/variableUtility';
 
 export class RequestVariableHoverProvider implements HoverProvider {
 
-    public async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover | undefined> {
+    public async provideHover(document: TextDocument, position: Position, _token: CancellationToken): Promise<Hover | undefined> {
         const wordRange = VariableUtility.getRequestVariableReferencePathRange(document, position);
         if (!wordRange) {
             return undefined;

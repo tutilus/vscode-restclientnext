@@ -7,7 +7,7 @@ import { VariableUtility } from '../utils/variableUtility';
 export class FileVariableReferencesCodeLensProvider implements CodeLensProvider {
     private readonly fileVariableReferenceCache = new DocumentCache<CodeLens[]>();
 
-    public provideCodeLenses(document: TextDocument, token: CancellationToken): Promise<CodeLens[]> {
+    public provideCodeLenses(document: TextDocument, _token: CancellationToken): Promise<CodeLens[]> {
         if (this.fileVariableReferenceCache.has(document)) {
             return Promise.resolve(this.fileVariableReferenceCache.get(document)!);
         }

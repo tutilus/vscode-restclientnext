@@ -12,7 +12,7 @@ const firstPartRegex: RegExp = /^(\w+)\.$/;
 const secondPartRegex: RegExp = /^(\w+)\.(request|response)\.$/;
 
 export class RequestVariableCompletionItemProvider implements CompletionItemProvider {
-    public async provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken): Promise<CompletionItem[] | undefined> {
+    public async provideCompletionItems(document: TextDocument, position: Position, _token: CancellationToken): Promise<CompletionItem[] | undefined> {
         const wordRange = VariableUtility.getPartialRequestVariableReferencePathRange(document, position);
 
         let fullPath = document.getText(wordRange);

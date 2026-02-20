@@ -7,7 +7,7 @@ import { VariableProcessor } from '../utils/variableProcessor';
 import { getCurrentHttpFileName } from '../utils/workspaceUtility';
 
 export class HttpDocumentSymbolProvider implements DocumentSymbolProvider {
-    public async provideDocumentSymbols(document: TextDocument, token: CancellationToken): Promise<SymbolInformation[]> {
+    public async provideDocumentSymbols(document: TextDocument, _token: CancellationToken): Promise<SymbolInformation[]> {
         const symbols: SymbolInformation[] = [];
         const lines: string[] = document.getText().split(Constants.LineSplitterRegex);
         const requestRange: [number, number][] = Selector.getRequestRanges(

@@ -1,7 +1,7 @@
 import { Telemetry } from './telemetry';
 
 export function trace(eventName: string): MethodDecorator {
-    return (target, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+    return (_target, _propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
         const originalMethod = descriptor.value;
 
         descriptor.value = function(...args: any[]) {

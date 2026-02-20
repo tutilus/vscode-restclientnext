@@ -3,7 +3,7 @@ import * as Constants from '../common/constants';
 import { VariableUtility } from '../utils/variableUtility';
 
 export class FileVariableReferenceProvider implements ReferenceProvider {
-    public async provideReferences(document: TextDocument, position: Position, context: ReferenceContext, token: CancellationToken): Promise<Location[] | undefined> {
+    public async provideReferences(document: TextDocument, position: Position, context: ReferenceContext, _token: CancellationToken): Promise<Location[] | undefined> {
         const wordRange = VariableUtility.getEnvironmentOrFileVariableReferenceNameRange(document, position)
             || VariableUtility.getFileVariableDefinitionNameRange(document, position);
         if (!wordRange) {

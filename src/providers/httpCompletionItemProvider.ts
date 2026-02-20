@@ -4,7 +4,7 @@ import { HttpElementFactory } from '../utils/httpElementFactory';
 import { VariableUtility } from "../utils/variableUtility";
 
 export class HttpCompletionItemProvider implements CompletionItemProvider {
-    public async provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken): Promise<CompletionItem[] | undefined> {
+    public async provideCompletionItems(document: TextDocument, position: Position, _token: CancellationToken): Promise<CompletionItem[] | undefined> {
         if (!!VariableUtility.getPartialRequestVariableReferencePathRange(document, position)) {
             return undefined;
         }

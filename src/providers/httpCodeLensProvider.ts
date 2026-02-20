@@ -3,7 +3,7 @@ import * as Constants from '../common/constants';
 import { Selector } from '../utils/selector';
 
 export class HttpCodeLensProvider implements CodeLensProvider {
-    public provideCodeLenses(document: TextDocument, token: CancellationToken): Promise<CodeLens[]> {
+    public provideCodeLenses(document: TextDocument, _token: CancellationToken): Promise<CodeLens[]> {
         const blocks: CodeLens[] = [];
         const lines: string[] = document.getText().split(Constants.LineSplitterRegex);
         const requestRanges: [number, number][] = Selector.getRequestRanges(lines);

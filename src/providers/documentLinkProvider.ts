@@ -25,7 +25,7 @@ export class RequestBodyDocumentLinkProvider implements DocumentLinkProvider {
                 const linkEnd = new Position(index, offset + filePath.length);
                 results.push(new DocumentLink(
                     new Range(linkStart, linkEnd),
-                    this.normalizeLink(document, filePath, base)
+                    this.normalizeLink(filePath, base)
                 ));
             }
         }
@@ -33,7 +33,7 @@ export class RequestBodyDocumentLinkProvider implements DocumentLinkProvider {
         return results;
     }
 
-    private normalizeLink(document: TextDocument, link: string, base: string): Uri {
+    private normalizeLink(link: string, base: string): Uri {
         let resourcePath: Uri;
         if (path.isAbsolute(link)) {
             resourcePath = Uri.file(link);

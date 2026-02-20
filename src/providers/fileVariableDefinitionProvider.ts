@@ -3,7 +3,7 @@ import * as Constants from '../common/constants';
 import { VariableUtility } from '../utils/variableUtility';
 
 export class FileVariableDefinitionProvider implements DefinitionProvider {
-    public async provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Promise<Definition | undefined> {
+    public async provideDefinition(document: TextDocument, position: Position, _token: CancellationToken): Promise<Definition | undefined> {
         const wordRange = VariableUtility.getEnvironmentOrFileVariableReferenceNameRange(document, position);
         if (!wordRange) {
             return undefined;

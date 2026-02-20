@@ -68,7 +68,7 @@ export class SystemVariableProvider implements HttpVariableProvider {
 
     public readonly type: VariableType = VariableType.System;
 
-    public async has(name: string, document: TextDocument): Promise<boolean> {
+    public async has(name: string, _document: TextDocument): Promise<boolean> {
         const [variableName] = name.split(' ').filter(Boolean);
         return this.resolveFuncs.has(variableName);
     }
@@ -83,7 +83,7 @@ export class SystemVariableProvider implements HttpVariableProvider {
         return { name: variableName, ...result };
     }
 
-    public async getAll(document: undefined, context: HttpVariableContext): Promise<HttpVariable[]> {
+    public async getAll(_document: undefined, _context: HttpVariableContext): Promise<HttpVariable[]> {
         return [...this.resolveFuncs.keys()].map(name => ({ name }));
     }
 
@@ -226,7 +226,7 @@ export class SystemVariableProvider implements HttpVariableProvider {
     }
 
     private registerAadTokenVariable() {
-        this.resolveFuncs.set(Constants.AzureActiveDirectoryVariableName, (name, document, context) => {
+        this.resolveFuncs.set(Constants.AzureActiveDirectoryVariableName, (name, _document, context) => {
             // get target app from URL
             const match = this.requestUrlRegex.exec(context.parsedRequest);
             const url = (match && match[1]) || context.parsedRequest;
@@ -302,7 +302,7 @@ export class SystemVariableProvider implements HttpVariableProvider {
     }
 
     private registerOidcTokenVariable() {
-        this.resolveFuncs.set(Constants.OidcVariableName, async (name, document, context) => {
+        this.resolveFuncs.set(Constants.OidcVariableName, async (name, _document, _context) => {
             const matchVar = this.oidcRegex.exec(name) ?? [];
             const [_, _1, forceNew, clientId, _3, callbackDomain, callbackPort, authorizeEndpoint, tokenEndpoint,  scopes, audience] = matchVar;
 

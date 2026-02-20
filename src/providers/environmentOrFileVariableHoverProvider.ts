@@ -5,7 +5,7 @@ import { VariableUtility } from '../utils/variableUtility';
 
 export class EnvironmentOrFileVariableHoverProvider implements HoverProvider {
 
-    public async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover | undefined> {
+    public async provideHover(document: TextDocument, position: Position, _token: CancellationToken): Promise<Hover | undefined> {
         const wordRange = VariableUtility.getEnvironmentOrFileVariableReferenceNameRange(document, position);
         if (!wordRange) {
             return undefined;
