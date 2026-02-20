@@ -47,12 +47,12 @@ export class SwaggerUtils {
         if (schema.$ref) {
             const schemaRef = schema.$ref;
             const schemaPath = schemaRef.replace("#/components/", "").split("/");
-            schema = schemaPath.reduce((obj, key) => obj[key], components);
+            schema = schemaPath.reduce((obj: any, key: string) => obj[key], components);
         }
 
         switch (schema.type) {
             case "object":
-                const obj = {};
+                const obj: { [key: string]: any } = {};
                 for (const prop in schema.properties) {
                     if (schema.anyOf) {
                         return this.getExampleObjectFromSchema(components,

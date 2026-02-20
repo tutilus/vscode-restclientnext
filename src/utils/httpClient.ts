@@ -1,7 +1,8 @@
 import * as fs from 'fs-extra';
 import * as iconv from 'iconv-lite';
 import * as path from 'path';
-import { CookieJar, Store } from 'tough-cookie';
+import { CookieJar } from 'tough-cookie';
+import FileCookieStore from 'tough-cookie-file-store';
 import * as url from 'url';
 import { Uri, window } from 'vscode';
 import { RequestHeaders, ResponseHeaders } from '../models/base';
@@ -21,7 +22,6 @@ import got from 'got';
 import { CancelableRequest, Headers, Method, OptionsOfBufferResponseBody, Response } from 'got';
 
 const encodeUrl = require('encodeurl');
-const CookieFileStore = require('tough-cookie-file-store').FileCookieStore;
 
 type Certificate = {
     cert?: Buffer;
@@ -31,11 +31,11 @@ type Certificate = {
 };
 
 export class HttpClient {
-    private cookieStore: Store;
+    private cookieStore: CookieJar;
 
     public constructor() {
         const cookieFilePath = UserDataManager.cookieFilePath;
-        this.cookieStore = new CookieFileStore(cookieFilePath) as Store;
+        this.cookieStore = new CookieJar(new FileCookieStore(cookieFilePath));
     }
 
     public async send(httpRequest: HttpRequest, settings?: IRestClientSettings): Promise<HttpResponse> {
@@ -46,9 +46,9 @@ export class HttpClient {
         let bodySize = 0;
         let headersSize = 0;
         const requestUrl = encodeUrl(httpRequest.url);
-        const request: CancelableRequest<Response<Buffer>> = got.default(requestUrl, options);
+        const request: CancelableRequest<Response<Buffer>> = got(requestUrl, options);
         httpRequest.setUnderlyingRequest(request);
-        (request as any).on('response', res => {
+        (request as any).on('response', (res: { rawHeaders: any[]; on: (arg0: string, arg1: (chunk: any) => void) => void; }) => {
             if (res.rawHeaders) {
                 headersSize += res.rawHeaders.map(h => h.length).reduce((a, b) => a + b, 0);
                 headersSize += (res.rawHeaders.length) / 2;
@@ -98,7 +98,11 @@ export class HttpClient {
                 HttpClient.normalizeHeaderNames(
                     (response as any).request.options.headers as RequestHeaders,
                     Object.keys(httpRequest.headers)),
-                Buffer.isBuffer(requestBody) ? convertBufferToStream(requestBody) : requestBody,
+                Buffer.isBuffer(requestBody)
+                    ? convertBufferToStream(requestBody)
+                    : (typeof requestBody === 'string' || requestBody === undefined
+                        ? requestBody
+                        : undefined),
                 httpRequest.rawBody,
                 httpRequest.name
             ));
@@ -106,7 +110,7 @@ export class HttpClient {
 
     public async clearCookies() {
         await fs.remove(UserDataManager.cookieFilePath);
-        this.cookieStore = new CookieFileStore(UserDataManager.cookieFilePath) as Store;
+        this.cookieStore = new CookieJar(new FileCookieStore(UserDataManager.cookieFilePath));
     }
 
     private async prepareOptions(httpRequest: HttpRequest, settings: IRestClientSettings): Promise<OptionsOfBufferResponseBody> {
@@ -132,7 +136,7 @@ export class HttpClient {
             decompress: true,
             followRedirect: settings.followRedirect,
             throwHttpErrors: false,
-            retry: 0,
+            retry: { limit: 0 },
             hooks: {
                 afterResponse: [],
                 beforeRequest: [],
@@ -143,11 +147,11 @@ export class HttpClient {
         };
 
         if (settings.timeoutInMilliseconds > 0) {
-            options.timeout = settings.timeoutInMilliseconds;
+            options.timeout = { request: settings.timeoutInMilliseconds };
         }
 
         if (settings.rememberCookiesForSubsequentRequests) {
-            options.cookieJar = new CookieJar(this.cookieStore);
+            options.cookieJar = this.cookieStore;
         }
 
         // TODO: refactor auth
@@ -184,20 +188,20 @@ export class HttpClient {
         Object.assign(options, certificate);
 
         // set proxy
-        if (settings.proxy && !HttpClient.ignoreProxy(httpRequest.url, settings.excludeHostsForProxy)) {
-            const proxyEndpoint = url.parse(settings.proxy);
-            if (/^https?:$/.test(proxyEndpoint.protocol || '')) {
-                const proxyOptions = {
-                    host: proxyEndpoint.hostname,
-                    port: Number(proxyEndpoint.port),
-                    rejectUnauthorized: settings.proxyStrictSSL
+        if (
+            settings.proxy &&
+            !HttpClient.ignoreProxy(httpRequest.url, settings.excludeHostsForProxy)
+        ) {
+            if (httpRequest.url.startsWith('http:')) {
+                const { HttpProxyAgent } = await import('http-proxy-agent');
+                options.agent = {
+                    http: new HttpProxyAgent(settings.proxy)
                 };
-
-                const ctor = (httpRequest.url.startsWith('http:')
-                    ? await import('http-proxy-agent')
-                    : await import('https-proxy-agent')).default;
-
-                options.agent = new ctor(proxyOptions);
+            } else {
+                const { HttpsProxyAgent } = await import('https-proxy-agent');
+                options.agent = {
+                    https: new HttpsProxyAgent(settings.proxy)
+                };
             }
         }
 
@@ -296,7 +300,7 @@ export class HttpClient {
 
     private static normalizeHeaderNames<T extends RequestHeaders | ResponseHeaders>(headers: T, rawHeaders: string[]): T {
         const headersDic: { [key: string]: string } = rawHeaders.reduce(
-            (prev, cur) => {
+            (prev: { [key: string]: string }, cur: string) => {
                 if (!(cur.toLowerCase() in prev)) {
                     prev[cur.toLowerCase()] = cur;
                 }

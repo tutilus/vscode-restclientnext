@@ -169,7 +169,7 @@ class AuthParameters {
     public cloud: string;
     public tenantId: string;
     public clientId: string;
-    public scopes: string[];
+    public scopes: string[] = [];
     public forceNewToken: boolean;
     public clientSecret?: string;
     public appOnly: boolean;
@@ -264,8 +264,8 @@ class AadV2TokenCache {
 }
 
 class AadV2TokenCacheEntry {
-    public token: string;
-    public scopes: string[];
+    public token: string = "";
+    public scopes: string[] = [];
     public supportScopes(scopes: string[]): boolean {
         return scopes.every((scope) => this.scopes.includes(scope));
     }

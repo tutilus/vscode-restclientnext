@@ -1,6 +1,6 @@
 export class OidcPayload {
-    public access_token: string;
-    public refresh_token: string;
+    public access_token: string = "";
+    public refresh_token: string = "";
 }
 
 export class MemoryCache<T> {

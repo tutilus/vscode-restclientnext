@@ -116,7 +116,7 @@ export class CodeLoopbackClient {
         }
         this.server.listen(this.port);
       } catch (ex) {
-        reportError('Failed to start server', ex);
+        reportError('Failed to start server', ex instanceof Error ? ex : new Error(String(ex)));
       }
     });
 
@@ -151,7 +151,7 @@ export class CodeLoopbackClient {
       const pfx = this.resolveCertificate(pfxPath);
       return { cert, key, pfx, passphrase };
     } catch (ex) {
-      reportError(`Failed to load certificates from: {certPath:${certPath}} {keyPath:${keyPath}} {pfxPath:${pfxPath}}`, ex);
+      reportError(`Failed to load certificates from: {certPath:${certPath}} {keyPath:${keyPath}} {pfxPath:${pfxPath}}`, ex instanceof Error ? ex : new Error(String(ex)));
       return null;
     }
   }
@@ -263,7 +263,7 @@ export class CodeLoopbackClient {
       );
     // Check if deserialization didn't work
     if (!deserializedQueryString) {
-      throw "Unable to deserialize query string";
+      throw new Error("Unable to deserialize query string");
     }
     return deserializedQueryString;
   }
@@ -364,7 +364,7 @@ export class OidcClient {
         const { payload } = jws.decode(token) ?? {};
         return JSON.parse(payload);
       } catch (ex) {
-        reportError('Faild to decode access token', ex);
+        reportError('Failed to decode access token', ex instanceof Error ? ex : new Error(String(ex)));
         return null;
       }
     };
@@ -471,8 +471,7 @@ export class OidcClient {
       throw new Error(`Failed to retrieve access token: ${response.status} ${JSON.stringify(error)}`);
     }
 
-    const { access_token, refresh_token } = await response.json();
-
+    const { access_token, refresh_token } = await response.json() as { access_token: string, refresh_token: string };
 
     return { access_token, refresh_token };
   }
@@ -518,14 +517,14 @@ export class OidcClient {
         body: postData
       });
       const json = await response.json();
-      const { access_token, refresh_token } = json;
+      const { access_token, refresh_token } = json as { access_token: string, refresh_token: string };
       if (!access_token) {
         reportError(`Failed to retrieve access token: ${response.status} ${JSON.stringify(json)}`);
       }
 
       return { access_token, refresh_token };
     } catch (ex) {
-      reportError('Failed to retrieve access token', ex);
+      reportError('Failed to retrieve access token', ex instanceof Error ? ex : new Error(String(ex)));
       return undefined;
     }
   }

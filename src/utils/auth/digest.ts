@@ -12,7 +12,7 @@ export function digest(user: string, pass: string): AfterResponseHook {
             const authHeader = response.headers['www-authenticate'];
             const method = (response as any).request.options.method;
             const path = new URL(response.url).pathname;
-            const challenge = {
+            const challenge: { [key: string]: string } = {
                 qop: '',
                 algorithm: '',
                 realm: '',
@@ -30,7 +30,7 @@ export function digest(user: string, pass: string): AfterResponseHook {
                 challenge[match[1]] = match[2] || match[3];
             }
 
-            const ha1Compute = function (algorithm, user, realm, pass, nonce, cnonce) {
+            const ha1Compute = function (algorithm: string | undefined, user: string, realm: string, pass: string, nonce: string, cnonce: string) {
                 const ha1 = md5(user + ':' + realm + ':' + pass);
                 if (algorithm?.toLowerCase() === 'md5-sess') {
                     return md5(ha1 + ':' + nonce + ':' + cnonce);
@@ -62,7 +62,7 @@ export function digest(user: string, pass: string): AfterResponseHook {
 
             const authParams: string[] = [];
             for (const [key, value] of Object.entries(authValues)) {
-                if (authValues[key]) {
+                if (authValues[key as keyof typeof authValues]) {
                     if (key === 'qop' || key === 'nc' || key === 'algorithm') {
                         authParams.push(key + '=' + value);
                     } else {

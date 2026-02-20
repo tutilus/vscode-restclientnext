@@ -254,7 +254,11 @@ export class SystemVariableProvider implements HttpVariableProvider {
             const clientId = Constants.AzureActiveDirectoryClientId;
 
             return new Promise((resolve, reject) => {
-                const resolveToken = (token: adal.TokenResponse, cache: boolean = true, copy?: boolean) => {
+                const resolveToken = (token?: adal.TokenResponse | PromiseLike<adal.TokenResponse>, cache: boolean = true, copy?: boolean) => {
+                    if (!token || typeof token !== 'object' || !('tokenType' in token) || !('accessToken' in token)) {
+                        resolve({ value: '' });
+                        return;
+                    }
                     if (cache) {
                         // save token using both specified and resulting domain/tenantId to cover more reuse scenarios
                         AadTokenCache.set(`${cloud}:${token.tenantId}`, token);
@@ -276,12 +280,14 @@ export class SystemVariableProvider implements HttpVariableProvider {
                 if (cachedToken) {
                     // if token expired, try to refresh; otherwise, use cached token
                     if (cachedToken.expiresOn <= new Date() && cachedToken.refreshToken) {
-                        authContext.acquireTokenWithRefreshToken(cachedToken.refreshToken, clientId, targetApp, (refreshError: Error, refreshResponse: adal.TokenResponse) => {
+                        authContext.acquireTokenWithRefreshToken(cachedToken.refreshToken, clientId, targetApp, (refreshError: Error, refreshResponse: adal.TokenResponse | adal.ErrorResponse) => {
                             // if refresh fails, acquire new token; otherwise, cache updated token
                             if (refreshError) {
                                 acquireToken();
+                            } else if (refreshResponse && (refreshResponse as adal.TokenResponse).accessToken) {
+                                resolveToken(refreshResponse as adal.TokenResponse);
                             } else {
-                                resolveToken(refreshResponse);
+                                acquireToken();
                             }
                         });
                     } else {
@@ -371,17 +377,23 @@ export class SystemVariableProvider implements HttpVariableProvider {
             const signIn = "Sign in";
             const tryAgain = "Try again";
             const done = "Done";
-            const signInPrompt = value => {
+            const signInPrompt = (value: string | undefined) => {
                 if (value === signIn || value === tryAgain) {
                     this.clipboard.writeText(codeResponse.userCode).then(() => {
                         commands.executeCommand("vscode.open", Uri.parse(codeResponse.verificationUrl));
                         window.showInformationMessage(prompt2, messageBoxOptions, done, tryAgain).then(signInPrompt);
                     });
                 } else if (value === done) {
-                    authContext.acquireTokenWithDeviceCode(targetApp, clientId, codeResponse, (tokenError: Error, tokenResponse: adal.TokenResponse) => {
+                    authContext.acquireTokenWithDeviceCode(targetApp, clientId, codeResponse, (tokenError: Error, tokenResponse: adal.TokenResponse | adal.ErrorResponse) => {
                         if (tokenError) {
                             signInFailed("acquireTokenWithDeviceCode", tokenError.message);
                             return reject(tokenError);
+                        }
+
+                        // Ensure tokenResponse is a TokenResponse (not ErrorResponse)
+                        if (!tokenResponse || (tokenResponse as adal.ErrorResponse).error) {
+                            signInFailed("acquireTokenWithDeviceCode", "No access token received.");
+                            return reject(tokenResponse);
                         }
 
                         // if no directory chosen, pick one (otherwise, the token is likely useless :P)
@@ -389,11 +401,11 @@ export class SystemVariableProvider implements HttpVariableProvider {
                             const client = new HttpClient();
                             const request = new HttpRequest(
                                 "GET", `${Constants.AzureClouds[cloud].arm}/tenants?api-version=2017-08-01`,
-                                { Authorization: this._getTokenString(tokenResponse) });
+                                { Authorization: this._getTokenString(tokenResponse as adal.TokenResponse) });
                             return client.send(request).then(async value => {
                                 const items = JSON.parse(value.body).value;
                                 const directories: QuickPickItem[] = [];
-                                items.forEach(element => {
+                                items.forEach((element: { displayName: any; domains: string | any[]; tenantId: any; }) => {
                                     /**
                                      * Some directories have multiple domains, but ARM doesn't return the primary domain
                                      * first. For instance, Microsoft has 268 domains and "microsoft.com" is #12. This
@@ -470,18 +482,22 @@ export class SystemVariableProvider implements HttpVariableProvider {
                                 // if directory selected, sign in to that directory; otherwise, stick with the default
                                 if (result) {
                                     const newDirAuthContext = new adal.AuthenticationContext(`${Constants.AzureClouds[cloud].aad}${result.description}`);
-                                    newDirAuthContext.acquireTokenWithRefreshToken(tokenResponse.refreshToken!, clientId, null!, (newDirError: Error, newDirResponse: adal.TokenResponse) => {
+                                    newDirAuthContext.acquireTokenWithRefreshToken((tokenResponse as adal.TokenResponse).refreshToken!, clientId, null!, (newDirError: Error, newDirResponse: adal.TokenResponse | adal.ErrorResponse) => {
                                         // cache/copy new directory token, if successful
-                                        resolve(newDirError ? tokenResponse : newDirResponse, true, true);
+                                        if (newDirError || !newDirResponse || (newDirResponse as adal.ErrorResponse).error) {
+                                            resolve(tokenResponse as adal.TokenResponse);
+                                        } else {
+                                            resolve(newDirResponse as adal.TokenResponse, true, true);
+                                        }
                                     });
                                 } else {
-                                    return resolve(tokenResponse, true, true);
+                                    return resolve(tokenResponse as adal.TokenResponse, true, true);
                                 }
                             });
                         }
 
                         // explicitly copy this token since we've informed the user in the dialog
-                        return resolve(tokenResponse, true, true);
+                        return resolve(tokenResponse as adal.TokenResponse, true, true);
                     });
                 }
             };

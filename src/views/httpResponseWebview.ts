@@ -356,17 +356,15 @@ ${formatHeaders(response.headers)}`;
         return `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' http: https: data: vscode-resource:; script-src 'nonce-${nonce}'; style-src 'self' 'unsafe-inline' http: https: data: vscode-resource:;">`;
     }
 
-    private addLineNums(code): string {
+    private addLineNums(code: string): string {
         code = code.replace(/([\r\n]\s*)(<\/span>)/ig, '$2$1');
-
         code = this.cleanLineBreaks(code);
 
-        code = code.split(/\r\n|\r|\n/);
-        const max = (1 + code.length).toString().length;
+        const codeChunks: string[] = code.split(/\r\n|\r|\n/);
+        const max = (1 + codeChunks.length).toString().length;
+        const foldingRanges = this.getFoldingRange(codeChunks);
 
-        const foldingRanges = this.getFoldingRange(code);
-
-        code = code
+        return codeChunks
             .map(function (line, i) {
                 const lineNum = i + 1;
                 const range = foldingRanges.has(lineNum)
@@ -376,7 +374,6 @@ ${formatHeaders(response.headers)}`;
                 return `<span class="line width-${max}" start="${lineNum}"${range}>${line}${folding}</span>`;
             })
             .join('\n');
-        return code;
     }
 
     private cleanLineBreaks(code: string): string {

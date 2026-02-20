@@ -712,6 +712,7 @@
   "devDependencies": {
     "@types/aws4": "^1.11.6",
     "@types/fs-extra": "^11.0.4",
+    "@types/js-yaml": "^4.0.9",
     "@types/jws": "^3.2.11",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
@@ -747,11 +748,16 @@
     "https-proxy-agent": "^7.0.6",
     "httpsnippet": "^2.0.0",
     "iconv-lite": "^0.7.2",
+    "js-yaml": "^4.1.1",
     "jsonc-parser": "^3.3.1",
     "jsonpath-plus": "^10.4.0",
     "mime-types": "^3.0.2",
+    "node-fetch": "^3.3.2",
+    "pretty-data": "^0.40.0",
     "sanitize-html": "^2.17.1",
     "tough-cookie": "^6.0.0",
+    "tough-cookie-file-store": "^3.3.0",
+    "xmldom": "^0.6.0",
     "xpath": "^0.0.34"
   }
 }
