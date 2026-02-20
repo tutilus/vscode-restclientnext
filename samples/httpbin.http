@@ -1,0 +1,18 @@
+# ==== Examples with httpbin.org ====
+# httpbin.org is a simple HTTP Request & Response Service.
+@host = https://httpbin.org
+
+# ==== GET ====
+### A simple GET request.
+GET {{@host}}/get
+
+### Basic Authentication.
+GET {{host}}/basic-auth/user/pass
+Authorization: Basic user pass
+
+# ==== Cookies ====
+### Set cookies
+GET {{host}}/cookies/set?foo=bar
+
+### Check cookies
+GET {{host}}/cookies
