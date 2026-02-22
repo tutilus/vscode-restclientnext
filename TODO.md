@@ -5,7 +5,7 @@
 - [x] Add all dependencies updated version
 - [x] Fix all errors
 - [x] Check everything is working
-- [ ] Change logo image to rest-client-rest one
+- [x] Change logo image to rest-client-rest one
 - [ ] Reduce README.md size (move most of the part in wiki to have a smaller package)
 - [ ] Stand the first version
 - [ ] Add PR and milestones
@@ -35,3 +35,9 @@ npm warn deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older v
 npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
 npm warn deprecated adal-node@0.2.4: This package is no longer supported. Please migrate to @azure/msal-node.
 npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+## Issues
+
+Still there.
+ - https://github.com/Huachao/vscode-restclient/issues/1378
+ - 

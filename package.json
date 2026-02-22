@@ -2,7 +2,7 @@
   "name": "rest-client-next",
   "displayName": "REST Client Next",
   "description": "REST Client Next allows you to send HTTP requests and view the responses in Visual Studio Code",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "publisher": "tutilus",
   "author": {
     "name": "Aurélien",
