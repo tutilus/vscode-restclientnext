@@ -1,7 +1,6 @@
 import { EventEmitter, QuickPickItem, window } from 'vscode';
 import * as Constants from '../common/constants';
 import { SystemSettings } from '../models/configurationSettings';
-import { trace } from "../utils/decorator";
 import { EnvironmentStatusEntry } from '../utils/environmentStatusBarEntry';
 import { UserDataManager } from '../utils/userDataManager';
 
@@ -31,7 +30,6 @@ export class EnvironmentController {
         this.environmentStatusEntry = new EnvironmentStatusEntry(initEnvironment.label);
     }
 
-    @trace('Switch Environment')
     public async switchEnvironment() {
         // Add no environment at the top
         const userEnvironments: EnvironmentPickItem[] =

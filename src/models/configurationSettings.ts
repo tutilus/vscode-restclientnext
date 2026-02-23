@@ -25,7 +25,6 @@ export interface IRestClientSettings {
     readonly proxy?: string;
     readonly proxyStrictSSL: boolean;
     readonly rememberCookiesForSubsequentRequests: boolean;
-    readonly enableTelemetry: boolean;
     readonly excludeHostsForProxy: string[];
     readonly fontSize?: number;
     readonly fontFamily?: string;
@@ -61,7 +60,6 @@ export class SystemSettings implements IRestClientSettings {
     private _proxy?: string;
     private _proxyStrictSSL: boolean = false;
     private _rememberCookiesForSubsequentRequests: boolean = true;
-    private _enableTelemetry: boolean = false;
     private _excludeHostsForProxy: string[] = [];
     private _fontSize?: number;
     private _fontFamily?: string;
@@ -117,10 +115,6 @@ export class SystemSettings implements IRestClientSettings {
 
     public get rememberCookiesForSubsequentRequests() {
         return this._rememberCookiesForSubsequentRequests;
-    }
-
-    public get enableTelemetry() {
-        return this._enableTelemetry;
     }
 
     public get excludeHostsForProxy() {
@@ -287,7 +281,6 @@ export class SystemSettings implements IRestClientSettings {
         this._largeResponseBodySizeLimitInMB = restClientSettings.get<number>("largeResponseBodySizeLimitInMB", 5);
         this._previewOption = ParsePreviewOptionStr(restClientSettings.get<string>("previewOption", "full"));
         this._formParamEncodingStrategy = ParseFormParamEncodingStr(restClientSettings.get<string>("formParamEncodingStrategy", "automatic"));
-        this._enableTelemetry = restClientSettings.get<boolean>('enableTelemetry', false);
         this._suppressResponseBodyContentTypeValidationWarning = restClientSettings.get('suppressResponseBodyContentTypeValidationWarning', false);
         this._addRequestBodyLineIndentationAroundBrackets = restClientSettings.get<boolean>('addRequestBodyLineIndentationAroundBrackets', true);
         this._decodeEscapedUnicodeCharacters = restClientSettings.get<boolean>('decodeEscapedUnicodeCharacters', false);
@@ -369,10 +362,6 @@ export class RestClientSettings implements IRestClientSettings {
 
     public get rememberCookiesForSubsequentRequests() {
         return this.requestSettings.rememberCookiesForSubsequentRequests ?? this.systemSettings.rememberCookiesForSubsequentRequests;
-    }
-
-    public get enableTelemetry() {
-        return this.systemSettings.enableTelemetry;
     }
 
     public get excludeHostsForProxy() {
