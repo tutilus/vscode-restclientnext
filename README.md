@@ -2,24 +2,19 @@
 
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/tutilus.rest-client-next?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=tutilus.rest-client-next) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A modernized fork of the popular REST Client extension for Visual Studio
-Code.
-
 REST Client Next lets you send HTTP requests and view responses directly
 inside VS Code --- no external tools required.
 
-REST Client Next is a fork of [Huachao's REST Client](https://github.com/Huachao/vscode-restclient). 
+A modernized fork of the popular REST Client extension for Visual Studio
+Code of [Huachao's REST Client](https://github.com/Huachao/vscode-restclient). 
 
 ------------------------------------------------------------------------
-
-## Features
 
 ## Table of contents
 
 - [REST Client Next](#rest-client-next)
-  - [Features](#features)
   - [Table of contents](#table-of-contents)
-  - [Commands](#commands)
+  - [Features](#features)
   - [Quick Example](#quick-example)
   - [Installation](#installation)
   - [Build \& Run locally](#build--run-locally)
@@ -33,31 +28,22 @@ REST Client Next is a fork of [Huachao's REST Client](https://github.com/Huachao
 
 ------------------------------------------------------------------------
 
-## Commands
+## Features
 
-The extension exposes the following commands (command id, description and default keyboard shortcut if available):
-
-| Command | Description | Default shortcut |
-|---|---|---|
-| `rest-client.request` | Send Request | `Ctrl+Alt+R` / `Cmd+Alt+R` |
-| `rest-client.rerun-last-request` | Rerun Last Request | `Ctrl+Alt+L` / `Cmd+Alt+L` |
-| `rest-client.cancel-request` | Cancel Request | `Ctrl+Alt+K` / `Cmd+Alt+K` |
-| `rest-client.switch-environment` | Switch Environment | `Ctrl+Alt+E` / `Cmd+Alt+E` |
-| `rest-client.history` | View Request History | `Ctrl+Alt+H` / `Cmd+Alt+H` |
-| `rest-client.clear-history` | Clear Request History | |
-| `rest-client.save-response` | Save Full Response | |
-| `rest-client.save-response-body` | Save Response Body | |
-| `rest-client.copy-response-body` | Copy Response Body | |
-| `rest-client.generate-codesnippet` | Generate Code Snippet | `Ctrl+Alt+C` / `Cmd+Alt+C` |
-| `rest-client.copy-codesnippet` | Copy Code Snippet | |
-| `rest-client.copy-request-as-curl` | Copy Request As cURL | |
-| `rest-client.clear-aad-token-cache` | Clear Azure AD Token Cache | |
-| `rest-client.clear-cookies` | Clear Cookies | |
-| `rest-client.fold-response` | Fold Response | |
-| `rest-client.unfold-response` | Unfold Response | |
-| `rest-client.preview-html-response-body` | HTML Preview | |
-| `rest-client.show-raw-response` | Show Raw Response | |
-| `rest-client.import-swagger` | Import from Swagger/OpenAPI file | |
+-   Send HTTP requests from `.http` and `.rest` files
+-   Environment variables support
+-   Authentication:
+    -   Basic
+    -   Digest
+    -   AWS Signature v4
+    -   AWS Cognito
+-   GraphQL requests
+-   cURL import
+-   Code snippet generation
+-   Cookie persistence
+-   Proxy support
+-   Request history
+-   SSL client certificates
 
 ## Quick Example
 

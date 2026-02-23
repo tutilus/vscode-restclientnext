@@ -10,8 +10,9 @@
 - [ ] Stand the first version
 - [ ] Add PR and milestones
 - [ ] Add minimum tests 
+- [ ] Delete telemetry
 - [ ] Migrate adal-node@0.2.4 --> @azure/msal-node
-
+  
 ## Warning
 
 ### Compile warnings

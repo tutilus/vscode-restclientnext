@@ -4,7 +4,7 @@
 
 # ==== GET ====
 ### A simple GET request.
-GET {{@host}}/get
+GET {{host}}/get
 
 ### Basic Authentication.
 GET {{host}}/basic-auth/user/pass
