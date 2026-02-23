@@ -1,23 +1,702 @@
 {
   "name": "rest-client-next",
   "displayName": "REST Client Next",
-  "description": "REST Client allows you to send HTTP request and view the response in Visual Studio Code directly.",
-  "version": "0.0.1",
+  "description": "REST Client Next allows you to send HTTP requests and view the responses in Visual Studio Code",
+  "version": "1.0.0",
+  "publisher": "tutilus",
+  "author": {
+    "name": "Aurélien",
+    "email": "au.tutilus@gmail.com"
+  },
+  "icon": "images/rest_icon.png",
+  "galleryBanner": {
+    "color": "#000000",
+    "theme": "dark"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tutilus/vscode-restclientnext/issues",
+    "email": "au.tutilus@gmail.com"
+  },
+  "homepage": "https://github.com/tutilus/vscode-restclientnext/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tutilus/vscode-restclientnext.git"
+  },
   "engines": {
     "vscode": "^1.106.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Snippets",
+    "Programming Languages"
   ],
-  "activationEvents": [],
+  "keywords": [
+    "REST",
+    "Http",
+    "GraphQL",
+    "multi-root ready"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
+    "languages": [
+      {
+        "id": "http",
+        "aliases": [
+          "HTTP",
+          "Http",
+          "http"
+        ],
+        "extensions": [
+          ".http",
+          ".rest"
+        ],
+        "firstLine": "^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE|LOCK|UNLOCK|PROPFIND|PROPPATCH|COPY|MOVE|MKCOL|MKCALENDAR|ACL|SEARCH)\\s+(.*?)HTTP/[0-9\\.]+$",
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "http",
+        "scopeName": "source.http",
+        "path": "./syntaxes/http.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "http",
+        "path": "./snippets/http.json"
+      }
+    ],
     "commands": [
       {
-        "command": "rest-client-next.helloWorld",
-        "title": "Hello World"
+        "command": "rest-client.request",
+        "title": "Send Request",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.rerun-last-request",
+        "title": "Rerun Last Request",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.cancel-request",
+        "title": "Cancel Request",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.switch-environment",
+        "title": "Switch Environment",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.history",
+        "title": "View Request History",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.clear-history",
+        "title": "Clear Request History",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.save-response",
+        "title": "Save Full Response",
+        "icon": {
+          "light": "./images/save.svg",
+          "dark": "./images/save-inverse.svg"
+        },
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.save-response-body",
+        "title": "Save Response Body",
+        "icon": {
+          "light": "./images/save-body.svg",
+          "dark": "./images/save-body-inverse.svg"
+        },
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.copy-response-body",
+        "title": "Copy Response Body",
+        "icon": {
+          "light": "./images/copy.svg",
+          "dark": "./images/copy-inverse.svg"
+        },
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.generate-codesnippet",
+        "title": "Generate Code Snippet",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.copy-codesnippet",
+        "title": "Copy Code Snippet",
+        "icon": {
+          "light": "./images/copy.svg",
+          "dark": "./images/copy-inverse.svg"
+        },
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.copy-request-as-curl",
+        "title": "Copy Request As cURL",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.clear-aad-token-cache",
+        "title": "Clear Azure AD Token Cache",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.clear-cookies",
+        "title": "Clear cookies",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.fold-response",
+        "title": "Fold Response",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.unfold-response",
+        "title": "Unfold Response",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.preview-html-response-body",
+        "title": "HTML Preview",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.show-raw-response",
+        "title": "Raw",
+        "category": "Rest Client"
+      },
+      {
+        "command": "rest-client.import-swagger",
+        "title": "Import from file",
+        "category": "Rest Client"
       }
-    ]
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "rest-client.fold-response",
+          "when": "httpResponsePreviewFocus"
+        },
+        {
+          "command": "rest-client.unfold-response",
+          "when": "httpResponsePreviewFocus"
+        },
+        {
+          "command": "rest-client.preview-html-response-body",
+          "when": "isHTMLResponse"
+        },
+        {
+          "command": "rest-client.show-raw-response",
+          "when": "isHTMLResponse"
+        },
+        {
+          "command": "rest-client.save-response",
+          "when": "httpResponsePreviewFocus"
+        },
+        {
+          "command": "rest-client.save-response-body",
+          "when": "httpResponsePreviewFocus"
+        },
+        {
+          "command": "rest-client.copy-response-body",
+          "when": "httpResponsePreviewFocus"
+        },
+        {
+          "command": "rest-client.copy-codesnippet",
+          "when": "codeSnippetPreviewFocus"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "httpResponsePreviewFocus",
+          "command": "rest-client.save-response",
+          "group": "navigation@1"
+        },
+        {
+          "when": "httpResponsePreviewFocus",
+          "command": "rest-client.save-response-body",
+          "group": "navigation@2"
+        },
+        {
+          "when": "httpResponsePreviewFocus",
+          "command": "rest-client.copy-response-body",
+          "group": "navigation@3"
+        },
+        {
+          "when": "httpResponsePreviewFocus",
+          "command": "rest-client.fold-response",
+          "group": "1_rest-client@1"
+        },
+        {
+          "when": "httpResponsePreviewFocus",
+          "command": "rest-client.unfold-response",
+          "group": "1_rest-client@2"
+        },
+        {
+          "when": "isHTMLResponse",
+          "command": "rest-client.preview-html-response-body",
+          "group": "1_rest-client@3"
+        },
+        {
+          "when": "isHTMLResponse",
+          "command": "rest-client.show-raw-response",
+          "group": "1_rest-client@4"
+        },
+        {
+          "when": "codeSnippetPreviewFocus",
+          "command": "rest-client.copy-codesnippet",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "rest-client.request",
+          "when": "editorTextFocus && editorLangId == http",
+          "group": "rest-client@1"
+        },
+        {
+          "command": "rest-client.generate-codesnippet",
+          "when": "editorTextFocus && editorLangId == http",
+          "group": "rest-client@2"
+        },
+        {
+          "command": "rest-client.copy-request-as-curl",
+          "when": "editorTextFocus && editorLangId == http",
+          "group": "rest-client@3"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "rest-client.request",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorTextFocus && editorLangId == 'http'"
+      },
+      {
+        "command": "rest-client.request",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorTextFocus && editorLangId == 'plaintext'"
+      },
+      {
+        "command": "rest-client.rerun-last-request",
+        "key": "ctrl+alt+l",
+        "mac": "cmd+alt+l",
+        "when": "editorTextFocus && editorLangId == 'http'"
+      },
+      {
+        "command": "rest-client.rerun-last-request",
+        "key": "ctrl+alt+l",
+        "mac": "cmd+alt+l",
+        "when": "editorTextFocus && editorLangId == 'plaintext'"
+      },
+      {
+        "command": "rest-client.rerun-last-request",
+        "key": "ctrl+alt+l",
+        "mac": "cmd+alt+l",
+        "when": "httpResponsePreviewFocus"
+      },
+      {
+        "command": "rest-client.cancel-request",
+        "key": "ctrl+alt+k",
+        "mac": "cmd+alt+k",
+        "when": "editorTextFocus && editorLangId == 'http'"
+      },
+      {
+        "command": "rest-client.cancel-request",
+        "key": "ctrl+alt+k",
+        "mac": "cmd+alt+k",
+        "when": "editorTextFocus && editorLangId == 'plaintext'"
+      },
+      {
+        "command": "rest-client.history",
+        "key": "ctrl+alt+h",
+        "mac": "cmd+alt+h"
+      },
+      {
+        "command": "rest-client.switch-environment",
+        "key": "ctrl+alt+e",
+        "mac": "cmd+alt+e"
+      },
+      {
+        "command": "rest-client.generate-codesnippet",
+        "key": "ctrl+alt+c",
+        "mac": "cmd+alt+c",
+        "when": "editorTextFocus && editorLangId == 'http'"
+      },
+      {
+        "command": "rest-client.generate-codesnippet",
+        "key": "ctrl+alt+c",
+        "mac": "cmd+alt+c",
+        "when": "editorTextFocus && editorLangId == 'plaintext'"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "REST Client",
+      "properties": {
+        "rest-client.followredirect": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Follow HTTP 3xx responses as redirects."
+        },
+        "rest-client.defaultHeaders": {
+          "type": "object",
+          "default": {
+            "User-Agent": "vscode-restclient"
+          },
+          "scope": "resource",
+          "description": "If particular headers are omitted in request headers, these will be added as headers for each request."
+        },
+        "rest-client.timeoutinmilliseconds": {
+          "type": "integer",
+          "default": 0,
+          "scope": "resource",
+          "description": "Timeout in milliseconds. 0 for infinity"
+        },
+        "rest-client.showResponseInDifferentTab": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Show response in different tab"
+        },
+        "rest-client.requestNameAsResponseTabTitle": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Show request name as the response tab title"
+        },
+        "rest-client.rememberCookiesForSubsequentRequests": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Remember cookies for subsequent requests"
+        },
+        "rest-client.enableTelemetry": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Send out anonymous usage data"
+        },
+        "rest-client.excludeHostsForProxy": {
+          "type": "array",
+          "default": [],
+          "scope": "resource",
+          "description": "Excluded hosts when using using proxy settings"
+        },
+        "rest-client.fontSize": {
+          "type": "number",
+          "scope": "resource",
+          "markdownDescription": "Controls the font size in pixels used in the response preview. When set to `0`, the value of `#editor.fontSize#` is used."
+        },
+        "rest-client.fontFamily": {
+          "type": "string",
+          "default": null,
+          "scope": "resource",
+          "description": "Controls the font family used in the response preview"
+        },
+        "rest-client.fontWeight": {
+          "type": "string",
+          "enum": [
+            "normal",
+            "bold",
+            "bolder",
+            "lighter",
+            "100",
+            "200",
+            "300",
+            "400",
+            "500",
+            "600",
+            "700",
+            "800",
+            "900"
+          ],
+          "scope": "resource",
+          "description": "Controls the font weight used in the response preview"
+        },
+        "rest-client.environmentVariables": {
+          "type": "object",
+          "default": {
+            "$shared": {}
+          },
+          "scope": "resource",
+          "markdownDescription": "Sets the environments and custom variables belongs to it, especially the special environment name '$shared' is used to create variables shared across all the individual environments (e.g., `{\"$shared\": {\"version\": \"v1\"}, \"production\": {\"host\": \"api.example.com\"}, \"sandbox\":{\"host\":\"sandbox.api.example.com\"}}`)",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "object",
+                "default": {},
+                "description": "Sets the custom variables belong to this environment",
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "Value of the custom variable"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "rest-client.mimeAndFileExtensionMapping": {
+          "type": "object",
+          "default": {},
+          "scope": "resource",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "markdownDescription": "Sets the custom mapping of mime type and file extension of saved response body (e.g., `{\"application/atom+xml\": \"xml\"}`)"
+        },
+        "rest-client.previewResponseInUntitledDocument": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Preview response in untitled document if set to true, otherwise displayed in html view"
+        },
+        "rest-client.oidcScopes": {
+          "type": "array",
+          "default": [],
+          "scope": "resource",
+          "description": "Scopes to be used by the OIDC client, default: [openid profile email]"
+        },
+        "rest-client.oidcCertificates": {
+          "type": "object",
+          "default": {},
+          "scope": "resource",
+          "description": "Certificate paths for Oidc callback server",
+          "pattern": "^(?!http(s?)://)",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "object",
+                "default": {},
+                "description": "Certifcate paths for Oidc callback server",
+                "properties": {
+                  "cert": {
+                    "type": "string",
+                    "description": "Absolute or relative path of Public x509 certificate"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Absolute or relative path of Private key"
+                  },
+                  "pfx": {
+                    "type": "string",
+                    "description": "Absolute or relative path of PKCS #12 certificate"
+                  },
+                  "passphrase": {
+                    "type": "string",
+                    "description": "[Optional] A string of passphrase for the private key or pfx"
+                  }
+                },
+                "dependencies": {
+                  "cert": [
+                    "key"
+                  ],
+                  "key": [
+                    "cert"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "rest-client.certificates": {
+          "type": "object",
+          "default": {},
+          "scope": "resource",
+          "description": "Certificate paths for different hosts. The path can be absolute path or relative path(relative to workspace or current http file)",
+          "pattern": "^(?!http(s?)://)",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "object",
+                "default": {},
+                "description": "Certifcate paths for specific host(e.g., foo.com, bar.org:8081), port is optional",
+                "properties": {
+                  "cert": {
+                    "type": "string",
+                    "description": "Absolute or relative path of Public x509 certificate"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Absolute or relative path of Private key"
+                  },
+                  "pfx": {
+                    "type": "string",
+                    "description": "Absolute or relative path of PKCS #12 certificate"
+                  },
+                  "passphrase": {
+                    "type": "string",
+                    "description": "[Optional] A string of passphrase for the private key or pfx"
+                  }
+                },
+                "dependencies": {
+                  "cert": [
+                    "key"
+                  ],
+                  "key": [
+                    "cert"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "rest-client.suppressResponseBodyContentTypeValidationWarning": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Suppress response body content type validation"
+        },
+        "rest-client.previewOption": {
+          "type": "string",
+          "enum": [
+            "full",
+            "headers",
+            "body",
+            "exchange"
+          ],
+          "enumDescriptions": [
+            "Response headers, body and status line",
+            "Response headers and status line",
+            "Response body only",
+            "Whole HTTP exchange including both request and response"
+          ],
+          "default": "full",
+          "scope": "resource",
+          "description": "Response preview output option"
+        },
+        "rest-client.disableHighlightResponseBodyForLargeResponse": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "Controls whether to highlight response body for response whose size is larger than limit specified by `rest-client.largeResponseSizeLimitInMB`"
+        },
+        "rest-client.disableAddingHrefLinkForLargeResponse": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "Controls whether to add href link in previewed response for response whose size is larger than limit specified by `rest-client.largeResponseSizeLimitInMB`"
+        },
+        "rest-client.largeResponseBodySizeLimitInMB": {
+          "type": "number",
+          "default": 5,
+          "minimum": 0,
+          "exclusiveMinimum": true,
+          "scope": "resource",
+          "markdownDescription": "Set the response body size threshold of MB to identify whether a response is a so-called 'large response', only used when `rest-client.disableHighlightResponseBodyForLargeResponse` and/or `rest-client.disableAddingHrefLinkForLargeResponse` is set to true"
+        },
+        "rest-client.previewColumn": {
+          "type": "string",
+          "enum": [
+            "current",
+            "beside"
+          ],
+          "markdownEnumDescriptions": [
+            "Preview in the column of current request file",
+            "previewing at the side of the current active column and the side direction depends on `workbench.editor.openSideBySideDirection` setting, either right or below the current editor column"
+          ],
+          "default": "beside",
+          "scope": "resource",
+          "description": "Response preview column option"
+        },
+        "rest-client.previewResponsePanelTakeFocus": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Preview response panel will take focus after receiving response."
+        },
+        "rest-client.formParamEncodingStrategy": {
+          "type": "string",
+          "enum": [
+            "automatic",
+            "never",
+            "always"
+          ],
+          "markdownEnumDescriptions": [
+            "Detecting encoding or not automatically and do the encoding job if necessary",
+            "Treat provided request body as is, no encoding job will be applied",
+            "Use for the scenario that `automatic` option not working properly, e.g., some special characters(`+`) are not encoded correctly"
+          ],
+          "default": "automatic",
+          "scope": "resource",
+          "markdownDescription": "Form param encoding strategy for request body of `x-www-form-urlencoded`."
+        },
+        "rest-client.addRequestBodyLineIndentationAroundBrackets": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "Add line indentation around brackets(`{}`, `<>`, `[]`) in request body when pressing enter."
+        },
+        "rest-client.decodeEscapedUnicodeCharacters": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Decode escaped unicode characters in response body."
+        },
+        "rest-client.logLevel": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warn",
+            "info",
+            "verbose"
+          ],
+          "default": "error",
+          "scope": "resource",
+          "description": "The verbosity of logging in the REST output panel"
+        },
+        "rest-client.enableSendRequestCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Enable/disable sending request CodeLens in request file"
+        },
+        "rest-client.enableCustomVariableReferencesCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Enable/disable custom variable references CodeLens in request file"
+        },
+        "rest-client.useContentDispositionFilename": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Enable/disable using filename from 'content-disposition' header, when saving response body"
+        }
+      }
+    },
+    "configurationDefaults": {
+      "[http]": {
+        "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": true
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
@@ -31,16 +710,54 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.109.0",
+    "@types/aws4": "^1.11.6",
+    "@types/fs-extra": "^11.0.4",
+    "@types/js-yaml": "^4.0.9",
+    "@types/jws": "^3.2.11",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.54.0",
-    "eslint": "^9.39.2",
-    "typescript": "^5.9.3",
-    "ts-loader": "^9.5.4",
-    "webpack": "^5.104.1",
-    "webpack-cli": "^6.0.1",
+    "@types/node-fetch": "^2.6.13",
+    "@types/sanitize-html": "^2.16.0",
+    "@types/vscode": "^1.106.0",
     "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.39.2",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@szmarczak/http-timer": "^5.0.1",
+    "adal-node": "^0.2.4",
+    "applicationinsights": "^3.13.0",
+    "aws-amplify": "^6.16.2",
+    "aws4": "^1.13.2",
+    "code-highlight-linenums": "^0.2.1",
+    "combined-stream": "^1.0.8",
+    "content-disposition": "^1.0.1",
+    "dayjs": "^1.11.19",
+    "dotenv": "^17.3.1",
+    "encodeurl": "^2.0.0",
+    "filesize": "^11.0.13",
+    "fs-extra": "^11.3.3",
+    "got": "^14.6.6",
+    "highlight.js": "^11.11.1",
+    "http-proxy-agent": "^7.0.2",
+    "https-proxy-agent": "^7.0.6",
+    "httpsnippet": "^2.0.0",
+    "iconv-lite": "^0.7.2",
+    "js-yaml": "^4.1.1",
+    "jsonc-parser": "^3.3.1",
+    "jsonpath-plus": "^10.4.0",
+    "mime-types": "^3.0.2",
+    "node-fetch": "^3.3.2",
+    "pretty-data": "^0.40.0",
+    "sanitize-html": "^2.17.1",
+    "tough-cookie": "^6.0.0",
+    "tough-cookie-file-store": "^3.3.0",
+    "xmldom": "^0.6.0",
+    "xpath": "^0.0.34"
   }
 }

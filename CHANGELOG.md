@@ -6,4 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- Initial release
+## 1.0.0 (2025/02/22)
+
+- All dependencies updated
+- Initial release based on version 0.25.1 (2022/07/06) - master
+

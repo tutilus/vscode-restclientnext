@@ -1,71 +1,153 @@
-# rest-client-next README
+# REST Client Next
 
-This is the README for your extension "rest-client-next". After writing up a brief description, we recommend including the following sections.
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/tutilus.rest-client-next?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=tutilus.rest-client-next) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+REST Client Next lets you send HTTP requests and view responses directly
+inside VS Code --- no external tools required.
+
+A modernized fork of the popular REST Client extension for Visual Studio
+Code of [Huachao's REST Client](https://github.com/Huachao/vscode-restclient). 
+
+------------------------------------------------------------------------
+
+## Table of contents
+
+- [REST Client Next](#rest-client-next)
+  - [Table of contents](#table-of-contents)
+  - [Features](#features)
+  - [Quick Example](#quick-example)
+  - [Installation](#installation)
+  - [Build \& Run locally](#build--run-locally)
+  - [Documentation](#documentation)
+  - [Basic Example with variables](#basic-example-with-variables)
+  - [Why REST Client Next?](#why-rest-client-next)
+  - [License](#license)
+  - [Change Log](#change-log)
+  - [Special Thanks](#special-thanks)
+  - [Feedback](#feedback)
+
+------------------------------------------------------------------------
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+-   Send HTTP requests from `.http` and `.rest` files
+-   Environment variables support
+-   Authentication:
+    -   Basic
+    -   Digest
+    -   AWS Signature v4
+    -   AWS Cognito
+-   GraphQL requests
+-   cURL import
+-   Code snippet generation
+-   Cookie persistence
+-   Proxy support
+-   Request history
+-   SSL client certificates
 
-For example if there is an image subfolder under your extension project workspace:
+## Quick Example
 
-\!\[feature X\]\(images/feature-x.png\)
+Create a file named `test.http`:
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+``` http
+GET https://httpbin.org/get
+```
 
-## Requirements
+Click **Send Request** above the request line.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+------------------------------------------------------------------------
 
-## Extension Settings
+## Installation
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Install from the VS Code Marketplace\
+Search for: **REST Client Next**
 
-For example:
+------------------------------------------------------------------------
 
-This extension contributes the following settings:
+## Build & Run locally
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+To build and run the extension locally for development:
 
-## Known Issues
+```bash
+npm install
+# build once
+npm run compile
+# or watch for changes during development
+npm run watch
+```
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+To package a production build:
 
-## Release Notes
+```bash
+npm run package
+```
 
-Users appreciate release notes as you update your extension.
+------------------------------------------------------------------------
 
-### 1.0.0
+## Documentation
 
-Initial release of ...
+Full documentation is available in the project Wiki:
 
-### 1.0.1
+👉 https://github.com/tutilus/vscode-restclientnext/wiki
 
-Fixed issue #.
+------------------------------------------------------------------------
 
-### 1.1.0
+## Basic Example with variables
 
-Added features X, Y, and Z.
+``` http
+```http
+@baseUrl = https://example.com
+###
 
----
+GET {{baseUrl}}/comments/1 HTTP/1.1
 
-## Following extension guidelines
+###
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+GET {{baseUrl}}/topics/1 HTTP/1.1
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+###
 
-## Working with Markdown
+POST {{baseUrl}}/comments HTTP/1.1
+content-type: application/json
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+{
+    "name": "sample",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
+```
+```
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+------------------------------------------------------------------------
 
-## For more information
+## Basic Authentication Example
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+``` http
+GET https://httpbin.org/basic-auth/user/pass
+Authorization: Basic user pass
+```
 
-**Enjoy!**
+------------------------------------------------------------------------
+
+## Why REST Client Next?
+
+There is already an excellent fork called [http-yac](https://github.com/anweber/vscode-httpyac), but my goal with REST Client Next is to preserve the simplicity of the original REST Client and continue using its lightweight approach while modernizing it for recent VS Code versions. 
+
+So my main goal is:
+
+- Updated dependencies
+- Modern TypeScript support
+- Compatible with latest VS Code versions
+- Fix the main issues
+- Probably add functionality as long as the compatibility is preserved
+
+## License
+[MIT License](LICENSE)
+
+## Change Log
+See CHANGELOG [here](CHANGELOG.md)
+
+## Special Thanks
+All the amazing [contributors](https://github.com/tutilus/vscode-restclientnext/graphs/contributors)❤️
+
+## Feedback
+Please provide feedback through the [GitHub Issue](https://github.com/tutilus/vscode-restclientnext/issues) system, or fork the repository and submit PR.
