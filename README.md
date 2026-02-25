@@ -5,8 +5,8 @@
 REST Client Next lets you send HTTP requests and view responses directly
 inside VS Code --- no external tools required.
 
-A modernized fork of the popular REST Client extension for Visual Studio
-Code of [Huachao's REST Client](https://github.com/Huachao/vscode-restclient). 
+
+REST Client Next continues the maintenance of the popular [REST Client](https://github.com/Huachao/vscode-restclient) extension for Visual Studio Code, originally created by Huachao. This project focuses on keeping dependencies up to date while preserving compatibility and ensuring a seamless experience for existing users. 
 
 ------------------------------------------------------------------------
 
