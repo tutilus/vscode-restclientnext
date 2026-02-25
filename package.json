@@ -752,7 +752,7 @@
     "highlight.js": "^11.11.1",
     "http-proxy-agent": "^7.0.2",
     "https-proxy-agent": "^7.0.6",
-    "httpsnippet": "^2.0.0",
+    "httpsnippet": "^3.0.1",
     "iconv-lite": "^0.7.2",
     "js-yaml": "^4.1.1",
     "jsonc-parser": "^3.3.1",
