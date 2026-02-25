@@ -154,33 +154,58 @@ export class HttpClient {
             options.cookieJar = this.cookieStore;
         }
 
-        // TODO: refactor auth
         const authorization = getHeader(options.headers!, 'Authorization') as string | undefined;
         if (authorization) {
             const [scheme, user, ...args] = authorization.split(/\s+/);
             const normalizedScheme = scheme.toLowerCase();
-            if (args.length > 0) {
-                const pass = args.join(' ');
-                if (normalizedScheme === 'basic') {
-                    removeHeader(options.headers!, 'Authorization');
-                    options.username = user;
-                    options.password = pass;
-                } else if (normalizedScheme === 'digest') {
-                    removeHeader(options.headers!, 'Authorization');
-                    options.hooks!.afterResponse!.push(digest(user, pass));
-                } else if (normalizedScheme === 'aws') {
-                    removeHeader(options.headers!, 'Authorization');
-                    options.hooks!.beforeRequest!.push(awsSignature(authorization));
-                } else if (normalizedScheme === 'cognito') {
-                    removeHeader(options.headers!, 'Authorization');
-                   options.hooks!.beforeRequest!.push(await awsCognito(authorization));
-                }
-            } else if (normalizedScheme === 'basic' && user.includes(':')) {
-                removeHeader(options.headers!, 'Authorization');
-                const [username, password] = user.split(':');
-                options.username = username;
-                options.password = password;
+
+            switch (normalizedScheme) {
+                case 'basic':
+                    // No password means user is basé64 encoded user:password
+                    if (args.length > 0) {
+                        removeHeader(options.headers!, 'Authorization');
+                        // Issue #8 : Check if the username contains ":", if yes, split it into username and password
+                        var username = user;
+                        var password = args.join(' ');
+                        if (user.includes(':')) {
+                            const [userPart, ...firstChunkPass] = user.split(':');
+                            username = userPart;
+                            password = [...firstChunkPass, ...args].join(' ');
+                        }
+                        options.username = username;
+                        options.password = password;
+                    }
+                    break;
+                case 'digest':
+                    if (args.length > 0) {
+                        const pass = args.join(' ');
+                        removeHeader(options.headers!, 'Authorization');
+                        options.hooks!.afterResponse!.push(digest(user, pass));
+                    }
+                    break;
+                case 'bearer':
+                    // Keep the Authorization header as is.
+                    break;
+                case 'aws':
+                    if (args.length >= 3) {
+                       removeHeader(options.headers!, 'Authorization');
+                        options.hooks!.beforeRequest!.push(awsSignature(authorization));
+                    } else {
+                        window.showWarningMessage(`Invalid AWS authorization header, the format should be "Authorization: AWS [region:<region>] [service:<service>] [token:<sessionToken>] <accessKeyId> <secretAccessKey>". The Authorization header will be sent as is.`);
+                    }
+                    break;
+                case 'cognito':
+                    if (args.length >= 4) {
+                       removeHeader(options.headers!, 'Authorization');
+                       options.hooks!.beforeRequest!.push(await awsCognito(authorization));
+                    } else {
+                        window.showWarningMessage(`Invalid Cognito authorization header, the format should be "Authorization: Cognito [...] <username> <password> <userPoolId> <clientId>". The Authorization header will be sent as is.`);
+                    }
+                    break;
+                default:
+                    window.showWarningMessage(`Authorization scheme ${scheme} is not supported, the Authorization header will be sent as is.`);
             }
+ 
         }
 
         // set certificate
