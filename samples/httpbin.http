@@ -1,6 +1,7 @@
 # ==== Examples with httpbin.org ====
 # httpbin.org is a simple HTTP Request & Response Service.
 @host = https://httpbin.org
+@var1 = variableValue
 
 # ==== GET ====
 ### A simple GET request.
@@ -16,3 +17,25 @@ GET {{host}}/cookies/set?foo=bar
 
 ### Check cookies
 GET {{host}}/cookies
+
+# ==== Issue 3 - change to @xmldom/xmldom ====
+### POST with XML body.
+# @name testXml
+POST {{host}}/post
+Content-Type: application/xml
+
+<note>
+  <to>User</to>
+  <from>Tester</from>
+  <heading>Reminder</heading>
+  <body>This is a test for {{var1}}.</body>
+</note>
+
+### GET Xml Document
+# @name testGetXml
+GET {{host}}/xml
+Accept: application/xml
+
+### Extracting data from the XML response of the previous request and using it in a new request.
+GET {{host}}/get
+X-User-Id: {{testGetXml.response.body.asXml.//slideshow/slide[1]/title}}
