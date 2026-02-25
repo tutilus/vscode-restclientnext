@@ -719,7 +719,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/jws": "^3.2.11",
     "@types/mocha": "^10.0.10",
-    "@types/node": "22.x",
+    "@types/node": "25.x",
     "@types/node-fetch": "^2.6.13",
     "@types/sanitize-html": "^2.16.0",
     "@types/vscode": "^1.106.0",
