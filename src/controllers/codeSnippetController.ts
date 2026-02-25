@@ -6,10 +6,8 @@ import { IRestClientSettings, RequestSettings, RestClientSettings } from '../mod
 import { HARCookie, HARHeader, HARHttpRequest, HARPostData } from '../models/harHttpRequest';
 import { HttpRequest } from '../models/httpRequest';
 import { RequestParserFactory } from '../models/requestParserFactory';
-import { trace } from "../utils/decorator";
 import { base64 } from '../utils/misc';
 import { Selector } from '../utils/selector';
-import { Telemetry } from '../utils/telemetry';
 import { getCurrentTextDocument } from '../utils/workspaceUtility';
 import { CodeSnippetWebview } from '../views/codeSnippetWebview';
 
@@ -95,7 +93,6 @@ export class CodeSnippetController {
             } else if (quickPick.step === 2) {
                 const { key: ck, title: ct } = selectedItem as any as CodeSnippetClient;
                 const { key: tk, title: tt } = target!;
-                Telemetry.sendEvent('Generate Code Snippet', { 'target': target!.key, 'client': ck });
                 const result = snippet.convert(tk, ck);
 
                 quickPick.hide();
@@ -110,7 +107,6 @@ export class CodeSnippetController {
         quickPick.show();
     }
 
-    @trace('Copy Request As cURL')
     public async copyAsCurl() {
         const editor = window.activeTextEditor;
         const document = getCurrentTextDocument();
