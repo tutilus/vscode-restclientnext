@@ -6,6 +6,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## 1.1.0 (2025/02/25)
+* __Bug Fix__: [xmldom deprecated](https://github.com/tutilus/vscode-restclientnext/issues/3)
+* __Bug_Fix__: [basic auth passphrase only works without ':'](https://github.com/tutilus/vscode-restclientnext/issues/8)
+* __Feature__: [Remove telemetry](https://github.com/tutilus/vscode-restclientnext/issues/9)
+* __Feature__: Update logo
+* __Maintenance__: [Add CodeQL](https://github.com/tutilus/vscode-restclientnext/pull/12)
+* __Maintenance__: Add dependbot, Git Actions to publish
+
 ## 1.0.0 (2025/02/22)
 
 - All dependencies updated
