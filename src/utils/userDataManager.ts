@@ -5,9 +5,10 @@ import { HistoricalHttpRequest } from '../models/httpRequest';
 import { JsonFileUtility } from './jsonFileUtility';
 
 const restClientDir = 'rest-client';
-const rootPath = process.env.VSC_REST_CLIENT_HOME !== undefined
-    ? process.env.VSC_REST_CLIENT_HOME
-    : path.join(os.homedir(), `.${restClientDir}`);
+const rootPath =
+    process.env.VSC_REST_CLIENT_HOME !== undefined
+        ? process.env.VSC_REST_CLIENT_HOME
+        : path.join(os.homedir(), `.${restClientDir}`);
 
 function getCachePath(): string {
     if (fs.existsSync(rootPath)) {
@@ -34,7 +35,6 @@ function getStatePath(): string {
 }
 
 export class UserDataManager {
-
     private static readonly historyItemsMaxCount = 50;
 
     private static readonly cachePath: string = getCachePath();
@@ -52,6 +52,10 @@ export class UserDataManager {
         return path.join(this.statePath, 'environment.json');
     }
 
+    private static get runtimeSharedFilePath() {
+        return path.join(this.statePath, 'runtime-shared.json');
+    }
+
     private static get responseSaveFolderPath() {
         return path.join(this.cachePath, 'responses/raw');
     }
@@ -65,15 +69,22 @@ export class UserDataManager {
             fs.ensureFile(this.historyFilePath),
             fs.ensureFile(this.cookieFilePath),
             fs.ensureFile(this.environmentFilePath),
+            fs.ensureFile(this.runtimeSharedFilePath),
             fs.ensureDir(this.responseSaveFolderPath),
-            fs.ensureDir(this.responseBodySaveFolderPath)
+            fs.ensureDir(this.responseBodySaveFolderPath),
         ]);
     }
 
     public static async addToRequestHistory(request: HistoricalHttpRequest) {
-        const requests = await JsonFileUtility.deserializeFromFile<HistoricalHttpRequest[]>(this.historyFilePath, []);
+        const requests = await JsonFileUtility.deserializeFromFile<HistoricalHttpRequest[]>(
+            this.historyFilePath,
+            []
+        );
         requests.unshift(request);
-        await JsonFileUtility.serializeToFile(this.historyFilePath, requests.slice(0, this.historyItemsMaxCount));
+        await JsonFileUtility.serializeToFile(
+            this.historyFilePath,
+            requests.slice(0, this.historyItemsMaxCount)
+        );
     }
 
     public static clearRequestHistory(): Promise<void> {
@@ -90,6 +101,14 @@ export class UserDataManager {
 
     public static setEnvironment(item: unknown) {
         return JsonFileUtility.serializeToFile(this.environmentFilePath, item);
+    }
+
+    public static getRuntimeSharedVariables(): Promise<{ [key: string]: string }> {
+        return JsonFileUtility.deserializeFromFile(this.runtimeSharedFilePath, {});
+    }
+
+    public static setRuntimeSharedVariables(variables: { [key: string]: string }) {
+        return JsonFileUtility.serializeToFile(this.runtimeSharedFilePath, variables);
     }
 
     public static getResponseSaveFilePath(fileName: string) {
