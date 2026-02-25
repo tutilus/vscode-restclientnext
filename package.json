@@ -730,6 +730,7 @@
   },
   "dependencies": {
     "@szmarczak/http-timer": "^5.0.1",
+    "@xmldom/xmldom": "^0.8.11",
     "adal-node": "^0.2.4",
     "applicationinsights": "^3.13.0",
     "aws-amplify": "^6.16.2",
@@ -757,7 +758,6 @@
     "sanitize-html": "^2.17.1",
     "tough-cookie": "^6.0.0",
     "tough-cookie-file-store": "^3.3.0",
-    "xmldom": "^0.6.0",
     "xpath": "^0.0.34"
   }
 }
