@@ -23,6 +23,7 @@ REST Client Next continues the maintenance of the popular [REST Client](https://
   - [Why REST Client Next?](#why-rest-client-next)
   - [License](#license)
   - [Change Log](#change-log)
+  - [Credits](#credits)
   - [Special Thanks](#special-thanks)
   - [Feedback](#feedback)
 
@@ -145,6 +146,12 @@ So my main goal is:
 
 ## Change Log
 See CHANGELOG [here](CHANGELOG.md)
+
+## Credits
+
+This project includes contributions originally made to the upstream repository:
+
+Chore Fix typos — originally proposed by @noritaka1166 (PR #1380)
 
 ## Special Thanks
 All the amazing [contributors](https://github.com/tutilus/vscode-restclientnext/graphs/contributors)❤️
