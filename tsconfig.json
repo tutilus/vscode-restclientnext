@@ -4,7 +4,8 @@
     "moduleResolution": "nodenext",
     "target": "ES2022",
     "lib": [
-        "ES2022"
+        "ES2022",
+        "DOM"
     ],
     "sourceMap": true,
     "outDir": "dist",
@@ -15,7 +16,7 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
-//    "esModuleInterop": true,
+    "skipLibCheck": true,
     "experimentalDecorators": true,
     "incremental": true
   },

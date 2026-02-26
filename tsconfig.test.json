@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "skipLibCheck": true,
+    "suppressImplicitAnyIndexErrors": true
+  },
+  "include": [
+    "src/**/*",
+    "node_modules/@types/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "out"
+  ]
+}
