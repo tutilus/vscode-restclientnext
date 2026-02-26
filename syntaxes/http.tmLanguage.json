@@ -291,7 +291,7 @@
           "name": "comment.line.double-slash.http"
         },
         {
-          "match": "^\\s*\\#{1,}\\s+(?:((@)set)\\s+([A-Za-z_]\\w*)\\s*=\\s*(response\\.(?:headers|body)\\..+)\\s*)$",
+          "match": "^\\s*\\#{1,}\\s+(?:((@)set)\\s+([A-Za-z_]\\w*)\\s*=\\s*(response\\.(?:headers|body)\\..+?)\\s*)$",
           "captures": {
             "1": {
               "name": "entity.other.attribute-name"
@@ -309,7 +309,7 @@
           "name": "comment.line.sharp.http"
         },
         {
-          "match": "^\\s*\\/{2,}\\s+(?:((@)set)\\s+([A-Za-z_]\\w*)\\s*=\\s*(response\\.(?:headers|body)\\..+)\\s*)$",
+          "match": "^\\s*\\/{2,}\\s+(?:((@)set)\\s+([A-Za-z_]\\w*)\\s*=\\s*(response\\.(?:headers|body)\\..+?)\\s*)$",
           "captures": {
             "1": {
               "name": "entity.other.attribute-name"
