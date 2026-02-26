@@ -67,7 +67,7 @@ export class HttpCompletionItemProvider implements CompletionItemProvider {
         const line = document.lineAt(position.line).text;
         const beforeCursor = line.substring(0, position.character);
 
-        const targetMatch = beforeCursor.match(/^\s*(?:#|\/{2})\s*@set\s+([A-Za-z_]\w*)?$/);
+        const targetMatch = beforeCursor.match(/^\s*(?:#|\/{2})\s*@set\s+([A-Za-z_]\w*)?$/i);
         if (targetMatch) {
             const prefix = targetMatch[1] ?? '';
             const sharedVariables = this.getSharedVariableNames();
@@ -77,7 +77,7 @@ export class HttpCompletionItemProvider implements CompletionItemProvider {
             );
 
             return sharedVariables
-                .filter(name => name.startsWith(prefix))
+                .filter(name => name.toLowerCase().startsWith(prefix.toLowerCase()))
                 .map(name => {
                     const item = new CompletionItem(name, CompletionItemKind.Variable);
                     item.detail = '$shared variable';
@@ -87,7 +87,9 @@ export class HttpCompletionItemProvider implements CompletionItemProvider {
                 });
         }
 
-        const sourceMatch = beforeCursor.match(/^\s*(?:#|\/{2})\s*@set\s+[A-Za-z_]\w*\s*=\s*(.*)$/);
+        const sourceMatch = beforeCursor.match(
+            /^\s*(?:#|\/{2})\s*@set\s+[A-Za-z_]\w*\s*=\s*(.*)$/i
+        );
         if (sourceMatch) {
             const prefix = sourceMatch[1] ?? '';
             const range = new Range(
@@ -194,7 +196,7 @@ export class HttpCompletionItemProvider implements CompletionItemProvider {
 
             const options = ['response.headers.', 'response.body.'];
             return options
-                .filter(option => option.startsWith(prefix))
+                .filter(option => option.toLowerCase().startsWith(prefix.toLowerCase()))
                 .map(option => {
                     const item = new CompletionItem(option, CompletionItemKind.Field);
                     item.detail = '@set source';

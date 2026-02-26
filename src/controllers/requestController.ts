@@ -262,7 +262,6 @@ export class RequestController {
             SystemSettings.Instance.environmentVariables[
                 EnvironmentController.sharedEnvironmentName
             ] ?? {};
-        const runtimeSharedVariables = await UserDataManager.getRuntimeSharedVariables();
         const updates: { [key: string]: string } = {};
 
         for (const directive of directives) {
@@ -297,10 +296,10 @@ export class RequestController {
         }
 
         if (Object.keys(updates).length > 0) {
-            await UserDataManager.setRuntimeSharedVariables({
-                ...runtimeSharedVariables,
+            await UserDataManager.updateRuntimeSharedVariables(variables => ({
+                ...variables,
                 ...updates,
-            });
+            }));
         }
     }
 

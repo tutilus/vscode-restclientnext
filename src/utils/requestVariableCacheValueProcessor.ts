@@ -15,7 +15,7 @@ const { JSONPath } = require('jsonpath-plus');
 
 const requestVariablePathRegex: RegExp =
     /^(\w+)(?:\.(request|response)(?:\.(body|headers)(?:\.(.*))?)?)?$/;
-const responseVariablePathRegex: RegExp = /^response\.(body|headers)\.(.*)$/;
+const responseVariablePathRegex: RegExp = /^response\.(body|headers)\.(.*)$/i;
 
 type HttpEntity = 'request' | 'response';
 type HttpPart = 'headers' | 'body';

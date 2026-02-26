@@ -36,6 +36,8 @@ function getStatePath(): string {
 
 export class UserDataManager {
     private static readonly historyItemsMaxCount = 50;
+    private static runtimeSharedVariablesCache: { [key: string]: string } | undefined;
+    private static runtimeSharedWriteQueue: Promise<void> = Promise.resolve();
 
     private static readonly cachePath: string = getCachePath();
     private static readonly statePath: string = getStatePath();
@@ -104,11 +106,39 @@ export class UserDataManager {
     }
 
     public static getRuntimeSharedVariables(): Promise<{ [key: string]: string }> {
-        return JsonFileUtility.deserializeFromFile(this.runtimeSharedFilePath, {});
+        if (this.runtimeSharedVariablesCache) {
+            return Promise.resolve({ ...this.runtimeSharedVariablesCache });
+        }
+
+        return JsonFileUtility.deserializeFromFile<{ [key: string]: string }>(
+            this.runtimeSharedFilePath,
+            {}
+        ).then(variables => {
+            this.runtimeSharedVariablesCache = { ...variables };
+            return { ...variables };
+        });
     }
 
     public static setRuntimeSharedVariables(variables: { [key: string]: string }) {
+        this.runtimeSharedVariablesCache = { ...variables };
         return JsonFileUtility.serializeToFile(this.runtimeSharedFilePath, variables);
+    }
+
+    public static updateRuntimeSharedVariables(
+        updater: (variables: { [key: string]: string }) => { [key: string]: string }
+    ): Promise<void> {
+        this.runtimeSharedWriteQueue = this.runtimeSharedWriteQueue
+            .catch(() => undefined)
+            .then(async () => {
+                const variables = await JsonFileUtility.deserializeFromFile<{
+                    [key: string]: string;
+                }>(this.runtimeSharedFilePath, {});
+                const updatedVariables = updater(variables);
+                this.runtimeSharedVariablesCache = { ...updatedVariables };
+                await JsonFileUtility.serializeToFile(this.runtimeSharedFilePath, updatedVariables);
+            });
+
+        return this.runtimeSharedWriteQueue;
     }
 
     public static getResponseSaveFilePath(fileName: string) {
