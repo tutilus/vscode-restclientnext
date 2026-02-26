@@ -66,8 +66,7 @@ export class EnvironmentVariableProvider implements HttpVariableProvider {
             currentEnvironmentVariables
         );
         return {
-            ...sharedEnvironmentVariables,
-            ...runtimeSharedVariables,
+            ...sharedWithRuntime,
             ...currentEnvironmentVariables,
         };
     }
