@@ -39,4 +39,5 @@ export const enum ResolveWarningMessage {
     UnsupportedBodyContentType = 'Only JSON and XML response/request body is supported to query the result',
     InvalidJSONPath = 'Invalid JSONPath query',
     InvalidXPath = 'Invalid XPath query',
+    IncorrectFakerVariableFormat = 'Faker system variable should follow format "{{$faker.module.method [params]}}"',
 }
