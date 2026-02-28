@@ -38,6 +38,9 @@ REST Client Next continues the maintenance of the popular [REST Client](https://
     -   Digest
     -   AWS Signature v4
     -   AWS Cognito
+    -   Azure AD v1 (deprecated since 2023, use v2) -- REMOVED
+    -   Azure AD v2
+    -   OIDC
 -   GraphQL requests
 -   cURL import
 -   Code snippet generation

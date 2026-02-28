@@ -746,7 +746,6 @@
   "dependencies": {
     "@szmarczak/http-timer": "^5.0.1",
     "@xmldom/xmldom": "^0.8.11",
-    "adal-node": "^0.2.4",
     "aws-amplify": "^6.16.2",
     "aws4": "^1.13.2",
     "code-highlight-linenums": "^0.2.1",
