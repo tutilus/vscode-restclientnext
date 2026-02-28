@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { Clipboard, commands, env, QuickPickItem, QuickPickOptions, TextDocument, Uri, window } from 'vscode';
+import { Clipboard, env, TextDocument } from 'vscode';
 import * as Constants from '../../common/constants';
 import { EnvironmentController } from '../../controllers/environmentController';
 import { ResolveErrorMessage, ResolveWarningMessage } from '../../models/httpVariableResolveResult';
