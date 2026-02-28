@@ -133,12 +133,6 @@ export class HttpElementFactory {
             new SnippetString(`{{$\${name:${Constants.DotenvVariableName.slice(1)}} \${2:.env variable name}}}`)
         ));
         originalElements.push(new HttpElement(
-            Constants.AzureActiveDirectoryVariableName,
-            ElementType.SystemVariable,
-            null,
-            Constants.AzureActiveDirectoryDescription,
-            new SnippetString(`{{$\${name:${Constants.AzureActiveDirectoryVariableName.slice(1)}}}}`)));
-        originalElements.push(new HttpElement(
                 Constants.OidcVariableName,
                 ElementType.SystemVariable,
                 null,
