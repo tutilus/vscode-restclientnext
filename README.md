@@ -38,7 +38,7 @@ REST Client Next continues the maintenance of the popular [REST Client](https://
     -   Digest
     -   AWS Signature v4
     -   AWS Cognito
-    -   Azure AD v1 (deprecated since 2023, use v2) -- REMOVED
+    -   ~~Azure AD v1~~ (deprecated since 2023, use v2) -- REMOVED
     -   Azure AD v2
     -   OIDC
 -   GraphQL requests
@@ -154,7 +154,10 @@ See CHANGELOG [here](CHANGELOG.md)
 
 This project includes contributions originally made to the upstream repository:
 
-Chore Fix typos — originally proposed by @noritaka1166 (PR #1380)
+| Pull Request                                                         | Title            | Version |
+|----------------------------------------------------------------------|------------------|
+| [PR #1380](https://github.com/Huachao/vscode-restclient/pull/1380) | Chore: Fix typos | V1.2.0 |
+| [PR #1381](https://github.com/Huachao/vscode-restclient/pull/1381) | Chore: Update uuid from v4 to v13 | V1.2.0 |
 
 ## Special Thanks
 All the amazing [contributors](https://github.com/tutilus/vscode-restclientnext/graphs/contributors)❤️
