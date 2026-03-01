@@ -13,6 +13,7 @@ import { AadV2TokenProvider } from '../aadV2TokenProvider';
 import { CALLBACK_PORT, OidcClient } from '../auth/oidcClient';
 import { EnvironmentVariableProvider } from './environmentVariableProvider';
 import { HttpVariable, HttpVariableContext, HttpVariableProvider } from './httpVariableProvider';
+import { faker } from '@faker-js/faker';
 
 dayjs.extend(utc);
 
@@ -32,6 +33,7 @@ export class SystemVariableProvider implements HttpVariableProvider {
     private readonly dotenvRegex: RegExp = new RegExp(`\\${Constants.DotenvVariableName}\\s(\\%)?([\\w-.]+)`);
 
     private readonly oidcRegex: RegExp = new RegExp(`\\s*(\\${Constants.OidcVariableName})(?:\\s+(${Constants.OIdcForceNewOption}))?(?:\\s*clientId:([\\w|.|:|/|_|-]+))?(?:\\s*issuer:([\\w|.|:|/]+))?(?:\\s*callbackDomain:([\\w|.|:|/|_|-]+))?(?:\\s*callbackPort:([\\w|_]+))?(?:\\s*authorizeEndpoint:([\\w|.|:|/|_|-]+))?(?:\\s*tokenEndpoint:([\\w|.|:|/|_|-]+))?(?:\\s*scopes:([\\w|.|:|/|_|-]+))?(?:\\s*audience:([\\w|.|:|/|_|-]+))?`);
+    private readonly fakerRegex: RegExp = new RegExp(`\\${Constants.FakerVariableName}\\s+([\\w.]+)(?:\\s+(.*))?`);
 
     private readonly innerSettingsEnvironmentVariableProvider: EnvironmentVariableProvider =  EnvironmentVariableProvider.Instance;
     private static _instance: SystemVariableProvider;
@@ -55,22 +57,50 @@ export class SystemVariableProvider implements HttpVariableProvider {
         this.registerDotenvVariable();
         this.registerOidcTokenVariable();
         this.registerAadV2TokenVariable();
+        this.registerFakerVariable();
     }
 
     public readonly type: VariableType = VariableType.System;
 
     public async has(name: string, _document: TextDocument): Promise<boolean> {
         const [variableName] = name.split(' ').filter(Boolean);
-        return this.resolveFuncs.has(variableName);
+        
+        // Check for exact match first
+        if (this.resolveFuncs.has(variableName)) {
+            return true;
+        }
+        
+        // For compound variables like $faker.internet.email, check if it starts with a registered key
+        for (const key of this.resolveFuncs.keys()) {
+            if (variableName.startsWith(key + '.')) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public async get(name: string, document: TextDocument, context: HttpVariableContext): Promise<HttpVariable> {
         const [variableName] = name.split(' ').filter(Boolean);
+        
+        // Find the matching resolver function key
+        let resolverKey = variableName;
         if (!this.resolveFuncs.has(variableName)) {
-            return { name: variableName, error: ResolveErrorMessage.SystemVariableNotExist };
+            // For compound variables like $faker.internet.email, find the base key
+            let found = false;
+            for (const key of this.resolveFuncs.keys()) {
+                if (variableName.startsWith(key + '.')) {
+                    resolverKey = key;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return { name: variableName, error: ResolveErrorMessage.SystemVariableNotExist };
+            }
         }
 
-        const result = await this.resolveFuncs.get(variableName)!(name, document, context);
+        const result = await this.resolveFuncs.get(resolverKey)!(name, document, context);
         return { name: variableName, ...result };
     }
 
@@ -235,6 +265,42 @@ export class SystemVariableProvider implements HttpVariableProvider {
                 return {value: token};
             });
     }
+
+    private registerFakerVariable() {
+        this.resolveFuncs.set(Constants.FakerVariableName, async name => {
+            const groups = this.fakerRegex.exec(name);
+            if (groups !== null) {
+                const [, path, paramsStr] = groups;
+                try {
+                    // Navigate to the faker method
+                    const parts = path.split('.');
+                    let target: any = faker;
+                    for (const part of parts) {
+                        target = target[part];
+                        if (!target) {
+                            return { warning: `Faker method not found: ${path}` };
+                        }
+                    }
+                    
+                    // Parse and call with parameters
+                    if (typeof target === 'function') {
+                        const params = paramsStr ? paramsStr.trim().split(/\s+/).map(p => {
+                            const num = Number(p);
+                            return isNaN(num) ? p : num;
+                        }) : [];
+                        const result = target(...params);
+                        return { value: String(result) };
+                    } else {
+                        return { value: String(target) };
+                    }
+                } catch (error) {
+                    return { warning: `Faker error: ${error instanceof Error ? error.message : "Unknown error"}` };
+                }
+            }
+            return { warning: ResolveWarningMessage.IncorrectFakerVariableFormat };
+        });
+    }
+
     private async resolveSettingsEnvironmentVariable(name: string) {
         if (await this.innerSettingsEnvironmentVariableProvider.has(name)) {
             const { value, error, warning } =  await this.innerSettingsEnvironmentVariableProvider.get(name);

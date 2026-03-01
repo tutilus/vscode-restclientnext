@@ -26,6 +26,8 @@ export const OidcVariableName = "$oidcAccessToken";
 export const OidcDescription = "Prompts to sign in to an Oidc provider and adds the token to the request";
 export const OIdcForceNewOption = "new";
 
+export const FakerVariableName = "$faker";
+export const FakerVariableDescription = "Generate fake data using Faker.js (e.g., {{$faker.internet.email}}, {{$faker.person.fullName}}, {{$faker.number.int 1 100}})";
 
 /**
  * NOTE: The client id represents an AAD app people sign in to. The client id is sent to AAD to indicate what app

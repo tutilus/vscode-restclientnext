@@ -33,6 +33,9 @@
       },
       "patterns": [
         {
+          "include": "#variables"
+        },
+        {
           "include": "source.json"
         }
       ]
@@ -92,7 +95,12 @@
           "name": "variable.other.http"
         },
         "3": {
-          "name": "string.other.http"
+          "name": "string.other.http",
+          "patterns": [
+            {
+              "include": "#variables"
+            }
+          ]
         }
       },
       "match": "^\\s*(@)([^\\s=]+)\\s*=\\s*(.*?)\\s*$",
@@ -107,7 +115,12 @@
           "name": "variable.other.http"
         },
         "3": {
-          "name": "string.other.http"
+          "name": "string.other.http",
+          "patterns": [
+            {
+              "include": "#variables"
+            }
+          ]
         }
       },
       "match": "^\\s*(\\?|&)([^=\\s]+)=(.*)$",
@@ -122,7 +135,12 @@
           "name": "keyword.other.http"
         },
         "3": {
-          "name": "string.other.http"
+          "name": "string.other.http",
+          "patterns": [
+            {
+              "include": "#variables"
+            }
+          ]
         }
       },
       "match": "^([\\w\\-]+)\\s*(\\:)\\s*([^\/].*?)\\s*$",
@@ -136,6 +154,46 @@
     }
   ],
   "repository": {
+    "variables": {
+      "patterns": [
+        {
+          "match": "\\{\\{\\s*(\\$faker\\.[\\w.]+(?:\\s+[^}]+)?)\\s*\\}\\}",
+          "captures": {
+            "0": {
+              "name": "variable.other.http"
+            },
+            "1": {
+              "name": "support.variable.http"
+            }
+          },
+          "name": "http.variable.faker"
+        },
+        {
+          "match": "\\{\\{\\s*(\\$\\w+(?:\\s+[^}]+)?)\\s*\\}\\}",
+          "captures": {
+            "0": {
+              "name": "variable.other.http"
+            },
+            "1": {
+              "name": "support.variable.http"
+            }
+          },
+          "name": "http.variable.system"
+        },
+        {
+          "match": "\\{\\{\\s*([^$][\\w.]+(?:\\.[\\w.]+)*)\\s*\\}\\}",
+          "captures": {
+            "0": {
+              "name": "variable.other.http"
+            },
+            "1": {
+              "name": "variable.parameter.http"
+            }
+          },
+          "name": "http.variable.custom"
+        }
+      ]
+    },
     "metadata": {
       "patterns": [
         {
@@ -248,7 +306,12 @@
           "name": "keyword.control.http"
         },
         "2": {
-          "name": "const.language.http"
+          "name": "const.language.http",
+          "patterns": [
+            {
+              "include": "#variables"
+            }
+          ]
         },
         "3": {
           "patterns": [
