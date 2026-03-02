@@ -7,7 +7,6 @@ import { EnvironmentController } from './controllers/environmentController';
 import { HistoryController } from './controllers/historyController';
 import { RequestController } from './controllers/requestController';
 import { SwaggerController } from './controllers/swaggerController';
-import { CustomVariableDiagnosticsProvider } from "./providers/customVariableDiagnosticsProvider";
 import { RequestBodyDocumentLinkProvider } from './providers/documentLinkProvider';
 import { EnvironmentOrFileVariableHoverProvider } from './providers/environmentOrFileVariableHoverProvider';
 import { FileVariableDefinitionProvider } from './providers/fileVariableDefinitionProvider';
@@ -84,8 +83,6 @@ export async function activate(context: ExtensionContext) {
     context.subscriptions.push(languages.registerReferenceProvider(documentSelector, new FileVariableReferenceProvider()));
     context.subscriptions.push(languages.registerDocumentSymbolProvider(documentSelector, new HttpDocumentSymbolProvider()));
 
-    const diagnosticsProvider = new CustomVariableDiagnosticsProvider();
-    context.subscriptions.push(diagnosticsProvider);
 }
 
 // this method is called when your extension is deactivated
