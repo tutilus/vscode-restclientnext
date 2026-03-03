@@ -26,6 +26,12 @@
   "engines": {
     "vscode": "^1.106.0"
   },
+  "overrides": {
+    "httpsnippet": {
+      "form-data": "^4.0.5"
+    },
+    "form-data": "^4.0.5"
+  },
   "categories": [
     "Other",
     "Snippets",
