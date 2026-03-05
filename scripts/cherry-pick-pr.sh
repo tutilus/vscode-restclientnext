@@ -1,19 +1,13 @@
 #!/usr/bin/env bash
-# Simple helper script to cherry-pick a pull request from the upstream
-# repository into your current branch. The script assumes you have an
-# `upstream` remote configured pointing at the original repo (the one
-# you forked from).  If not, add it with:
+# Helper utility to fetch and cherry-pick a pull request from the upstream
+# repository. Useful when you want to test or apply specific PRs without
+# merging the whole branch into your own fork.
 #
-#     git remote add upstream https://github.com/tutilus/vscode-restclientnext.git
+# Prerequisites:
+#   git remote add upstream https://github.com/tutilus/vscode-restclientnext.git
 #
-# Usage: ./scripts/cherry-pick-pr.sh <PR-number>
-#
-# The script will fetch the head of the pull request, create a temporary
-# branch named "pr-<number>", then cherry-pick all commits from that PR
-# onto whatever branch you currently have checked out.  After the
-# operation it leaves you on your original branch and deletes the temporary
-# ref.  Any conflicts must be resolved by hand; the script will abort if
-# cherry-pick fails.
+# Usage:
+#   ./scripts/cherry-pick-pr.sh 733   # cherry-pick PR #733
 
 set -euo pipefail
 
@@ -25,14 +19,22 @@ fi
 PR=$1
 ORIG_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-# fetch the pull request head into a temporary branch
 echo "Fetching PR #$PR from upstream..."
 git fetch upstream pull/${PR}/head:pr-${PR}
 
 echo "Cherry-picking commits from pr-${PR} onto ${ORIG_BRANCH}..."
 
-# compute list of commits in the PR that are not already in the target branch
-COMMITS=$(git log --format=%H ${ORIG_BRANCH}..pr-${PR})
+# Determine which upstream branch is the default (usually master or main)
+BASE=$(git rev-parse upstream/master 2>/dev/null)
+if [ -z "$BASE" ]; then
+    echo "Error: Could not determine the default branch of upstream (tried master and main)."
+    exit 1
+fi
+
+echo "Finding commits between ${BASE} and pr-${PR}..."
+
+# Only get commits introduced by this PR
+COMMITS=$(git log --format=%H ${BASE}..pr-${PR})
 
 if [ -z "$COMMITS" ]; then
     echo "No new commits to cherry-pick (maybe the branch is already merged?)."
@@ -40,14 +42,28 @@ if [ -z "$COMMITS" ]; then
     exit 0
 fi
 
-# cherry-pick each commit in order
+echo "Found commits:"
+echo "$COMMITS"
+echo ""
+
+# Cherry-pick each commit in reverse order (oldest first)
 for commit in $(echo "$COMMITS" | tac); do
-    echo "Picking $commit";
-    git cherry-pick $commit
+    echo "Picking $commit..."
+
+    # run cherry-pick but do not let a conflict abort the whole script;
+    # instead, inform the user and stop so they can resolve the conflict
+    if ! git cherry-pick $commit; then
+        echo ""
+        echo "Conflict occurred while applying $commit."
+        echo "Please resolve the conflict, run 'git cherry-pick --continue'"
+        echo "or 'git cherry-pick --abort' and handle the situation manually." 
+        echo "The temporary branch pr-${PR} is still available if you need it." 
+        exit 1
+    fi
 done
 
 echo "Cherry-pick finished; cleaning up temporary branch."
 git checkout ${ORIG_BRANCH}
 git branch -D pr-${PR}
 
-echo "Done.  Please review and push your changes if everything looks good."
+echo "Done. Please review and push your changes if everything looks good."
