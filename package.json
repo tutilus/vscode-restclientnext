@@ -86,7 +86,7 @@
         "category": "Rest Client"
       },
       {
-        "command": "rest-client.run-all-requests-sequentialy",
+        "command": "rest-client.run-all-requests-sequentially",
         "title": "Send all requests sequentially",
         "category": "Rest Client"
       },
@@ -300,7 +300,7 @@
         "when": "editorTextFocus && editorLangId == 'http'"
       },
       {
-        "command": "rest-client.run-all-requests-sequentialy",
+        "command": "rest-client.run-all-requests-sequentially",
         "key": "ctrl+shift+r",
         "mac": "cmd+shift+r",
         "when": "editorTextFocus"
