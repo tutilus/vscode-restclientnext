@@ -462,6 +462,6 @@ export class RestClientSettings implements IRestClientSettings {
 
     private readonly systemSettings = SystemSettings.Instance;
 
-    public constructor(private readonly requestSettings: RequestSettings) {
+    public constructor(private readonly requestSettings: RequestSettings) {  
     }
 }
