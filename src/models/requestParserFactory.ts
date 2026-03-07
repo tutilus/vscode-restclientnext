@@ -10,11 +10,11 @@ export class RequestParserFactory {
     public static createRequestParser(rawRequest: string): RequestParser;
     public static createRequestParser(rawRequest: string, settings: IRestClientSettings): RequestParser;
     public static createRequestParser(rawHttpRequest: string, settings?: IRestClientSettings): RequestParser {
-        settings = settings || SystemSettings.Instance;
+        const localSettings = settings || SystemSettings.Instance;
         if (RequestParserFactory.curlRegex.test(rawHttpRequest)) {
-            return new CurlRequestParser(rawHttpRequest, settings);
+            return new CurlRequestParser(rawHttpRequest, localSettings);
         } else {
-            return new HttpRequestParser(rawHttpRequest, settings);
+            return new HttpRequestParser(rawHttpRequest, localSettings);
         }
     }
 }

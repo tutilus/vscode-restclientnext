@@ -5,7 +5,7 @@ import { RequestHeaders } from './base';
 import { FormParamEncodingStrategy, fromString as ParseFormParamEncodingStr } from './formParamEncodingStrategy';
 import { fromString as ParseLogLevelStr, LogLevel } from './logLevel';
 import { fromString as ParsePreviewOptionStr, PreviewOption } from './previewOption';
-import { RequestMetadata } from './requestMetadata';
+import { RequestMetadata } from '../models/requestMetadata';
 
 export type HostCertificates = {
     [key: string]: {
@@ -49,6 +49,9 @@ export interface IRestClientSettings {
     readonly enableSendRequestCodeLens: boolean;
     readonly enableCustomVariableReferencesCodeLens: boolean;
     readonly useContentDispositionFilename: boolean;
+    readonly codeLensSendRequestTitle?: string;
+    readonly codeLensSendAllRequestTitle?: string;
+    readonly showEnvironmentInCodeLensTitle: boolean;
 }
 
 export class SystemSettings implements IRestClientSettings {
@@ -84,6 +87,9 @@ export class SystemSettings implements IRestClientSettings {
     private _enableSendRequestCodeLens: boolean = false;
     private _enableCustomVariableReferencesCodeLens: boolean = false;
     private _useContentDispositionFilename: boolean = false;
+    private _codeLensSendRequestTitle?: string;
+    private _codeLensSendAllRequestTitle?: string;
+    private _showEnvironmentInCodeLensTitle: boolean = false;
 
     public get followRedirect() {
         return this._followRedirect;
@@ -213,6 +219,18 @@ export class SystemSettings implements IRestClientSettings {
         return this._useContentDispositionFilename;
     }
 
+    public get codeLensSendRequestTitle() {
+        return this._codeLensSendRequestTitle;
+    }
+
+    public get codeLensSendAllRequestTitle() {
+        return this._codeLensSendAllRequestTitle;
+    }
+
+    public get showEnvironmentInCodeLensTitle() {
+        return this._showEnvironmentInCodeLensTitle;
+    }
+
     private readonly brackets: CharacterPair[];
 
     private static _instance: SystemSettings;
@@ -288,6 +306,9 @@ export class SystemSettings implements IRestClientSettings {
         this._enableSendRequestCodeLens = restClientSettings.get<boolean>('enableSendRequestCodeLens', true);
         this._enableCustomVariableReferencesCodeLens = restClientSettings.get<boolean>('enableCustomVariableReferencesCodeLens', true);
         this._useContentDispositionFilename = restClientSettings.get<boolean>('useContentDispositionFilename', true);
+        this._codeLensSendRequestTitle = restClientSettings.get<string>('codeLensSendRequestTitle', 'Send Request');
+        this._codeLensSendAllRequestTitle = restClientSettings.get<string>('codeLensSendAllRequestTitle', 'Send All Requests Sequentially');
+        this._showEnvironmentInCodeLensTitle = restClientSettings.get<boolean>('showEnvironmentInCodeLensTitle', false);
         languages.setLanguageConfiguration('http', { brackets: this._addRequestBodyLineIndentationAroundBrackets ? this.brackets : [] });
 
         const httpSettings = workspace.getConfiguration("http");
@@ -458,6 +479,18 @@ export class RestClientSettings implements IRestClientSettings {
 
     public get useContentDispositionFilename() {
         return this.systemSettings.useContentDispositionFilename;
+    }
+
+    public get codeLensSendRequestTitle() {
+        return this.systemSettings.codeLensSendRequestTitle;
+    }
+
+    public get codeLensSendAllRequestTitle() {
+        return this.systemSettings.codeLensSendAllRequestTitle;
+    }
+
+    public get showEnvironmentInCodeLensTitle() {
+        return this.systemSettings.showEnvironmentInCodeLensTitle;
     }
 
     private readonly systemSettings = SystemSettings.Instance;

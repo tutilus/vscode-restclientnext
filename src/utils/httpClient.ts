@@ -39,9 +39,9 @@ export class HttpClient {
     }
 
     public async send(httpRequest: HttpRequest, settings?: IRestClientSettings): Promise<HttpResponse> {
-        settings = settings || SystemSettings.Instance;
+        const settingsToUse = settings || SystemSettings.Instance;
 
-        const options = await this.prepareOptions(httpRequest, settings);
+        const options = await this.prepareOptions(httpRequest, settingsToUse);
 
         let bodySize = 0;
         let headersSize = 0;
@@ -73,7 +73,7 @@ export class HttpClient {
         const bodyBuffer = response.body;
         let bodyString = iconv.encodingExists(encoding) ? iconv.decode(bodyBuffer, encoding) : bodyBuffer.toString();
 
-        if (settings.decodeEscapedUnicodeCharacters) {
+        if (settingsToUse.decodeEscapedUnicodeCharacters) {
             bodyString = this.decodeEscapedUnicodeCharacters(bodyString);
         }
 

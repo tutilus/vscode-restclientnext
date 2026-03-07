@@ -698,6 +698,24 @@
           "default": true,
           "scope": "resource",
           "description": "Enable/disable using filename from 'content-disposition' header, when saving response body"
+        },
+        "rest-client.codeLensSendRequestTitle": {
+          "type": "string",
+          "default": "Send Request",
+          "scope": "resource",
+          "description": "Custom title for the 'Send Request' code lens"
+        },
+        "rest-client.codeLensSendAllRequestTitle": {
+          "type": "string",
+          "default": "Send All Requests Sequentially",
+          "scope": "resource",
+          "description": "Custom title for the 'Send All Requests Sequentially' code lens"
+        },
+        "rest-client.showEnvironmentInCodeLensTitle": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Show current environment name in code lens title"
         }
       }
     },
