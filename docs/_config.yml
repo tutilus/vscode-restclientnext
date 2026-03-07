@@ -1,0 +1,36 @@
+title: REST Client Next
+description: Documentation for REST Client Next - Send HTTP requests directly in VS Code
+author: REST Client Next Team
+baseurl: /vscode-restclientnext
+url: https://tutilus.github.io
+markdown: kramdown
+theme: null
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+navigation:
+  - title: Home
+    url: /
+  - title: Features
+    url: /features/
+  - title: Usage
+    url: /usage/
+  - title: Commands
+    url: /commands/
+  - title: Authentication
+    url: /authentication/
+  - title: Variables
+    url: /variables/
+  - title: Settings
+    url: /settings/
+  - title: HTTP Language
+    url: /http-language/
+
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: page
+      author: REST Client Next Team

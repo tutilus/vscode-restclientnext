@@ -15,7 +15,7 @@ REST Client Next continues the maintenance of the popular [REST Client](https://
 - [REST Client Next](#rest-client-next)
   - [Table of contents](#table-of-contents)
   - [Features](#features)
-  - [Quick Example](#quick-example)
+  - [Elementary example](#elementary-example)
   - [Installation](#installation)
   - [Build \& Run locally](#build--run-locally)
   - [Documentation](#documentation)
@@ -49,12 +49,13 @@ REST Client Next continues the maintenance of the popular [REST Client](https://
 -   Request history
 -   SSL client certificates
 
-## Quick Example
+## Elementary example
 
 Create a file named `test.http`:
 
 ``` http
 GET https://httpbin.org/get
+Authorization: Basic user:password
 ```
 
 Click **Send Request** above the request line.
@@ -90,7 +91,7 @@ npm run package
 
 ## Documentation
 
-Full documentation is available in [Documentation](./docs/DOC.md)
+Full documentation is available in [Documentation](https://tutilus.github.io/vscode-restclientnext/)
 
 ------------------------------------------------------------------------
 
