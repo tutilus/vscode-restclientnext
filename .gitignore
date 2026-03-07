@@ -6,3 +6,8 @@ node_modules
 *.vsix
 **/.env
 NOTE.md
+
+# Jekyll / GitHub Pages
+docs/_site/
+.jekyll-cache/
+.sass-cache/
