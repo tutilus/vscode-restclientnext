@@ -8,7 +8,11 @@ import { HttpVariable, HttpVariableProvider } from './httpVariableProvider';
 import { RequestVariableProvider } from './requestVariableProvider';
 import { SystemVariableProvider } from './systemVariableProvider';
 
-type FileVariableValue = Record<'name' | 'value', string>;
+type FileVariableValue = {
+    name: string;
+    value: string;
+    description?: string;
+};
 
 export class FileVariableProvider implements HttpVariableProvider {
     private static _instance: FileVariableProvider;
@@ -59,14 +63,19 @@ export class FileVariableProvider implements HttpVariableProvider {
             if (value !== undefined && isEncoded) {
                 value = encodeURIComponent(value);
             }
-            return { name, value };
+            return { name, value, description: variable.description };
         }
     }
 
     public async getAll(document: TextDocument): Promise<HttpVariable[]> {
         const variables = await this.getFileVariables(document);
         const variableMap = await this.resolveFileVariables(document, variables);
-        return [...variableMap.entries()].map(([name, value]) => ({ name, value }));
+        const variableMapWithDescriptions = new Map(variables.map(v => [v.name, v.description]));
+        return [...variableMap.entries()].map(([name, value]) => ({
+            name,
+            value,
+            description: variableMapWithDescriptions.get(name)
+        }));
     }
 
     private async getFileVariables(document: TextDocument): Promise<FileVariableValue[]> {
@@ -77,31 +86,107 @@ export class FileVariableProvider implements HttpVariableProvider {
         const fileContent = document.getText();
         const variables = new Map<string, FileVariableValue>();
         for (const line of fileContent.split(Constants.LineSplitterRegex)) {
-            const regex = new RegExp(Constants.FileVariableDefinitionRegex, 'g');
-            let match: RegExpExecArray | null;
-            while (match = regex.exec(line)) {
-                const [, key, originalValue] = match;
-                let value = "";
-                let isPrevCharEscape = false;
-                for (const currentChar of originalValue) {
-                    if (isPrevCharEscape) {
-                        isPrevCharEscape = false;
-                        value += this.escapee.get(currentChar) || currentChar;
-                    } else {
-                        if (currentChar === "\\") {
-                            isPrevCharEscape = true;
-                            continue;
-                        }
-                        value += currentChar;
-                    }
-                }
-                variables.set(key, { name: key, value });
+            const match = Constants.FileVariableDefinitionRegex.exec(line);
+            if (!match) { continue; }
+            
+            const [, key, rightSide] = match;
+            const { value, description } = this.parseVariableValueAndDescription(rightSide);
+            const fileVar: FileVariableValue = { name: key, value };
+            if (description !== undefined) {
+                fileVar.description = description;
             }
+            variables.set(key, fileVar);
         }
 
         const values = [...variables.values()];
         this.fileVariableCache.set(document, values);
         return values;
+    }
+
+    private parseVariableValueAndDescription(rightSide: string): { value: string; description?: string } {
+        // Trim trailing whitespace but preserve leading for quote detection
+        let trimmed = rightSide.trimEnd();
+        
+        // Check if the value starts with a quote
+        if (trimmed.startsWith('"') || trimmed.startsWith("'")) {
+            const quoteChar = trimmed[0];
+            let value = '';
+            let i = 1;
+            let inEscape = false;
+            
+            while (i < trimmed.length) {
+                const char = trimmed[i];
+                if (inEscape) {
+                    value += char;
+                    inEscape = false;
+                } else if (char === '\\') {
+                    inEscape = true;
+                } else if (char === quoteChar) {
+                    // Found closing quote
+                    i++; // Move past closing quote
+                    // Check if there's a | description after
+                    const remainder = trimmed.slice(i).trimLeft();
+                    if (remainder.startsWith('|')) {
+                        const desc = remainder.slice(1).trim();
+                        return { value, description: desc };
+                    }
+                    return { value };
+                } else {
+                    value += char;
+                }
+                i++;
+            }
+            // No closing quote found, treat whole rightSide as value (after processing escapes as we go)
+            // We need to process escape sequences in the value
+            return { value: this.processEscapes(rightSide) };
+        }
+
+        // Non-quoted value: look for | that's not inside any quotes
+        let inQuote = false;
+        let currentQuoteChar = '';
+        let pipeIndex = -1;
+        
+        for (let i = 0; i < trimmed.length; i++) {
+            const char = trimmed[i];
+            if (inQuote) {
+                if (char === currentQuoteChar) {
+                    inQuote = false;
+                }
+            } else if (char === '"' || char === "'") {
+                inQuote = true;
+                currentQuoteChar = char;
+            } else if (char === '|') {
+                pipeIndex = i;
+                break;
+            }
+        }
+
+        if (pipeIndex !== -1) {
+            const rawValue = trimmed.slice(0, pipeIndex).trimRight();
+            const description = trimmed.slice(pipeIndex + 1).trimLeft();
+            const value = this.processEscapes(rawValue);
+            return { value, description };
+        }
+
+        return { value: this.processEscapes(trimmed) };
+    }
+
+    private processEscapes(value: string): string {
+        let result = '';
+        let isPrevCharEscape = false;
+        for (const currentChar of value) {
+            if (isPrevCharEscape) {
+                isPrevCharEscape = false;
+                result += this.escapee.get(currentChar) || currentChar;
+            } else {
+                if (currentChar === "\\") {
+                    isPrevCharEscape = true;
+                    continue;
+                }
+                result += currentChar;
+            }
+        }
+        return result;
     }
 
     private async resolveFileVariables(document: TextDocument, variables: FileVariableValue[]): Promise<Map<string, string>> {

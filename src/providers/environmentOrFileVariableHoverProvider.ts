@@ -14,9 +14,13 @@ export class EnvironmentOrFileVariableHoverProvider implements HoverProvider {
         const selectedVariableName = document.getText(wordRange);
 
         if (await FileVariableProvider.Instance.has(selectedVariableName, document)) {
-            const { name, value, error, warning } = await FileVariableProvider.Instance.get(selectedVariableName, document);
+            const { name, value, description, error, warning } = await FileVariableProvider.Instance.get(selectedVariableName, document);
             if (!warning && !error) {
-                const contents: MarkdownString[] = [new MarkdownString(value as string), new MarkdownString(`*File Variable* \`${name}\``)];
+                const contents: MarkdownString[] = [new MarkdownString(value as string)];
+                if (description) {
+                    contents.push(new MarkdownString(`_${description}_`));
+                }
+                contents.push(new MarkdownString(`*File Variable* \`${name}\``));
                 return new Hover(contents, wordRange);
             }
 
@@ -24,9 +28,13 @@ export class EnvironmentOrFileVariableHoverProvider implements HoverProvider {
         }
 
         if (await EnvironmentVariableProvider.Instance.has(selectedVariableName)) {
-            const { name, value, error, warning } = await EnvironmentVariableProvider.Instance.get(selectedVariableName);
+            const { name, value, description, error, warning } = await EnvironmentVariableProvider.Instance.get(selectedVariableName);
             if (!warning && !error) {
-                const contents: MarkdownString[] = [new MarkdownString(value as string), new MarkdownString(`*Environment Variable* \`${name}\``)];
+                const contents: MarkdownString[] = [new MarkdownString(value as string)];
+                if (description) {
+                    contents.push(new MarkdownString(`_${description}_`));
+                }
+                contents.push(new MarkdownString(`*Environment Variable* \`${name}\``));
                 return new Hover(contents, wordRange);
             }
         }

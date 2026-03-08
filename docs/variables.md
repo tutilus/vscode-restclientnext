@@ -66,8 +66,10 @@ Defined within the `.http` file itself. Scope: entire file.
 
 Place anywhere in the file (before or between requests):
 
+> Accept quote and single quote.
+
 ```http
-@hostname = api.example.com
+@hostname = "api.example.com"
 @port = 8080
 @host = {{hostname}}:{{port}}
 @contentType = application/json
@@ -162,7 +164,7 @@ If resolution fails (invalid path, missing response), the literal text is sent a
 
 Interactive input per request. Override any pre-defined variable temporarily.
 
-#### Definition
+The definition syntax of prompt variables is like a single-line comment by adding the syntax before the desired request url with the following syntax // @prompt {var1} or # @prompt {var1}. A variable description is also assignable using // @prompt {var1} {description} or # @prompt {var1} {description} which will prompt an input popup with a desired description message.
 
 Before the request URL:
 
@@ -170,7 +172,7 @@ Before the request URL:
 # @prompt username
 # @prompt password
 # @prompt refCode Your reference code from webpage
-POST https://{{host}}/verify/{{refCode}} HTTP/1.1
+{% raw %}POST https://{{host}}/verify/{{refCode}} HTTP/1.1{% endraw %}
 Authorization: Basic {{username}}:{{password}}
 ```
 
