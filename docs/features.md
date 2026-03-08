@@ -73,8 +73,8 @@ REST Client Next supports multiple authentication schemes:
 - **Basic Auth** - Username/password with base64 encoding
 - **Digest Auth** - More secure challenge-response authentication
 - **SSL Client Certificates** - PFX, PKCS12, and PEM formats
-- **Azure Active Directory (Azure AD)** - Enterprise cloud directory
-- **Microsoft Identity Platform (Azure AD V2)** - OAuth2 with incremental consent
+- **Microsoft Entra ID (ex Azure Active Directory)** - Enterprise cloud directory
+- **OpenID Connect** - OAuth2 with incremental consent
 - **AWS Signature v4** - AWS service authentication
 - **AWS Cognito** - AWS user pool authentication
 

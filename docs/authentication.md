@@ -71,7 +71,9 @@ Supports `PFX`, `PKCS12`, and `PEM` certificates. Configure in settings:
 
 Paths can be absolute or relative to workspace/current file.
 
-## Microsoft Identity Platform (Azure AD V2)
+## Microsoft Entra ID (Azure Active Directory)
+
+Only support V2, V1 is deprecated and end of life since 2023.
 
 Use the `{% raw %}{{$aadV2Token}}{% endraw %}` system variable:
 
@@ -84,7 +86,7 @@ Optional parameters:
 
 {% raw %}
 ```
-{{$aadV2Token [new] [AzureCloud|AzureChinaCloud|AzureUSGovernment|ppe] [appOnly] [scopes:<scope>] [tenantid:<domain|tenantId>] [clientid:<clientId>]}}
+{{$aadV2Token [new] [AzureCloud|AzureChinaCloud|AzureUSGovernment|ppe] [appOnly] [scopes:<scope>] [tenantid:<domain|tenantId>] [clientid:<clientId>}}
 ```
 {% endraw %}
 
@@ -97,11 +99,11 @@ Optional parameters:
 
 ## OpenID Connect (OIDC) 
 
-Create a Access Token from Open ID Connect end point:
+Create a Access Token from Open ID Connect end point as Microsft Identity Platform:
 
 {% raw %}
 ```http
-{{$oidcAccessToken [new] [<clientId:<clientId>] [<callbackPort:<callbackPort>] [authorizeEndpoint:<authorizeEndpoint>] [tokenEndpoint:<tokenEndpoint>] [scopes:<scopes>] [audience:<audience>]}}
+{{$oidcAccessToken [new] [<clientId:<clientId>] [<callbackPort:<callbackPort>] [authorizeEndpoint:<authorizeEndpoint>] [tokenEndpoint:<tokenEndpoint>] [scopes:<scopes>] [audience:<audience>}}
 ```
 {% endraw %}
 

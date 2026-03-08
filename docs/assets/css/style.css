@@ -75,10 +75,20 @@ body {
     color: var(--color-text);
     font-size: 1.25rem;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .site-title:hover {
     color: var(--color-primary);
+}
+
+.site-logo {
+    width: 50%;
+    max-width: 80px;
+    height: auto;
+    display: block;
 }
 
 .top-nav ul {
@@ -417,12 +427,18 @@ hr {
 
     .header-content {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        text-align: center;
+    }
+
+    .site-title {
+        margin-bottom: 0.5rem;
     }
 
     .top-nav ul {
         flex-direction: column;
         gap: 0.5rem;
         margin-top: 0.5rem;
+        align-items: center;
     }
 }

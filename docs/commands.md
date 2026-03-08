@@ -100,7 +100,7 @@ Right-click in an `.http` or `.rest` file to access:
 When CodeLens is enabled, clickable links appear above each request:
 
 - **Send Request** - Send this specific request
-- **Send All Requests Sequentially** - Execute all requests in the file
+- **Send All Requests Sequentially** - Execute all requests in the file one after another
 
 Customize the text via settings:
 - `rest-client.codeLensSendRequestTitle`
@@ -215,6 +215,6 @@ For reference, here's all commands in JSON format:
 
 ## Related Documentation
 
-- [Usage](/usage/) - How to use basic features
-- [Keyboard Shortcuts](/usage/#keyboard-shortcuts) - Complete shortcut reference
-- [HTTP Language](/http-language/) - Language support details
+- [Usage]({{ '/usage' | relative_url }}) - How to use basic features
+- [Keyboard Shortcuts]({{ '/usage#keyboard-shortcuts' | relative_url }}) - Complete shortcut reference
+- [HTTP Language]({{ '/http-language' | relative_url }}) - Language support details
