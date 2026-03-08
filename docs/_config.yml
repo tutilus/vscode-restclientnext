@@ -13,19 +13,19 @@ navigation:
   - title: Home
     url: /
   - title: Features
-    url: /features/
+    url: /features
   - title: Usage
-    url: /usage/
+    url: /usage
   - title: Commands
-    url: /commands/
+    url: /commands
   - title: Authentication
-    url: /authentication/
+    url: /authentication
   - title: Variables
-    url: /variables/
+    url: /variables
   - title: Settings
-    url: /settings/
+    url: /settings
   - title: HTTP Language
-    url: /http-language/
+    url: /http-language
 
 defaults:
   -

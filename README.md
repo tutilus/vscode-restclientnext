@@ -91,7 +91,7 @@ npm run package
 
 ## Documentation
 
-Full documentation is available in [Documentation](https://tutilus.github.io/vscode-restclientnext/)
+Full documentation is available in Github Page [https://tutilus.github.io/vscode-restclientnext/]
 
 ------------------------------------------------------------------------
 
@@ -141,7 +141,7 @@ So my main goal is:
 - Modern TypeScript support
 - Compatible with latest VS Code versions
 - Fix the main issues
-- Probably add functionality as long as the compatibility is preserved
+- Probably add functionalities as long as the compatibility is preserved
 
 ## License
 [MIT License](LICENSE)
@@ -154,8 +154,11 @@ See CHANGELOG [here](CHANGELOG.md)
 This project includes contributions originally made to the upstream repository:
 
 | Pull Request                                                         | Title            | Version |
-|----------------------------------------------------------------------|------------------|
-| [PR #1380](https://github.com/Huachao/vscode-restclient/pull/1380) | Chore: Fix typos | V1.2.0 |
+|----------------------------------------------------------------------|------------------|---------|
+| [PR #1388](https://github.com/Huachao/vscode-restclient/pull/1388) | feat: Implement "Run All Requests Sequentially" command | V1.3.0 |
+| [PR #1104](https://github.com/Huachao/vscode-restclient/pull/1104) | Chore: CORS comment | V1.3.0 |
+| [PR #¹#1356](https://github.com/Huachao/vscode-restclient/pull/1356) | Chore: README Graphql syntax | V1.3.0 |
+| [PR #1380](https://github.com/Huachao/vscode-restclient/pull/1380) | Chore: Fix typos | V1.2.0  |
 | [PR #1381](https://github.com/Huachao/vscode-restclient/pull/1381) | Chore: Update uuid from v4 to v13 | V1.2.0 |
 
 ## Special Thanks

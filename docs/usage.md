@@ -10,7 +10,7 @@ description: Learn how to use REST Client Next to send HTTP requests and view re
 ![Usage Demo]({{ '/assets/images/usage.gif' | relative_url }})
 *Demo: Sending a request and viewing response*
 
-1. Create or open a file with `.http` or `.rest` extension (or any file and set language mode to `HTTP`)
+1. Create or open a file with `.http` or `.rest` extension (or any file and set language mode to `HTTP`) in Visual Studio Code
 2. Type your HTTP request
 3. Use one of these methods to send:
    - Click `Send Request` link above the request
@@ -65,8 +65,9 @@ User-Agent: rest-client
 Accept-Language: en-GB,en-US;q=0.8,en;q=0.6,zh-CN;q=0.4
 Content-Type: application/json
 ```
+A default `User-Agent: vscode-restclient` is added if not specified. Customize via `rest-client.defaultHeaders` setting. 
 
-A default `User-Agent: vscode-restclient` is added if not specified. Customize via `rest-client.defaultHeaders` setting.
+> Tes CORS by setting an _Origin:_ header.
 
 #### Request Body
 
@@ -75,6 +76,7 @@ Add a blank line after headers, then include the body:
 ```http
 POST https://example.com/comments HTTP/1.1
 Content-Type: application/json
+Origin: https://example.com
 
 {
     "name": "sample",
@@ -160,13 +162,13 @@ Place your cursor within a request block and send it. You can also select specif
 
 ### Making GraphQL Requests
 
-Add header `X-Request-Type: GraphQL` and include the query and optional variables:
+Add header `X-Request-Type: graphql` and include the query and optional variables:
 
 ```http
 POST https://api.github.com/graphql
 Content-Type: application/json
 Authorization: Bearer xxx
-X-REQUEST-TYPE: GraphQL
+X-REQUEST-TYPE: graphql
 
 query ($name: String!, $owner: String!) {
   repository(name: $name, owner: $owner) {
