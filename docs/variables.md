@@ -82,9 +82,16 @@ Rules:
 - Use `\` to escape special characters like `\n`
 - Values can reference other variables (including system variables)
 
+You can add description for better understanding (displayed in hover):
+
+```http
+# @variableName = value | description
+@apiKey = abc123 | API key for external service
+```
+
 #### Reference
 
-Use `{% raw %}{{variableName}}{% endraw %}` in the file. To percent-encode the value, use `{% raw %}%%{ variableName }%%{% endraw %}` (note: this is a Liquid percent-encoding escape, not the actual syntax; actual syntax is `{% raw %}{{% variableName %}}{% endraw %}`).
+Use `{% raw %}{{variableName}}{% endraw %}` in the file. To percent-encode the value, use `{% raw %}{{% variableName %}}{% endraw %}`.
 
 #### Features
 
@@ -169,26 +176,51 @@ Authorization: Basic {{username}}:{{password}}
 
 **Special Behavior:** Variable names matching `password`, `passwd`, `pass` (any case) will be masked during input.
 
-When you send the request, an input dialog appears for each prompt variable. Enter values and the request uses them. Values are **not stored** for later requests.
-
-### File Variables with Description
-
-You can add description for better understanding (displayed in hover):
-
-```http
-# @variableName = value | description
-@apiKey = abc123 | API key for external service
-```
+When you send the request, an input dialog appears for each prompt variable. Enter values and the request uses them. Values are **not stored** for subsequent requests.
 
 ## System Variables
 
 Pre-defined dynamic variables, format: `{% raw %}{{$variableName}}{% endraw %}` (case-sensitive).
 
-### UUID & Random
+### UUID
 
-- `{% raw %}{{$guid}}{% endraw %}` - RFC 4122 v4 UUID
-- `{% raw %}{{$faker <module>.<property> [param]}}{% endraw %}` - Generate fake data using Faker.js
-  - Examples: `{% raw %}{{$faker internet.email}}{% endraw %}`, `{% raw %}{{$faker name.fullName}}{% endraw %}`, `{% raw %}{{$faker string.alphanumeric 10}}{% endraw %}`
+`{% raw %}{{$guid}}{% endraw %}` - RFC 4122 v4 UUID
+
+### Fake Values
+
+Generate fake data using `Faker.js`. 
+
+`{% raw %}{{$faker <module>.<property> [param]}}{% endraw %}` 
+
+**Common Faker Modules:**
+
+| Module | Properties | Examples |
+|--------|------------|----------|
+| `address` | `city`, `cityName`, `country`, `countryCode`, `postalCode`, `streetAddress`, `latitude`, `longitude` | `{% raw %}{{$faker address.city}}{% endraw %}`, `{% raw %}{{$faker address.postalCode}}{% endraw %}` |
+| `commerce` | `color`, `department`, `productName`, `price`, `ean` | `{% raw %}{{$faker commerce.productName}}{% endraw %}`, `{% raw %}{{$faker commerce.price}}{% endraw %}` |
+| `date` | `past`, `future`, `between`, `recent`, `month`, `weekday` | `{% raw %}{{$faker date.past}}{% endraw %}`, `{% raw %}{{$faker date.future 1 y}}{% endraw %}` |
+| `finance` | `account`, `mask`, `amount`, `transactionType`, `currencyCode`, `iban` | `{% raw %}{{$faker finance.account}}{% endraw %}`, `{% raw %}{{$faker finance.iban}}{% endraw %}` |
+| `git` | `branch`, `commitEntry`, `commitMessage`, `commitSha`, `tag` | `{% raw %}{{$faker git.commitSha}}{% endraw %}`, `{% raw %}{{$faker git.branch}}{% endraw %}` |
+| `hacker` | `abbreviation`, `adjective`, `noun`, `verb`, `ingverb` | `{% raw %}{{$faker hacker.noun}}{% endraw %}`, `{% raw %}{{$faker hacker.adjective}}{% endraw %}` |
+| `internet` | `avatar`, `email`, `exampleEmail`, `userAgent`, `url`, `ip`, `mac` | `{% raw %}{{$faker internet.email}}{% endraw %}`, `{% raw %}{{$faker internet.url}}{% endraw %}` |
+| `lorem` | `word`, `words`, `sentence`, `slug`, `paragraph`, `text` | `{% raw %}{{$faker lorem.paragraph}}{% endraw %}`, `{% raw %}{{$faker lorem.slug}}{% endraw %}` |
+| `name` | `firstName`, `lastName`, `fullName`, `jobTitle`, `prefix`, `suffix`, `title` | `{% raw %}{{$faker name.fullName}}{% endraw %}`, `{% raw %}{{$faker name.jobTitle}}{% endraw %}` |
+| `phone` | `phoneNumber`, `phoneNumberFormat`, `imei` | `{% raw %}{{$faker phone.number}}{% endraw %}`, `{% raw %}{{$faker phone.imei}}{% endraw %}` |
+| `random` | `number`, `float`, `arrayElement`, `objectElement`, `uuid`, `alphaNumeric` | `{% raw %}{{$faker random.number 1000 9999}}{% endraw %}`, `{% raw %}{{$faker random.arrayElement @array}}{% endraw %}` |
+| `system` | `fileName`, `mimeType`, `directory`, `fileType`, `commonFileName`, `semver` | `{% raw %}{{$faker system.fileName}}{% endraw %}`, `{% raw %}{{$faker system.mimeType}}{% endraw %}` |
+
+**Examples with parameters:**
+
+```http
+{% raw %}{{$faker string.alphanumeric 10}}{% endraw %}  // Alphanumeric string of 10 characters
+{% raw %}{{$faker random.number 100 999}}{% endraw %}   // Number between 100 and 999
+{% raw %}{{$faker date.past 2 d}}{% endraw %}          // Date within the last 2 days
+{% raw %}{{$faker internet.email}}{% endraw %}         // Random email
+{% raw %}{{$faker name.fullName}}{% endraw %}          // Full name
+{% raw %}{{$faker phone.number}}{% endraw %}           // Phone number
+```
+
+> **Note:** The complete list of modules and properties is available in the [Faker.js documentation](https://fakerjs.dev/).
 
 ### Random Integer
 
@@ -249,17 +281,17 @@ GET https://api.example.com
 Authorization: Bearer {% raw %}{{$dotenv API_TOKEN}}{% endraw %}
 ```
 
-### Azure Active Directory
+### Microsoft Entra ID (ex Azure Active Directory)
 
 - `{% raw %}{{$aadV2Token [new] [cloud] [appOnly] [scopes:] [tenantid:] [clientid:]}}{% endraw %}`
 
-See [Authentication](/authentication/) for full details.
+See [Authentication]({{ '/authentication.html' | relative_url }}) for full details.
 
 ### OpenID Connect
 
 - `{% raw %}{{$oidcAccessToken [new] [<clientId:] [<callbackPort:] [authorizeEndpoint:] [tokenEndpoint:] [scopes:] [audience:]}}{% endraw %}`
 
-See [Authentication](/authentication/) for full details.
+See [Authentication]({{ '/authentication.html' | relative_url }}) for full details.
 
 ## Variable Best Practices
 
@@ -338,7 +370,7 @@ GET https://{{host}}/{{apiVersion}}/users
 ### Request Chaining with Tokens
 
 ```http
-@baseUrl = https://api.example.com/v1
+{% raw %}@baseUrl = https://api.example.com/v1
 
 # @name login
 POST {{baseUrl}}/auth/login
@@ -350,8 +382,7 @@ Content-Type: application/json
 }
 
 ###
-
-@authToken = {% raw %}{{login.response.body.token}}{% endraw %}
+@authToken = {{login.response.body.token}}
 
 # @name getUser
 GET {{baseUrl}}/user/profile
@@ -366,24 +397,24 @@ Content-Type: application/json
 
 {
     "title": "My Post",
-    "userId": {% raw %}{{getUser.response.body.id}}{% endraw %}
-}
+    "userId": {{getUser.response.body.id}}
+}{% endraw %}
 ```
 
 ### Dynamic Test Data
 
 ```http
-POST https://api.example.com/users
+{% raw %}POST https://api.example.com/users
 Content-Type: application/json
 
 {
-    "email": "{% raw %}{{$faker internet.email}}{% endraw %}",
-    "name": "{% raw %}{{$faker name.fullName}}{% endraw %}",
-    "phone": "{% raw %}{{$faker phone.number}}{% endraw %}",
-    "address": "{% raw %}{{$faker address.city}}{% endraw %}, {% raw %}{{$faker address.country}}{% endraw %}",
-    "createdAt": "{% raw %}{{$datetime iso8601}}{% endraw %}",
-    "id": "{% raw %}{{$guid}}{% endraw %}"
-}
+    "email": "{{$faker internet.email}}",
+    "name": "{{$faker name.fullName}}",
+    "phone": "{{$faker phone.number}}",
+    "address": "{{$faker address.city}}, {{$faker address.country}}",
+    "createdAt": "{{$datetime iso8601}}",
+    "id": "{{$guid}}"
+}{% endraw %}
 ```
 
 ### Using Process Environment Variables
@@ -409,5 +440,6 @@ Settings:
 Request:
 
 ```http
-GET https://api.example.com/data
-Authorization: Bearer {% raw %}{{$processEnv %apiKeyEnvVar}}{% endraw %}
+{% raw %}GET https://api.example.com/data
+Authorization: Bearer {{$processEnv %apiKeyEnvVar}}{% endraw %}
+```

@@ -7,12 +7,15 @@ description: Learn how to use REST Client Next to send HTTP requests and view re
 
 ### Sending a Request
 
+![Usage Demo]({{ '/assets/images/usage.gif' | relative_url }})
+*Demo: Sending a request and viewing response*
+
 1. Create or open a file with `.http` or `.rest` extension (or any file and set language mode to `HTTP`)
 2. Type your HTTP request
 3. Use one of these methods to send:
    - Click `Send Request` link above the request
    - Press `Ctrl+Alt+R` (`Cmd+Alt+R` on macOS)
-   - Right-click and select `Send Request`
+   - Right-click in the editor and select `Send Request`
    - Press `F1` and type `Rest Client: Send Request`
 
 The response will appear in a separate preview panel.
@@ -112,12 +115,12 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 Content-Disposition: form-data; name="text"
 
 title
-----WebKitFormBoundary7MA4YWxkTrZu0gW
+------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="image"; filename="1.png"
 Content-Type: image/png
 
 < ./1.png
-----WebKitFormBoundary7MA4YWxkTrZu0gW--
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ```
 
 ##### application/x-www-form-urlencoded
@@ -181,6 +184,9 @@ Note: Blank line between query and variables.
 
 ### Making cURL Requests
 
+![cURL Request]({{ '/assets/images/curl-request.png' | relative_url }})
+*Writing a cURL request in the editor*
+
 Simply write a cURL command in the editor:
 
 ```bash
@@ -233,6 +239,9 @@ Change via `rest-client.previewOption` setting:
 
 Click the respective icons in the response preview tab title bar.
 
+![Save Response]({{ '/assets/images/response.gif' | relative_url }})
+*Save full response or response body only*
+
 ### Viewing Response Details
 
 Hover over status bar indicators:
@@ -241,6 +250,9 @@ Hover over status bar indicators:
 - **Size** - Breakdown: headers and body sizes
 
 ## Request History
+
+![Request History]({{ '/assets/images/request-history.png' | relative_url }})
+*Viewing request history*
 
 Every sent request is automatically saved. Access via:
 
@@ -252,6 +264,9 @@ View last 50 requests (most recent first). Select one to see its details in a te
 Clear history with `Rest Client: Clear Request History`.
 
 ## Code Snippets
+
+![Generate Code Snippet]({{ '/assets/images/code-snippet.gif' | relative_url }})
+*Generating code snippets in various languages*
 
 Generate code snippets for your request in various languages:
 

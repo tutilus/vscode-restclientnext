@@ -21,7 +21,7 @@ REST Client Next provides a comprehensive set of features for API testing:
 - Fold and unfold response body
 - Customize font(size/family/weight) in response preview
 - Preview response with expected parts(_headers only_, _body only_, _full response_ and _both request and response_)
-- Authentication support for Basic Auth, Digest Auth, SSL Client Certificates, Azure Active Directory, Microsoft Identity Platform, AWS Signature v4, and AWS Cognito
+- Authentication support for Basic Auth, Digest Auth, SSL Client Certificates, Microsoft Entra ID (ex Azure Active Directory), OpenID Connect (as Microsoft Identity Platform), AWS Signature v4, and AWS Cognito
 - Environments and custom/system variables support with powerful variable resolution
 - Generate code snippets for HTTP requests in multiple languages
 - Remember Cookies for subsequent requests
@@ -57,15 +57,18 @@ To send a prepared request, you can:
 
 The response will be previewed in a separate webview panel inside Visual Studio Code.
 
+![Demo]({{ '/assets/images/demo.gif' | relative_url }})
+*Send request with Rest Client Next demonstration*
+
 ## Documentation Sections
 
-- **[Features](/features/)** - Detailed feature overview
-- **[Usage](/usage/)** - How to use the REST Client
-- **[Commands](/commands/)** - Complete command reference and shortcuts
-- **[Authentication](/authentication/)** - Authentication methods and configuration
-- **[Variables](/variables/)** - Environment, file, request, and system variables
-- **[Settings](/settings/)** - Configuration settings and customization
-- **[HTTP Language](/http-language/)** - HTTP language support details
+- **[Features]({{ '/features' | relative_url }})** - Detailed feature overview
+- **[Usage]({{ '/usage' | relative_url }})** - How to use the REST Client
+- **[Commands]({{ '/commands' | relative_url }})** - Complete command reference and shortcuts
+- **[Authentication]({{ '/authentication' | relative_url }})** - Authentication methods and configuration
+- **[Variables]({{ '/variables' | relative_url }})** - Environment, file, request, and system variables
+- **[Settings]({{ '/settings' | relative_url }})** - Configuration settings and customization
+- **[HTTP Language]({{ '/http-language' | relative_url }})** - HTTP language support details
 
 ## Installation
 

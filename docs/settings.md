@@ -59,7 +59,7 @@ Default:
 
 `rest-client.environmentVariables` - Object defining environments and their variables.
 
-See [Variables](/variables/) for complete documentation and examples.
+See [Variables]({{ '/variables' | relative_url }}) for complete documentation and examples.
 
 ```json
 {
@@ -154,7 +154,7 @@ CodeLens adds actionable links above requests in the editor.
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `rest-client.enableSendRequestCodeLens` | boolean | `true` | Enable/disable "Send Request" CodeLens |
+| `rest-client.enableSendRequestCodeLens` | boolean | `true` | Enable/disable "Send Request" and "Send All Request Sequentially" CodeLens |
 | `rest-client.enableCustomVariableReferencesCodeLens` | boolean | `true` | Enable/disable custom variable references CodeLens |
 | `rest-client.codeLensSendRequestTitle` | string | `"Send Request"` | Custom title for send request CodeLens |
 | `rest-client.codeLensSendAllRequestTitle` | string | `"Send All Requests Sequentially"` | Custom title for send all CodeLens |
