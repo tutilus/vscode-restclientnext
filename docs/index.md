@@ -74,4 +74,4 @@ The response will be previewed in a separate webview panel inside Visual Studio 
 
 Press `F1`, type `ext install` then search for `rest-client-next`.
 
-Or install directly from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=restclientdev.rest-client-next).
+Or install directly from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=tutilus.rest-client-next&ssr=false).
