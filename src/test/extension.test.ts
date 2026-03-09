@@ -9,45 +9,54 @@ suite('Extension Test Suite', () => {
 		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
 	});
 
-	test('File variable parsing should handle quoted values and descriptions', async () => {
+	test('File variable parsing should handle quoted values, descriptions, and comments', async () => {
 		const { FileVariableProvider } = require('../utils/httpVariableProviders/fileVariableProvider');
 		const provider = new FileVariableProvider();
 		
-		// Access the private method via type assertion for testing
+		// Access the private method for testing
 		const parseMethod = (provider as any).parseVariableValueAndDescription;
 		
-		const testCases: Array<{input: string, expectedValue: string, expectedDesc?: string}> = [
-			// Basic cases without quotes
+		const testCases: Array<{
+			input: string, 
+			expectedValue: string, 
+			expectedDesc?: string,
+			description?: string // test case description
+		}> = [
+			// Basic cases
 			{ input: 'abcd', expectedValue: 'abcd' },
 			{ input: 'abcd | description', expectedValue: 'abcd', expectedDesc: 'description' },
 			
-			// Quoted values without description
+			// Quoted values
 			{ input: '"abcd"', expectedValue: 'abcd' },
 			{ input: "'abcd'", expectedValue: 'abcd' },
-			
-			// Quoted values with description
 			{ input: '"abcd" | description', expectedValue: 'abcd', expectedDesc: 'description' },
-			{ input: "'abcd' | description", expectedValue: 'abcd', expectedDesc: 'description' },
 			
-			// Quoted values containing pipe - no description
+			// Pipe inside quotes
 			{ input: '"abcd | desc"', expectedValue: 'abcd | desc' },
-			{ input: "'abcd | desc'", expectedValue: 'abcd | desc' },
-			
-			// Quoted values containing pipe with description
 			{ input: '"abcd | desc" | description', expectedValue: 'abcd | desc', expectedDesc: 'description' },
-			{ input: "'abcd | desc' | description", expectedValue: 'abcd | desc', expectedDesc: 'description' },
 			
-			// With escape sequences
+			// Escape sequences
 			{ input: '"ab\\"cd"', expectedValue: 'ab"cd' },
 			{ input: '"ab\\ncd"', expectedValue: 'ab\ncd' },
 			{ input: 'ab\\ncd', expectedValue: 'ab\ncd' },
+			
+			// Trailing comments (new feature)
+			{ input: 'abcd # comment', expectedValue: 'abcd', description: 'Comment should be stripped' },
+			{ input: 'abcd | description # comment', expectedValue: 'abcd', expectedDesc: 'description', description: 'Comment after description' },
+			{ input: '"abcd" # comment', expectedValue: 'abcd', description: 'Comment after quoted value' },
+			{ input: '"abcd | desc" # comment', expectedValue: 'abcd | desc', description: 'Comment after value with pipe' },
+			{ input: '"abcd" | description # comment', expectedValue: 'abcd', expectedDesc: 'description', description: 'Comment after description' },
+			
+			// Edge case: # inside quotes should not be treated as comment
+			{ input: '"abcd # not a comment"', expectedValue: 'abcd # not a comment' },
+			{ input: '"abcd # not a comment" | description', expectedValue: 'abcd # not a comment', expectedDesc: 'description' },
 		];
 		
-		for (const { input, expectedValue, expectedDesc } of testCases) {
+		for (const { input, expectedValue, expectedDesc, description } of testCases) {
 			const result = parseMethod.call(provider, input);
-			assert.strictEqual(result.value, expectedValue, `Value mismatch for input: "${input}"`);
+			assert.strictEqual(result.value, expectedValue, `Value mismatch for input: "${input}"${description ? ` (${description})` : ''}`);
 			if (expectedDesc !== undefined) {
-				assert.strictEqual(result.description, expectedDesc, `Description mismatch for input: "${input}"`);
+				assert.strictEqual(result.description, expectedDesc, `Description mismatch for input: "${input}"${description ? ` (${description})` : ''}`);
 			} else {
 				assert.strictEqual(result.description, undefined, `Expected no description for input: "${input}"`);
 			}

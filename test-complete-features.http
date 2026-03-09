@@ -1,0 +1,32 @@
+# Complete test file for variable descriptions with all features
+
+# Basic examples
+@apiKey = abc123 | API key for external service
+@host = api.example.com
+@port = 8080 | Port number
+
+# With trailing comments
+@debug = true # Enable debug mode
+@timeout = 5000 | Timeout in ms # connection timeout
+
+# Quoted values
+@url = "https://api.example.com/v1" | Base URL
+@secret = "my.password@123" | Secret with special chars
+
+# Values with pipe inside quotes
+@connectionString = "server=localhost;port=5432" | Database connection string
+@complexValue = "value1|value2|value3" | Multiple pipe-separated values
+
+# Escape sequences
+@jsonPath = "{\"key\": \"value\"}" | JSON string
+@multiline = "line1\nline2" | Multi-line value
+
+# Mixed: quotes with pipe AND description with comment
+@finalExample = "abcd | inside quotes" | This is the description # trailing comment
+
+# @name testRequest
+GET {{host}}:{{port}}/test HTTP/1.1
+Authorization: Bearer {{apiKey}}
+X-Debug: {{debug}}
+X-URL: {{url}}
+X-Connection: {{connectionString}}

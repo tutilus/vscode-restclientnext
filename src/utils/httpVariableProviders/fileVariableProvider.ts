@@ -14,6 +14,8 @@ type FileVariableValue = {
     description?: string;
 };
 
+type ParseReason = 'descriptionMark' | 'commentMark' | 'endOfString' | 'endOfLine';
+
 export class FileVariableProvider implements HttpVariableProvider {
     private static _instance: FileVariableProvider;
 
@@ -24,12 +26,6 @@ export class FileVariableProvider implements HttpVariableProvider {
 
         return this._instance;
     }
-
-    private readonly escapee: Map<string, string> = new Map<string, string>([
-        ['n', '\n'],
-        ['r', '\r'],
-        ['t', '\t']
-    ]);
 
     private readonly innerVariableProviders: HttpVariableProvider[] = [
         SystemVariableProvider.Instance,
@@ -104,90 +100,114 @@ export class FileVariableProvider implements HttpVariableProvider {
     }
 
     private parseVariableValueAndDescription(rightSide: string): { value: string; description?: string } {
-        // Trim trailing whitespace but preserve leading for quote detection
-        let trimmed = rightSide.trimEnd();
+        let values: string[] = [];
+        let descs: string[] = [];
+        let remaining = rightSide;
+        let reason: ParseReason = 'endOfLine';
         
-        // Check if the value starts with a quote
-        if (trimmed.startsWith('"') || trimmed.startsWith("'")) {
-            const quoteChar = trimmed[0];
-            let value = '';
-            let i = 1;
-            let inEscape = false;
+        do {
+            const parsed = this.parseQuotedValue(remaining, true);
+            values.push(parsed.value);
+            remaining = parsed.remaining;
+            reason = parsed.reason;
+        } while (reason === 'endOfString');
+
+        if ( reason === 'descriptionMark') {
+            do {
+                const parsed = this.parseQuotedValue(remaining);
+                descs.push(parsed.value);
+                remaining = parsed.remaining;
+                reason = parsed.reason;
+            } while (reason === 'endOfString');
             
-            while (i < trimmed.length) {
-                const char = trimmed[i];
-                if (inEscape) {
-                    value += char;
-                    inEscape = false;
-                } else if (char === '\\') {
-                    inEscape = true;
-                } else if (char === quoteChar) {
-                    // Found closing quote
-                    i++; // Move past closing quote
-                    // Check if there's a | description after
-                    const remainder = trimmed.slice(i).trimLeft();
-                    if (remainder.startsWith('|')) {
-                        const desc = remainder.slice(1).trim();
-                        return { value, description: desc };
-                    }
-                    return { value };
-                } else {
-                    value += char;
-                }
-                i++;
-            }
-            // No closing quote found, treat whole rightSide as value (after processing escapes as we go)
-            // We need to process escape sequences in the value
-            return { value: this.processEscapes(rightSide) };
+            return { value: values.join(' '), description: descs.join(' ') };
         }
 
-        // Non-quoted value: look for | that's not inside any quotes
-        let inQuote = false;
-        let currentQuoteChar = '';
-        let pipeIndex = -1;
-        
-        for (let i = 0; i < trimmed.length; i++) {
-            const char = trimmed[i];
-            if (inQuote) {
-                if (char === currentQuoteChar) {
-                    inQuote = false;
-                }
-            } else if (char === '"' || char === "'") {
-                inQuote = true;
-                currentQuoteChar = char;
-            } else if (char === '|') {
-                pipeIndex = i;
-                break;
-            }
-        }
-
-        if (pipeIndex !== -1) {
-            const rawValue = trimmed.slice(0, pipeIndex).trimRight();
-            const description = trimmed.slice(pipeIndex + 1).trimLeft();
-            const value = this.processEscapes(rawValue);
-            return { value, description };
-        }
-
-        return { value: this.processEscapes(trimmed) };
+        return { value: values.join(' '), description: undefined };
     }
 
-    private processEscapes(value: string): string {
-        let result = '';
-        let isPrevCharEscape = false;
-        for (const currentChar of value) {
-            if (isPrevCharEscape) {
-                isPrevCharEscape = false;
-                result += this.escapee.get(currentChar) || currentChar;
-            } else {
-                if (currentChar === "\\") {
-                    isPrevCharEscape = true;
+    private parseQuotedValue(value: string, stopAtPipe: boolean = false): { value: string; remaining: string; reason: ParseReason } {
+        let quoteChar = '';
+        let inQuote = false;
+        let inEscape = false;
+        let reason: ParseReason = 'endOfLine';
+        let chunk = '';
+        let idx = 0;
+        // Trim trailing whitespace but preserve leading for quote detection
+        let trimmed = value.trimEnd();
+
+        if (trimmed.length === 0) {
+            return { value: '', remaining: '', reason };
+        }
+        // Check if I am looking for a quoted value
+        if (trimmed[0] === '"' || trimmed[0] === "'") {
+            quoteChar = trimmed[0];
+            inQuote = true;
+            idx = 1;
+        }
+
+        while (idx < trimmed.length) {
+
+            if (trimmed[idx] === '"' || trimmed[idx] === "'") {
+                // Handle escape character first
+                if (inEscape) {
+                    chunk += trimmed[idx];
+                    inEscape = false;
+                    idx++;
                     continue;
                 }
-                result += currentChar;
+
+                if (inQuote && trimmed[idx] === quoteChar) {
+                    return { value: chunk, remaining: trimmed.slice(idx + 1).trim(), reason: 'endOfString' };
+                }
+                chunk += trimmed[idx];
+
+            } else if (trimmed[idx] === '\\' && inQuote) {
+                if (inEscape) {
+                    inEscape = false;
+                    chunk += trimmed[idx];
+                    idx++;
+                    continue;
+                } 
+                inEscape = true;
+                
+            } else if (trimmed[idx] === '|' && !inQuote && stopAtPipe) {
+                return { value: chunk, remaining: trimmed.slice(idx + 1).trim(), reason: 'descriptionMark' };
+        
+            } else if (trimmed[idx] === '#' && !inQuote) {
+                // Start of comment, stop processing further  
+                reason = 'commentMark';
+                break;
+            } else {
+                if (inEscape) {
+                    // Handle common escape sequences
+                    switch (trimmed[idx]) {
+                        case 'n':
+                            chunk += '\n';
+                            break;
+                        case 'r':
+                            chunk += '\r';
+                            break;
+                        case 't':
+                            chunk += '\t';
+                            break;
+                        default:
+                            chunk += trimmed[idx];
+                    }
+                    inEscape = false;
+                } else {
+                    chunk += trimmed[idx];
+                }
             }
+            idx++;
         }
-        return result;
+        if (inEscape) {
+            // Handle dangling escape character at end of string
+            chunk += '\\';
+        }
+        return { value: chunk, remaining: trimmed.slice(idx).trim(), reason };
     }
+
 
     private async resolveFileVariables(document: TextDocument, variables: FileVariableValue[]): Promise<Map<string, string>> {
         // Resolve non-file variables in variable value

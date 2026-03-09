@@ -95,15 +95,22 @@
           "name": "variable.other.http"
         },
         "3": {
-          "name": "string.other.http",
-          "patterns": [
-            {
-              "include": "#variables"
-            }
-          ]
+          "name": "keyword.operator.http"
+        },
+        "4": {
+          "name": "string.other.http"
+        },
+        "5": {
+          "name": "keyword.operator.http"
+        },
+        "6": {
+          "name": "string.other.http.description"
+        },
+        "7": {
+          "name": "comment.line.sharp.http"
         }
       },
-      "match": "^\\s*(@)([^\\s=]+)\\s*=\\s*(.*?)\\s*$",
+      "match": "^\\s*(@)([^\\s=]+)\\s*(=)\\s*(.+?)(?:\\s*(\\|)\\s*(.+?))?(?:\\s*(#.*))?$",
       "name": "http.filevariable"
     },
     {
