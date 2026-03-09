@@ -35,6 +35,8 @@ REST Client Next includes a rich set of features designed to make API testing co
   - `-u, --user` (Basic auth only)
   - `-d, --data, --data-ascii, --data-binary, --data-raw`
 
+![Curl Request]({{ '/assets/images/curl-request.png' | relative_url }})
+
 ### Request History
 
 - Auto-save every sent request to history
@@ -42,6 +44,8 @@ REST Client Next includes a rich set of features designed to make API testing co
 - Display method, URL, and request time for each entry
 - Re-send any historical request by selecting it
 - Clear history via `Rest Client: Clear Request History`
+
+![Request History]({{ '/assets/images/request-history.png' | relative_url }})
 
 ### Response Handling
 
@@ -106,6 +110,8 @@ Full language support for `.http` and `.rest` files:
 - CodeLens for sending requests
 - Request block folding/unfolding
 - Support for Markdown fenced code blocks with `http` or `rest`
+
+![Auto-completion example]({{ '/assets/images/http.png' | relative_url }})
 
 ### Proxy & Network
 
