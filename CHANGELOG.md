@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/tutilus/vscode-restclientnext/compare/v1.2.0...v1.3.0) (2026-03-10)
+
+- **Feature**: All Request Sequentielly -- fix typo + add lens ([5b31588](https://github.com/tutilus/vscode-restclientnext/commit/5b31588488360c9d040b05467b14c0b74f8f9a25)) Upstream -> [PR #1388](https://github.com/Huachao/vscode-restclient/pull/1388)
+- **Feature**: Customize code Lens and optionally show environnement ([ee244fb](https://github.com/tutilus/vscode-restclientnext/commit/ee244fbef9517332f0fd9878c82ac045a35a7289))
+- **Feature**: Variable descriptions with quote-aware parsing ([3c69264](https://github.com/tutilus/vscode-restclientnext/commit/3c692646e31323dcd1d7adac59cb0b48983ebbfc)), closes [#22](https://github.com/tutilus/vscode-restclientnext/issues/22) [#21](https://github.com/tutilus/vscode-restclientnext/issues/21) Upstream -> [Issue #1397](https://github.com/Huachao/vscode-restclient/issues/1397) partially done.
+- **Feature**: Add new @set metadata directive [PR #24](https://github.com/tutilus/vscode-restclientnext/pull/24) Upstream [PR #1422](https://github.com/Huachao/vscode-restclient/pull/1422)
+- **Bugfix**: Auth Basic regression on user:pass format ([beeb772](https://github.com/tutilus/vscode-restclientnext/commit/beeb772e212c43c80175f00ddda70c56c81d700d))
+- **Chore**: Cherry pick upstream README fixes
+- **Maintenance**: Package optimization ([7ef29cc](https://github.com/tutilus/vscode-restclientnext/commit/7ef29cc7c1a3258d59d06796d2678ef73db0e47c))
+- **Chore**: Add github page for documentation ([9e8f233](https://github.com/tutilus/vscode-restclientnext/commit/9e8f233097a2988ab38cded853233ff7c58a79d6))
+- **Chore**: Add markdown sample ([4300982](https://github.com/tutilus/vscode-restclientnext/commit/430098203ad715581031bfd1029a0df1179e0708))
+- **Maintenance**: Fix permission release.workflow ([6a37e67](https://github.com/tutilus/vscode-restclientnext/commit/6a37e67f032774c99a47985ed1694293268b78dc))
+- **Maintenance**: Add oxfmt and oxlint ([e07292d](https://github.com/tutilus/vscode-restclientnext/commit/e07292d626b0ebe31d6ffc5ffcfbd442fdeabb4e))
+
 ## [1.2.0](https://github.com/tutilus/vscode-restclientnext/compare/v1.1.0...v1.2.0) (2026-03-03)
 
 - **Feature**: Add Faker.js integration for realistic fake data generation (https://github.com/tutilus/vscode-restclientnext/issues/6)
