@@ -32,6 +32,10 @@
     },
     "form-data": "^4.0.5"
   },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.svg"
+  ],
   "categories": [
     "Other",
     "Snippets",

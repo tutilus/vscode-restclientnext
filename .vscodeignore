@@ -3,6 +3,8 @@
 out/**
 node_modules/**
 src/**
+.git/**
+.github/**
 .gitignore
 .yarnrc
 webpack.config.js
@@ -12,5 +14,12 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+**/*.test.ts
+**/test/**
+scripts/
+.vscode-test.mjs
+oxlintrc.json
+oxfmtrc.json
+CODE_OF_CONDUCT.md
 docs/
 samples/
