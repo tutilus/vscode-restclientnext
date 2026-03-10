@@ -138,6 +138,34 @@ name=foo
 
 > **Tip:** Ctrl/Cmd + Click on a document link to open the file in a new tab.
 
+## Per-Request Settings in Code
+
+Add special comments (metadata directives) before a request to modify its behavior. These include:
+
+- `@name` - Name the request for cross-referencing
+- `@prompt` - Prompt for user input
+- `@set` - Extract response values to variables
+- `@note` - Show confirmation dialog
+- `@no-redirect` - Disable redirect following
+- `@no-cookie-jar` - Disable cookie handling
+
+For detailed documentation, examples, and best practices, see [Metadata Directives]({{ '/metadata' | relative_url }}).
+
+```http
+```http
+###
+# @name first
+GET https://api.example.com/user
+
+###
+# @note This A Note
+POST https://api.example.com/login HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+name={{ first.response.body.$.name }}
+&password=bar
+```
+
 ### Multiple Requests in One File
 
 Separate requests with three or more consecutive `#` symbols:
