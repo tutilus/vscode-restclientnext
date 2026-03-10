@@ -1,11 +1,12 @@
-export type ResolveResult = { state: ResolveState.Success, value: any }
-                          | { state: ResolveState.Warning, value?: any, message: ResolveWarningMessage }
-                          | { state: ResolveState.Error, message: ResolveErrorMessage };
+export type ResolveResult =
+    | { state: ResolveState.Success; value: any }
+    | { state: ResolveState.Warning; value?: any; message: ResolveWarningMessage }
+    | { state: ResolveState.Error; message: ResolveErrorMessage };
 
 export const enum ResolveState {
     Success,
     Warning,
-    Error
+    Error,
 }
 
 export const enum ResolveErrorMessage {
@@ -14,7 +15,7 @@ export const enum ResolveErrorMessage {
     SystemVariableNotExist = 'System variable does not exist',
     EnvironmentVariableNotExist = 'Environment variable does not exist',
     FileVariableNotExist = 'File variable does not exist',
-    RequestVariableNotExist =  'Request variable does not exist',
+    RequestVariableNotExist = 'Request variable does not exist',
 }
 
 export const enum ResolveWarningMessage {

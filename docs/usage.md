@@ -8,15 +8,15 @@ description: Learn how to use REST Client Next to send HTTP requests and view re
 ### Sending a Request
 
 ![Usage Demo]({{ '/assets/images/usage.gif' | relative_url }})
-*Demo: Sending a request and viewing response*
+_Demo: Sending a request and viewing response_
 
 1. Create or open a file with `.http` or `.rest` extension (or any file and set language mode to `HTTP`) in Visual Studio Code
 2. Type your HTTP request
 3. Use one of these methods to send:
-   - Click `Send Request` link above the request
-   - Press `Ctrl+Alt+R` (`Cmd+Alt+R` on macOS)
-   - Right-click in the editor and select `Send Request`
-   - Press `F1` and type `Rest Client: Send Request`
+    - Click `Send Request` link above the request
+    - Press `Ctrl+Alt+R` (`Cmd+Alt+R` on macOS)
+    - Right-click in the editor and select `Send Request`
+    - Press `F1` and type `Rest Client: Send Request`
 
 The response will appear in a separate preview panel.
 
@@ -65,7 +65,8 @@ User-Agent: rest-client
 Accept-Language: en-GB,en-US;q=0.8,en;q=0.6,zh-CN;q=0.4
 Content-Type: application/json
 ```
-A default `User-Agent: vscode-restclient` is added if not specified. Customize via `rest-client.defaultHeaders` setting. 
+
+A default `User-Agent: vscode-restclient` is added if not specified. Customize via `rest-client.defaultHeaders` setting.
 
 > Tes CORS by setting an _Origin:_ header.
 
@@ -187,7 +188,7 @@ Note: Blank line between query and variables.
 ### Making cURL Requests
 
 ![cURL Request]({{ '/assets/images/curl-request.png' | relative_url }})
-*Writing a cURL request in the editor*
+_Writing a cURL request in the editor_
 
 Simply write a cURL command in the editor:
 
@@ -242,7 +243,7 @@ Change via `rest-client.previewOption` setting:
 Click the respective icons in the response preview tab title bar.
 
 ![Save Response]({{ '/assets/images/response.gif' | relative_url }})
-*Save full response or response body only*
+_Save full response or response body only_
 
 ### Viewing Response Details
 
@@ -254,7 +255,7 @@ Hover over status bar indicators:
 ## Request History
 
 ![Request History]({{ '/assets/images/request-history.png' | relative_url }})
-*Viewing request history*
+_Viewing request history_
 
 Every sent request is automatically saved. Access via:
 
@@ -268,7 +269,7 @@ Clear history with `Rest Client: Clear Request History`.
 ## Code Snippets
 
 ![Generate Code Snippet]({{ '/assets/images/code-snippet.gif' | relative_url }})
-*Generating code snippets in various languages*
+_Generating code snippets in various languages_
 
 Generate code snippets for your request in various languages:
 
@@ -280,14 +281,14 @@ Select from supported languages and libraries; generated code appears in a previ
 
 ## Keyboard Shortcuts
 
-| Action | Windows/Linux | macOS |
-|--------|---------------|-------|
-| Send Request | `Ctrl+Alt+R` | `Cmd+Alt+R` |
-| Cancel Request | `Ctrl+Alt+K` | `Cmd+Alt+K` |
-| Rerun Last Request | `Ctrl+Alt+L` | `Cmd+Alt+L` |
-| Request History | `Ctrl+Alt+H` | `Cmd+Alt+H` |
-| Switch Environment | `Ctrl+Alt+E` | `Cmd+Alt+E` |
-| Copy Request as cURL | `Ctrl+Alt+C` | `Cmd+Alt+C` |
-| Generate Code Snippet | `Ctrl+Alt+C` | `Cmd+Alt+C` |
+| Action                | Windows/Linux | macOS       |
+| --------------------- | ------------- | ----------- |
+| Send Request          | `Ctrl+Alt+R`  | `Cmd+Alt+R` |
+| Cancel Request        | `Ctrl+Alt+K`  | `Cmd+Alt+K` |
+| Rerun Last Request    | `Ctrl+Alt+L`  | `Cmd+Alt+L` |
+| Request History       | `Ctrl+Alt+H`  | `Cmd+Alt+H` |
+| Switch Environment    | `Ctrl+Alt+E`  | `Cmd+Alt+E` |
+| Copy Request as cURL  | `Ctrl+Alt+C`  | `Cmd+Alt+C` |
+| Generate Code Snippet | `Ctrl+Alt+C`  | `Cmd+Alt+C` |
 
 > Note: Shortcuts work exclusively when file language mode is `HTTP` or `plaintext`.

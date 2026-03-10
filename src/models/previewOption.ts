@@ -2,7 +2,7 @@ export enum PreviewOption {
     Full,
     Headers,
     Body,
-    Exchange
+    Exchange,
 }
 
 export function fromString(value: string): PreviewOption {

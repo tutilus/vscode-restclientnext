@@ -7,23 +7,32 @@ export interface HARNameValue {
 }
 
 export class HARHeader implements HARNameValue {
-    public constructor(public name: string, public value: string) {
-    }
+    public constructor(
+        public name: string,
+        public value: string
+    ) {}
 }
 
 export class HARCookie implements HARNameValue {
-    public constructor(public name: string, public value: string) {
-    }
+    public constructor(
+        public name: string,
+        public value: string
+    ) {}
 }
 
 export class HARParam implements HARNameValue {
-    public constructor(public name: string, public value: string) {
-    }
+    public constructor(
+        public name: string,
+        public value: string
+    ) {}
 }
 
 export class HARPostData {
     public params: HARParam[] = [];
-    public constructor(public mimeType: string, public text: string) {
+    public constructor(
+        public mimeType: string,
+        public text: string
+    ) {
         if (mimeType === 'application/x-www-form-urlencoded') {
             if (text) {
                 text = decodeURIComponent(text.replace(/\+/g, '%20'));
@@ -41,7 +50,13 @@ export class HARPostData {
 export class HARHttpRequest {
     public queryString: HARParam[];
 
-    public constructor(public method: string, public url: string, public headers: HARHeader[], public cookies: HARCookie[], public postData?: HARPostData) {
+    public constructor(
+        public method: string,
+        public url: string,
+        public headers: HARHeader[],
+        public cookies: HARCookie[],
+        public postData?: HARPostData
+    ) {
         const queryObj = urlParse(url, true).query;
         this.queryString = this.flatten(queryObj);
     }

@@ -11,22 +11,31 @@ const yargsParser = require('yargs-parser');
 const DefaultContentType: string = 'application/x-www-form-urlencoded';
 
 export class CurlRequestParser implements RequestParser {
-
-    public constructor(private readonly requestRawText: string, private readonly settings: IRestClientSettings) {
-    }
+    public constructor(
+        private readonly requestRawText: string,
+        private readonly settings: IRestClientSettings
+    ) {}
 
     public async parseHttpRequest(name?: string): Promise<HttpRequest> {
         let requestText = CurlRequestParser.mergeMultipleSpacesIntoSingle(
-            CurlRequestParser.mergeIntoSingleLine(this.requestRawText.trim()));
+            CurlRequestParser.mergeIntoSingleLine(this.requestRawText.trim())
+        );
         requestText = requestText
-            .replace(/(-X)(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE|LOCK|UNLOCK|PROPFIND|PROPPATCH|COPY|MOVE|MKCOL|MKCALENDAR|ACL|SEARCH)/, '$1 $2')
+            .replace(
+                /(-X)(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE|LOCK|UNLOCK|PROPFIND|PROPPATCH|COPY|MOVE|MKCOL|MKCALENDAR|ACL|SEARCH)/,
+                '$1 $2'
+            )
             .replace(/(-I|--head)(?=\s+)/, '-X HEAD');
         const parsedArguments = yargsParser.default(requestText);
 
         // parse url
         let url = parsedArguments._[1];
         if (!url) {
-            url = parsedArguments.L || parsedArguments.location || parsedArguments.compressed || parsedArguments.url;
+            url =
+                parsedArguments.L ||
+                parsedArguments.location ||
+                parsedArguments.compressed ||
+                parsedArguments.url;
         }
 
         // parse header
@@ -52,7 +61,12 @@ export class CurlRequestParser implements RequestParser {
         }
 
         // parse body
-        let body = parsedArguments.d || parsedArguments.data || parsedArguments['data-ascii'] || parsedArguments['data-binary'] || parsedArguments['data-raw'];
+        let body =
+            parsedArguments.d ||
+            parsedArguments.data ||
+            parsedArguments['data-ascii'] ||
+            parsedArguments['data-binary'] ||
+            parsedArguments['data-raw'];
         if (Array.isArray(body)) {
             body = body.join('&');
         } else if (body !== undefined) {
@@ -76,7 +90,7 @@ export class CurlRequestParser implements RequestParser {
         // parse method
         let method: string = (parsedArguments.X || parsedArguments.request) as string;
         if (!method) {
-            method = body ? "POST" : "GET";
+            method = body ? 'POST' : 'GET';
         }
 
         return new HttpRequest(method, url, headers, body, body, name);

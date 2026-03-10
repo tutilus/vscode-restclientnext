@@ -1,9 +1,18 @@
-import { CancellationToken, CodeLens, CodeLensProvider, Command, Range, TextDocument } from 'vscode';
+import {
+    CancellationToken,
+    CodeLens,
+    CodeLensProvider,
+    Command,
+    Range,
+    TextDocument,
+} from 'vscode';
 import { Selector } from '../utils/selector';
 
 export class MarkdownCodeLensProvider implements CodeLensProvider {
-
-    public provideCodeLenses(document: TextDocument, _token: CancellationToken): Promise<CodeLens[]> {
+    public provideCodeLenses(
+        document: TextDocument,
+        _token: CancellationToken
+    ): Promise<CodeLens[]> {
         const blocks: CodeLens[] = [];
 
         for (const range of Selector.getMarkdownRestSnippets(document)) {
@@ -18,5 +27,4 @@ export class MarkdownCodeLensProvider implements CodeLensProvider {
 
         return Promise.resolve(blocks);
     }
-
 }

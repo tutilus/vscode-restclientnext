@@ -48,12 +48,12 @@ export class RequestController {
         }
 
         const confirmation = await window.showInformationMessage(
-            "Are you sure you want to run all requests in this document?",
-            "Yes",
-            "No"
+            'Are you sure you want to run all requests in this document?',
+            'Yes',
+            'No'
         );
 
-        if (confirmation !== "Yes") {
+        if (confirmation !== 'Yes') {
             return;
         }
 
@@ -66,13 +66,14 @@ export class RequestController {
 
         const activeColumn = window.activeTextEditor!.viewColumn;
 
-
         for (const selectedRequest of requests) {
             const { text, metadatas } = selectedRequest;
             const name = metadatas.get(RequestMetadata.Name);
 
             if (metadatas.has(RequestMetadata.Note)) {
-                const note = name ? `Are you sure you want to send the request "${name}"?` : 'Are you sure you want to send this request?';
+                const note = name
+                    ? `Are you sure you want to send the request "${name}"?`
+                    : 'Are you sure you want to send this request?';
                 const userConfirmed = await window.showWarningMessage(note, 'Yes', 'No');
                 if (userConfirmed !== 'Yes') {
                     continue;
@@ -82,7 +83,10 @@ export class RequestController {
             const requestSettings = new RequestSettings(metadatas);
             const settings: IRestClientSettings = new RestClientSettings(requestSettings);
 
-            const httpRequest = await RequestParserFactory.createRequestParser(text, settings).parseHttpRequest(name);
+            const httpRequest = await RequestParserFactory.createRequestParser(
+                text,
+                settings
+            ).parseHttpRequest(name);
 
             await this.runCore(httpRequest, settings, activeColumn, document);
         }
@@ -152,7 +156,6 @@ export class RequestController {
     }
 
     private async runCore(
-        
         httpRequest: HttpRequest,
         settings: IRestClientSettings,
         activeColumn?: ViewColumn,
@@ -213,25 +216,24 @@ export class RequestController {
             let message = 'An unexpected error occurred.';
 
             if (error instanceof Error) {
-
                 const err = error as Error & { code?: string };
                 switch (err.code) {
-                case 'ETIMEDOUT':
-                    message = `Request timed out. Double-check your network connection and/or raise the timeout duration (currently set to ${settings.timeoutInMilliseconds}ms) as needed: 'rest-client.timeoutinmilliseconds'. Details: ${error}.`;
-                    break;
-                case 'ECONNREFUSED':
-                    message = `The connection was rejected. Either the requested service isn’t running on the requested server/port, the proxy settings in vscode are misconfigured, or a firewall is blocking requests. Details: ${error}.`;
-                    break;
-                case 'ENETUNREACH':
-                    message = `You don't seem to be connected to a network. Details: ${error}`;
-                    break;
-                default:
-                    message = `An error occurred while sending the request: ${error}`;
+                    case 'ETIMEDOUT':
+                        message = `Request timed out. Double-check your network connection and/or raise the timeout duration (currently set to ${settings.timeoutInMilliseconds}ms) as needed: 'rest-client.timeoutinmilliseconds'. Details: ${error}.`;
+                        break;
+                    case 'ECONNREFUSED':
+                        message = `The connection was rejected. Either the requested service isn’t running on the requested server/port, the proxy settings in vscode are misconfigured, or a firewall is blocking requests. Details: ${error}.`;
+                        break;
+                    case 'ENETUNREACH':
+                        message = `You don't seem to be connected to a network. Details: ${error}`;
+                        break;
+                    default:
+                        message = `An error occurred while sending the request: ${error}`;
                 }
-             } else {
+            } else {
                 message = `${error}`;
             }
-    
+
             this._requestStatusEntry.update({ state: RequestState.Error });
             Logger.error('Failed to send request:', error);
             window.showErrorMessage(message);

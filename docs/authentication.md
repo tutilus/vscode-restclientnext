@@ -86,9 +86,11 @@ Authorization: Bearer {% raw %}{{$aadV2Token}}{% endraw %}
 Optional parameters:
 
 {% raw %}
+
 ```
 {{$aadV2Token [new] [AzureCloud|AzureChinaCloud|AzureUSGovernment|ppe] [appOnly] [scopes:<scope>] [tenantid:<domain|tenantId>] [clientid:<clientId>}}
 ```
+
 {% endraw %}
 
 - `new` - Force re-authentication
@@ -98,14 +100,16 @@ Optional parameters:
 - `tenantid:` - Tenant domain or ID (`common` for sign-in determination)
 - `clientid:` - App registration ID (defaults to plugin's built-in app)
 
-## OpenID Connect (OIDC) 
+## OpenID Connect (OIDC)
 
 Create a Access Token from Open ID Connect end point as Microsft Identity Platform:
 
 {% raw %}
+
 ```http
 {{$oidcAccessToken [new] [<clientId:<clientId>] [<callbackPort:<callbackPort>] [authorizeEndpoint:<authorizeEndpoint>] [tokenEndpoint:<tokenEndpoint>] [scopes:<scopes>] [audience:<audience>}}
 ```
+
 {% endraw %}
 
 ## AWS Signature v4

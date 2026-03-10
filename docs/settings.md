@@ -9,19 +9,20 @@ REST Client Next provides extensive configuration options to customize its behav
 
 ### Network & Request
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `rest-client.followredirect` | boolean | `true` | Follow HTTP 3xx responses as redirects |
-| `rest-client.timeoutinmilliseconds` | number | `0` | Timeout in milliseconds (0 = infinity) |
-| `rest-client.rememberCookiesForSubsequentRequests` | boolean | `true` | Save cookies from `Set-Cookie` header and reuse in subsequent requests |
-| `rest-client.proxySupport` | string | `"system"` | Proxy support: `"off"`, `"on"`, `"system"` (use VS Code proxy) |
-| `rest-client.excludeHostsForProxy` | string[] | `[]` | List of hosts to exclude when using proxy |
+| Setting                                            | Type     | Default    | Description                                                            |
+| -------------------------------------------------- | -------- | ---------- | ---------------------------------------------------------------------- |
+| `rest-client.followredirect`                       | boolean  | `true`     | Follow HTTP 3xx responses as redirects                                 |
+| `rest-client.timeoutinmilliseconds`                | number   | `0`        | Timeout in milliseconds (0 = infinity)                                 |
+| `rest-client.rememberCookiesForSubsequentRequests` | boolean  | `true`     | Save cookies from `Set-Cookie` header and reuse in subsequent requests |
+| `rest-client.proxySupport`                         | string   | `"system"` | Proxy support: `"off"`, `"on"`, `"system"` (use VS Code proxy)         |
+| `rest-client.excludeHostsForProxy`                 | string[] | `[]`       | List of hosts to exclude when using proxy                              |
 
 ### Default Headers
 
 `rest-client.defaultHeaders` - Object of header name/value pairs added to every request if not explicitly specified.
 
 Default:
+
 ```json
 {
     "User-Agent": "vscode-restclient",
@@ -31,29 +32,29 @@ Default:
 
 ### Response Preview
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `rest-client.previewOption` | `"full" \| "headers" \| "body" \| "exchange"` | `"full"` | What to preview: full response, headers only, body only, or both request and response |
-| `rest-client.previewResponseInUntitledDocument` | boolean | `false` | Preview response in untitled document (allows VS Code search/select) instead of HTML view |
-| `rest-client.previewResponsePanelTakeFocus` | boolean | `true` | Response panel takes focus after receiving response |
-| `rest-client.previewColumn` | `"current" \| "beside"` | `"beside"` | Where to show response: current column or side-by-side |
-| `rest-client.requestNameAsResponseTabTitle` | boolean | `false` | Use request name as response tab title (only for HTML view) |
+| Setting                                         | Type                                          | Default    | Description                                                                               |
+| ----------------------------------------------- | --------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------- |
+| `rest-client.previewOption`                     | `"full" \| "headers" \| "body" \| "exchange"` | `"full"`   | What to preview: full response, headers only, body only, or both request and response     |
+| `rest-client.previewResponseInUntitledDocument` | boolean                                       | `false`    | Preview response in untitled document (allows VS Code search/select) instead of HTML view |
+| `rest-client.previewResponsePanelTakeFocus`     | boolean                                       | `true`     | Response panel takes focus after receiving response                                       |
+| `rest-client.previewColumn`                     | `"current" \| "beside"`                       | `"beside"` | Where to show response: current column or side-by-side                                    |
+| `rest-client.requestNameAsResponseTabTitle`     | boolean                                       | `false`    | Use request name as response tab title (only for HTML view)                               |
 
 ### Font Customization
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `rest-client.fontSize` | number | `13` | Font size in pixels for response preview |
-| `rest-client.fontFamily` | string | `"Menlo, Monaco, Consolas, \"Droid Sans Mono\", \"Courier New\", monospace, \"Droid Sans Fallback\""` | Font family for response preview |
-| `rest-client.fontWeight` | `"normal" \| "bold" \| "lighter" \| "bolder"` | `"normal"` | Font weight for response preview |
+| Setting                  | Type                                          | Default                                                                                               | Description                              |
+| ------------------------ | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `rest-client.fontSize`   | number                                        | `13`                                                                                                  | Font size in pixels for response preview |
+| `rest-client.fontFamily` | string                                        | `"Menlo, Monaco, Consolas, \"Droid Sans Mono\", \"Courier New\", monospace, \"Droid Sans Fallback\""` | Font family for response preview         |
+| `rest-client.fontWeight` | `"normal" \| "bold" \| "lighter" \| "bolder"` | `"normal"`                                                                                            | Font weight for response preview         |
 
 ### Large Response Handling
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `rest-client.disableHighlightResponseBodyForLargeResponse` | boolean | `true` | Disable syntax highlighting for large responses |
-| `rest-client.disableAddingHrefLinkForLargeResponse` | boolean | `true` | Disable href links in large responses |
-| `rest-client.largeResponseBodySizeLimitInMB` | number | `5` | Size threshold in MB to identify "large responses" |
+| Setting                                                    | Type    | Default | Description                                        |
+| ---------------------------------------------------------- | ------- | ------- | -------------------------------------------------- |
+| `rest-client.disableHighlightResponseBodyForLargeResponse` | boolean | `true`  | Disable syntax highlighting for large responses    |
+| `rest-client.disableAddingHrefLinkForLargeResponse`        | boolean | `true`  | Disable href links in large responses              |
+| `rest-client.largeResponseBodySizeLimitInMB`               | number  | `5`     | Size threshold in MB to identify "large responses" |
 
 ### Environments & Variables
 
@@ -99,6 +100,7 @@ See [Variables]({{ '/variables' | relative_url }}) for complete documentation an
 ```
 
 Paths can be:
+
 - Absolute: `/home/user/certs/client.crt`
 - Relative to workspace: `certs/client.crt`
 - Relative to current `.http` file: `./certs/client.crt`
@@ -126,6 +128,7 @@ Paths can be:
 `rest-client.formParamEncodingStrategy` - Strategy for encoding `application/x-www-form-urlencoded` body.
 
 Options:
+
 - `"automatic"` - Detect and encode automatically (default)
 - `"never"` - Treat provided body as-is
 - `"always"` - Always encode (for special character issues)
@@ -143,6 +146,7 @@ Options:
 `rest-client.logLevel` - Verbosity of logging in REST output panel.
 
 Options:
+
 - `"error"` - Errors only (default)
 - `"warning"` - Errors and warnings
 - `"info"` - Informational messages
@@ -152,13 +156,13 @@ Options:
 
 CodeLens adds actionable links above requests in the editor.
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `rest-client.enableSendRequestCodeLens` | boolean | `true` | Enable/disable "Send Request" and "Send All Request Sequentially" CodeLens |
-| `rest-client.enableCustomVariableReferencesCodeLens` | boolean | `true` | Enable/disable custom variable references CodeLens |
-| `rest-client.codeLensSendRequestTitle` | string | `"Send Request"` | Custom title for send request CodeLens |
-| `rest-client.codeLensSendAllRequestTitle` | string | `"Send All Requests Sequentially"` | Custom title for send all CodeLens |
-| `rest-client.showEnvironmentInCodeLensTitle` | boolean | `false` | Show current environment name in CodeLens title |
+| Setting                                              | Type    | Default                            | Description                                                                |
+| ---------------------------------------------------- | ------- | ---------------------------------- | -------------------------------------------------------------------------- |
+| `rest-client.enableSendRequestCodeLens`              | boolean | `true`                             | Enable/disable "Send Request" and "Send All Request Sequentially" CodeLens |
+| `rest-client.enableCustomVariableReferencesCodeLens` | boolean | `true`                             | Enable/disable custom variable references CodeLens                         |
+| `rest-client.codeLensSendRequestTitle`               | string  | `"Send Request"`                   | Custom title for send request CodeLens                                     |
+| `rest-client.codeLensSendAllRequestTitle`            | string  | `"Send All Requests Sequentially"` | Custom title for send all CodeLens                                         |
+| `rest-client.showEnvironmentInCodeLensTitle`         | boolean | `false`                            | Show current environment name in CodeLens title                            |
 
 ## Per-Request Settings
 

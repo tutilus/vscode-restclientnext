@@ -1,7 +1,7 @@
 import { Timings } from '@szmarczak/http-timer';
 import { getContentType } from '../utils/misc';
 import { ResponseHeaders } from './base';
-import { HttpRequest } from "./httpRequest";
+import { HttpRequest } from './httpRequest';
 
 export class HttpResponse {
     public constructor(
@@ -14,8 +14,8 @@ export class HttpResponse {
         public headersSizeInBytes: number,
         public bodyBuffer: Buffer,
         public timingPhases: Timings['phases'],
-        public request: HttpRequest) {
-    }
+        public request: HttpRequest
+    ) {}
 
     public get contentType(): string | undefined {
         return getContentType(this.headers);

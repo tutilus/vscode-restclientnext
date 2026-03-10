@@ -20,7 +20,10 @@ interface PromptVariableDefinition {
 export class Selector {
     private static readonly responseStatusLineRegex = /^\s*HTTP\/[\d.]+/;
 
-    public static async getAllRequests(_editor: TextEditor, document: TextDocument): Promise<SelectedRequest[]> {
+    public static async getAllRequests(
+        _editor: TextEditor,
+        document: TextDocument
+    ): Promise<SelectedRequest[]> {
         const requests: SelectedRequest[] = [];
         const fullText = document.getText();
         const lines = fullText.split(Constants.LineSplitterRegex);
@@ -34,28 +37,35 @@ export class Selector {
             const metadatas = this.parseReqMetadatas(requestLines);
 
             // Prompt for variables if needed
-            const promptVariablesDefinitions = this.parsePromptMetadataForVariableDefinitions(metadatas.get(RequestMetadata.Prompt));
+            const promptVariablesDefinitions = this.parsePromptMetadataForVariableDefinitions(
+                metadatas.get(RequestMetadata.Prompt)
+            );
             const promptVariables = await this.promptForInput(promptVariablesDefinitions);
             if (!promptVariables) {
                 // If user cancels prompt, skip this request
                 continue;
             }
-            
 
             // Remove comment lines for the actual request
             const rawLines = requestLines.filter(l => !this.isCommentLine(l));
-            const requestText = await VariableProcessor.processRawRequest(rawLines.join(EOL), promptVariables);
+            const requestText = await VariableProcessor.processRawRequest(
+                rawLines.join(EOL),
+                promptVariables
+            );
 
             requests.push({
                 text: requestText,
-                metadatas: metadatas
+                metadatas: metadatas,
             });
         }
 
         return requests;
     }
 
-    public static async getRequest(editor: TextEditor, range: Range | null = null): Promise<SelectedRequest | null> {
+    public static async getRequest(
+        editor: TextEditor,
+        range: Range | null = null
+    ): Promise<SelectedRequest | null> {
         if (!editor.document) {
             return null;
         }
@@ -327,8 +337,8 @@ export class Selector {
     }
 
     public static *getMarkdownRestSnippets(document: TextDocument): Generator<Range> {
-        const snippetStartRegx = new RegExp('^\`\`\`(' + ['http', 'rest'].join('|') + ')$');
-        const snippetEndRegx = /^\`\`\`$/;
+        const snippetStartRegx = new RegExp('^```(' + ['http', 'rest'].join('|') + ')$');
+        const snippetEndRegx = /^```$/;
 
         let snippetStart: number | null = null;
         for (let i = 0; i < document.lineCount; i++) {

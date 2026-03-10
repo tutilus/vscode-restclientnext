@@ -38,14 +38,14 @@ Auto-completion triggers automatically or with `Ctrl+Space`. Supported categorie
 
 Built-in snippets accelerate request authoring:
 
-| Snippet | Description |
-|---------|-------------|
-| `get` | GET request template |
-| `post` | POST request template |
-| `put` | PUT request template |
-| `delete` | DELETE request template |
-| `patch` | PATCH request template |
-| `head` | HEAD request template |
+| Snippet   | Description              |
+| --------- | ------------------------ |
+| `get`     | GET request template     |
+| `post`    | POST request template    |
+| `put`     | PUT request template     |
+| `delete`  | DELETE request template  |
+| `patch`   | PATCH request template   |
+| `head`    | HEAD request template    |
 | `options` | OPTIONS request template |
 
 Type the snippet name and press `Tab` to expand.
@@ -85,6 +85,7 @@ Navigate to requests and variables quickly:
 - Or press `F1` and type `@`
 
 Shows a list of:
+
 - **File-level variables** (`@variableName`)
 - **Named requests** (`# @name requestName`)
 - **Request blocks**
@@ -99,10 +100,12 @@ CodeLens displays actionable links above each request:
 - **Send All Requests Sequentially** - Send all requests in the file one after another
 
 Toggle via:
+
 - `rest-client.enableSendRequestCodeLens`
 - `rest-client.enableCustomVariableReferencesCodeLens` (shows variable references)
 
 Customize titles:
+
 - `rest-client.codeLensSendRequestTitle`
 - `rest-client.codeLensSendAllRequestTitle`
 
@@ -118,6 +121,7 @@ Authorization: Bearer token
 ```
 
 Click the fold icon in the gutter or use:
+
 - `Ctrl+Shift+[` to fold
 - `Ctrl+Shift+]` to unfold
 
@@ -155,18 +159,18 @@ If a file isn't automatically recognized, change language mode:
 
 ## Language Features Summary
 
-| Feature | Description |
-|---------|-------------|
-| Syntax highlighting | Requests, headers, bodies, comments |
-| Auto-completion | Methods, URLs, headers, variables, MIME types |
-| Snippets | Templates for common HTTP methods |
-| Goto Symbol | Navigate to variables and named requests |
-| CodeLens | Inline "Send Request" links |
-| Folding | Collapse/expand request blocks |
-| Comment toggling | `#` and `//` support |
-| Bracket matching & auto-closing | {}, [], (), "", '' |
-| Indentation | Smart indentation around brackets |
-| Markdown support | Recognize requests in fenced code blocks |
+| Feature                         | Description                                   |
+| ------------------------------- | --------------------------------------------- |
+| Syntax highlighting             | Requests, headers, bodies, comments           |
+| Auto-completion                 | Methods, URLs, headers, variables, MIME types |
+| Snippets                        | Templates for common HTTP methods             |
+| Goto Symbol                     | Navigate to variables and named requests      |
+| CodeLens                        | Inline "Send Request" links                   |
+| Folding                         | Collapse/expand request blocks                |
+| Comment toggling                | `#` and `//` support                          |
+| Bracket matching & auto-closing | {}, [], (), "", ''                            |
+| Indentation                     | Smart indentation around brackets             |
+| Markdown support                | Recognize requests in fenced code blocks      |
 
 ## Tips
 
@@ -179,20 +183,24 @@ If a file isn't automatically recognized, change language mode:
 ## Troubleshooting
 
 ### No syntax highlighting?
+
 - Ensure file extension is `.http` or `.rest`
 - Or manually set language mode to **HTTP**
 
 ### Auto-completion not working?
+
 - Check that language mode is **HTTP**
 - Wait for language server to initialize (~1-2 seconds after opening)
 - Try `Ctrl+Space` to manually trigger
 
 ### CodeLens missing?
+
 - Verify `rest-client.enableSendRequestCodeLens` is `true`
 - CodeLens may be disabled globally in VS Code: `editor.codeLens` setting
 - Some themes hide CodeLens; try changing theme or adjusting `workbench.colorCustomizations`
 
 ### Goto Symbol not showing variables?
+
 - Ensure file variables start with `@` on their own line
 - Named requests must use `# @name` or `// @name` syntax
 - File must be saved for registration
@@ -210,16 +218,16 @@ For large files (100+ requests):
 
 All shortcuts require HTTP/plaintext language mode:
 
-| Action | Windows/Linux | macOS |
-|--------|---------------|-------|
-| Send Request | `Ctrl+Alt+R` | `Cmd+Alt+R` |
-| Cancel Request | `Ctrl+Alt+K` | `Cmd+Alt+K` |
-| Rerun Last Request | `Ctrl+Alt+L` | `Cmd+Alt+L` |
-| Request History | `Ctrl+Alt+H` | `Cmd+Alt+H` |
-| Switch Environment | `Ctrl+Alt+E` | `Cmd+Alt+E` |
-| Copy Request as cURL | `Ctrl+Alt+C` | `Cmd+Alt+C` |
-| Generate Code Snippet | `Ctrl+Alt+C` | `Cmd+Alt+C` |
-| Goto Symbol | `Ctrl+Shift+O` | `Cmd+Shift+O` |
-| Toggle Comment | `Ctrl+/` | `Cmd+/` |
+| Action                | Windows/Linux  | macOS         |
+| --------------------- | -------------- | ------------- |
+| Send Request          | `Ctrl+Alt+R`   | `Cmd+Alt+R`   |
+| Cancel Request        | `Ctrl+Alt+K`   | `Cmd+Alt+K`   |
+| Rerun Last Request    | `Ctrl+Alt+L`   | `Cmd+Alt+L`   |
+| Request History       | `Ctrl+Alt+H`   | `Cmd+Alt+H`   |
+| Switch Environment    | `Ctrl+Alt+E`   | `Cmd+Alt+E`   |
+| Copy Request as cURL  | `Ctrl+Alt+C`   | `Cmd+Alt+C`   |
+| Generate Code Snippet | `Ctrl+Alt+C`   | `Cmd+Alt+C`   |
+| Goto Symbol           | `Ctrl+Shift+O` | `Cmd+Shift+O` |
+| Toggle Comment        | `Ctrl+/`       | `Cmd+/`       |
 
 > **Note:** These shortcuts are exclusive to HTTP/plaintext mode to avoid conflicts with other extensions.

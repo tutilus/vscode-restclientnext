@@ -78,6 +78,7 @@ Place anywhere in the file (before or between requests):
 ```
 
 Rules:
+
 - `@variableName = value` on a single line
 - Variable name cannot contain spaces
 - Value can include whitespace and any characters
@@ -140,15 +141,16 @@ Content-Type: application/json
 **Form:** `{% raw %}{{requestName.(response|request).(body|headers).(*|JSONPath|XPath|Header Name)}}{% endraw %}`
 
 **Components:**
+
 - `requestName` - The name defined with `@name`
 - `response` or `request` - Which to reference
 - `body` or `headers` - Which part
 - For `body`:
-  - `*` - Entire body
-  - `$.path` - JSONPath for JSON responses (e.g., `$.id`)
-  - `//xpath` - XPath for XML responses (e.g., `//user/@id`)
+    - `*` - Entire body
+    - `$.path` - JSONPath for JSON responses (e.g., `$.id`)
+    - `//xpath` - XPath for XML responses (e.g., `//user/@id`)
 - For `headers`:
-  - Header name (case-insensitive) - e.g., `X-Auth-Token`
+    - Header name (case-insensitive) - e.g., `X-Auth-Token`
 
 **Examples:**
 
@@ -190,26 +192,26 @@ Pre-defined dynamic variables, format: `{% raw %}{{$variableName}}{% endraw %}` 
 
 ### Fake Values
 
-Generate fake data using `Faker.js`. 
+Generate fake data using `Faker.js`.
 
-`{% raw %}{{$faker <module>.<property> [param]}}{% endraw %}` 
+`{% raw %}{{$faker <module>.<property> [param]}}{% endraw %}`
 
 **Common Faker Modules:**
 
-| Module | Properties | Examples |
-|--------|------------|----------|
-| `address` | `city`, `cityName`, `country`, `countryCode`, `postalCode`, `streetAddress`, `latitude`, `longitude` | `{% raw %}{{$faker address.city}}{% endraw %}`, `{% raw %}{{$faker address.postalCode}}{% endraw %}` |
-| `commerce` | `color`, `department`, `productName`, `price`, `ean` | `{% raw %}{{$faker commerce.productName}}{% endraw %}`, `{% raw %}{{$faker commerce.price}}{% endraw %}` |
-| `date` | `past`, `future`, `between`, `recent`, `month`, `weekday` | `{% raw %}{{$faker date.past}}{% endraw %}`, `{% raw %}{{$faker date.future 1 y}}{% endraw %}` |
-| `finance` | `account`, `mask`, `amount`, `transactionType`, `currencyCode`, `iban` | `{% raw %}{{$faker finance.account}}{% endraw %}`, `{% raw %}{{$faker finance.iban}}{% endraw %}` |
-| `git` | `branch`, `commitEntry`, `commitMessage`, `commitSha`, `tag` | `{% raw %}{{$faker git.commitSha}}{% endraw %}`, `{% raw %}{{$faker git.branch}}{% endraw %}` |
-| `hacker` | `abbreviation`, `adjective`, `noun`, `verb`, `ingverb` | `{% raw %}{{$faker hacker.noun}}{% endraw %}`, `{% raw %}{{$faker hacker.adjective}}{% endraw %}` |
-| `internet` | `avatar`, `email`, `exampleEmail`, `userAgent`, `url`, `ip`, `mac` | `{% raw %}{{$faker internet.email}}{% endraw %}`, `{% raw %}{{$faker internet.url}}{% endraw %}` |
-| `lorem` | `word`, `words`, `sentence`, `slug`, `paragraph`, `text` | `{% raw %}{{$faker lorem.paragraph}}{% endraw %}`, `{% raw %}{{$faker lorem.slug}}{% endraw %}` |
-| `name` | `firstName`, `lastName`, `fullName`, `jobTitle`, `prefix`, `suffix`, `title` | `{% raw %}{{$faker name.fullName}}{% endraw %}`, `{% raw %}{{$faker name.jobTitle}}{% endraw %}` |
-| `phone` | `phoneNumber`, `phoneNumberFormat`, `imei` | `{% raw %}{{$faker phone.number}}{% endraw %}`, `{% raw %}{{$faker phone.imei}}{% endraw %}` |
-| `random` | `number`, `float`, `arrayElement`, `objectElement`, `uuid`, `alphaNumeric` | `{% raw %}{{$faker random.number 1000 9999}}{% endraw %}`, `{% raw %}{{$faker random.arrayElement @array}}{% endraw %}` |
-| `system` | `fileName`, `mimeType`, `directory`, `fileType`, `commonFileName`, `semver` | `{% raw %}{{$faker system.fileName}}{% endraw %}`, `{% raw %}{{$faker system.mimeType}}{% endraw %}` |
+| Module     | Properties                                                                                           | Examples                                                                                                                |
+| ---------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `address`  | `city`, `cityName`, `country`, `countryCode`, `postalCode`, `streetAddress`, `latitude`, `longitude` | `{% raw %}{{$faker address.city}}{% endraw %}`, `{% raw %}{{$faker address.postalCode}}{% endraw %}`                    |
+| `commerce` | `color`, `department`, `productName`, `price`, `ean`                                                 | `{% raw %}{{$faker commerce.productName}}{% endraw %}`, `{% raw %}{{$faker commerce.price}}{% endraw %}`                |
+| `date`     | `past`, `future`, `between`, `recent`, `month`, `weekday`                                            | `{% raw %}{{$faker date.past}}{% endraw %}`, `{% raw %}{{$faker date.future 1 y}}{% endraw %}`                          |
+| `finance`  | `account`, `mask`, `amount`, `transactionType`, `currencyCode`, `iban`                               | `{% raw %}{{$faker finance.account}}{% endraw %}`, `{% raw %}{{$faker finance.iban}}{% endraw %}`                       |
+| `git`      | `branch`, `commitEntry`, `commitMessage`, `commitSha`, `tag`                                         | `{% raw %}{{$faker git.commitSha}}{% endraw %}`, `{% raw %}{{$faker git.branch}}{% endraw %}`                           |
+| `hacker`   | `abbreviation`, `adjective`, `noun`, `verb`, `ingverb`                                               | `{% raw %}{{$faker hacker.noun}}{% endraw %}`, `{% raw %}{{$faker hacker.adjective}}{% endraw %}`                       |
+| `internet` | `avatar`, `email`, `exampleEmail`, `userAgent`, `url`, `ip`, `mac`                                   | `{% raw %}{{$faker internet.email}}{% endraw %}`, `{% raw %}{{$faker internet.url}}{% endraw %}`                        |
+| `lorem`    | `word`, `words`, `sentence`, `slug`, `paragraph`, `text`                                             | `{% raw %}{{$faker lorem.paragraph}}{% endraw %}`, `{% raw %}{{$faker lorem.slug}}{% endraw %}`                         |
+| `name`     | `firstName`, `lastName`, `fullName`, `jobTitle`, `prefix`, `suffix`, `title`                         | `{% raw %}{{$faker name.fullName}}{% endraw %}`, `{% raw %}{{$faker name.jobTitle}}{% endraw %}`                        |
+| `phone`    | `phoneNumber`, `phoneNumberFormat`, `imei`                                                           | `{% raw %}{{$faker phone.number}}{% endraw %}`, `{% raw %}{{$faker phone.imei}}{% endraw %}`                            |
+| `random`   | `number`, `float`, `arrayElement`, `objectElement`, `uuid`, `alphaNumeric`                           | `{% raw %}{{$faker random.number 1000 9999}}{% endraw %}`, `{% raw %}{{$faker random.arrayElement @array}}{% endraw %}` |
+| `system`   | `fileName`, `mimeType`, `directory`, `fileType`, `commonFileName`, `semver`                          | `{% raw %}{{$faker system.fileName}}{% endraw %}`, `{% raw %}{{$faker system.mimeType}}{% endraw %}`                    |
 
 **Examples with parameters:**
 
@@ -239,11 +241,13 @@ Generate fake data using `Faker.js`.
 - `{% raw %}{{$localDatetime format [offset option]}}{% endraw %}` - Formatted datetime in local timezone
 
 **Formats:**
+
 - `rfc1123` - RFC 1123 format (e.g., `Wed, 01 Jan 2020 00:00:00 GMT`)
 - `iso8601` - ISO 8601 format (e.g., `2020-01-01T00:00:00.000Z`)
 - `"custom"` or `'custom'` - Custom Day.js format (e.g., `{% raw %}{{$datetime "YYYY-MM-DD"}}{% endraw %}`)
 
 **Offset Options:**
+
 - `y` (year), `M` (month), `w` (week), `d` (day), `h` (hour), `m` (minute), `s` (second), `ms` (millisecond)
 
 **Examples:**
@@ -298,39 +302,40 @@ See [Authentication]({{ '/authentication.html' | relative_url }}) for full detai
 ## Variable Best Practices
 
 1. **Security First**
-   - Never commit secrets to source control
-   - Use environment variables or `{% raw %}{{$processEnv}}{% endraw %}` for API keys, passwords
-   - Use `$shared` for non-sensitive common values
+    - Never commit secrets to source control
+    - Use environment variables or `{% raw %}{{$processEnv}}{% endraw %}` for API keys, passwords
+    - Use `$shared` for non-sensitive common values
 
 2. **File-Level Constants**
-   - Use `@variable` for constants in the file (base URLs, common headers)
-   - You get Go to Definition and Find References for free
+    - Use `@variable` for constants in the file (base URLs, common headers)
+    - You get Go to Definition and Find References for free
 
 3. **Request Chaining**
-   - Use `@name` and request variables for multi-step workflows
-   - Reference responses from previous requests
-   - Order matters: define and execute named requests before referencing them
+    - Use `@name` and request variables for multi-step workflows
+    - Reference responses from previous requests
+    - Order matters: define and execute named requests before referencing them
 
 4. **Prompt for Dynamic Values**
-   - Use `@prompt` for one-time values (OTP, temporary codes)
-   - Mask sensitive prompts by using `password`, `pass`, or `passwd` in name
+    - Use `@prompt` for one-time values (OTP, temporary codes)
+    - Mask sensitive prompts by using `password`, `pass`, or `passwd` in name
 
 5. **Leverage System Variables**
-   - `{% raw %}{{$guid}}{% endraw %}` for unique identifiers
-   - `{% raw %}{{$timestamp}}{% endraw %}` and `{% raw %}{{$datetime}}{% endraw %}` for time-sensitive requests
-   - `{% raw %}{{$faker}}{% endraw %}` for realistic test data
-   - `{% raw %}{{$randomInt}}{% endraw %}` for random selections
+    - `{% raw %}{{$guid}}{% endraw %}` for unique identifiers
+    - `{% raw %}{{$timestamp}}{% endraw %}` and `{% raw %}{{$datetime}}{% endraw %}` for time-sensitive requests
+    - `{% raw %}{{$faker}}{% endraw %}` for realistic test data
+    - `{% raw %}{{$randomInt}}{% endraw %}` for random selections
 
 6. **Naming Conventions**
-   - Use descriptive names: `@authToken` not `@token1`
-   - Use lowercase with camelCase or snake_case consistently
-   - Avoid names that might conflict with system variables
+    - Use descriptive names: `@authToken` not `@token1`
+    - Use lowercase with camelCase or snake_case consistently
+    - Avoid names that might conflict with system variables
 
 ## Troubleshooting
 
 ### Variable Not Resolving
 
 Check:
+
 1. Variable is defined (spelling/case matters)
 2. For request variables: named request was executed first
 3. For JSONPath/XPath: syntax is correct and path exists in response
@@ -339,6 +344,7 @@ Check:
 ### Hover for Diagnostics
 
 Hover over a variable reference to see:
+
 - Resolved value
 - Errors (if any)
 - Source of the variable

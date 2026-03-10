@@ -1,4 +1,4 @@
-import { Disposable } from "vscode";
+import { Disposable } from 'vscode';
 
 export function disposeAll(disposables: Disposable[]) {
     while (disposables.length) {

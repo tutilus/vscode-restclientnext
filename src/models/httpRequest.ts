@@ -12,9 +12,10 @@ export class HttpRequest {
         public headers: RequestHeaders,
         public body?: string | Stream,
         public rawBody?: string,
-        public name?: string) {
-            this.method = method.toLocaleUpperCase();
-            this.isCancelled = false;
+        public name?: string
+    ) {
+        this.method = method.toLocaleUpperCase();
+        this.isCancelled = false;
     }
 
     public get contentType(): string | undefined {
@@ -39,10 +40,13 @@ export class HistoricalHttpRequest {
         public url: string,
         public headers: RequestHeaders,
         public body: string | undefined,
-        public startTime: number) {
-    }
+        public startTime: number
+    ) {}
 
-    public static convertFromHttpRequest(httpRequest: HttpRequest, startTime: number = Date.now()): HistoricalHttpRequest {
+    public static convertFromHttpRequest(
+        httpRequest: HttpRequest,
+        startTime: number = Date.now()
+    ): HistoricalHttpRequest {
         return new HistoricalHttpRequest(
             httpRequest.method,
             httpRequest.url,

@@ -1,6 +1,6 @@
-import { TextDocument } from "vscode";
+import { TextDocument } from 'vscode';
 import { HttpResponse } from '../../models/httpResponse';
-import { VariableType } from "../../models/variableType";
+import { VariableType } from '../../models/variableType';
 
 export type HttpVariableValue = string | {} | HttpResponse;
 
@@ -20,6 +20,10 @@ export interface HttpVariableContext {
 export interface HttpVariableProvider {
     readonly type: VariableType;
     has(name: string, document?: TextDocument, context?: HttpVariableContext): Promise<boolean>;
-    get(name: string, document?: TextDocument, context?: HttpVariableContext): Promise<HttpVariable>;
+    get(
+        name: string,
+        document?: TextDocument,
+        context?: HttpVariableContext
+    ): Promise<HttpVariable>;
     getAll(document?: TextDocument, context?: HttpVariableContext): Promise<HttpVariable[]>;
 }

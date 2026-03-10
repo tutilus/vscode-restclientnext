@@ -1,7 +1,12 @@
 import { TextDocument } from 'vscode';
 import * as Constants from '../../common/constants';
 import { DocumentCache } from '../../models/documentCache';
-import { ResolveErrorMessage, ResolveResult, ResolveState, ResolveWarningMessage } from '../../models/httpVariableResolveResult';
+import {
+    ResolveErrorMessage,
+    ResolveResult,
+    ResolveState,
+    ResolveWarningMessage,
+} from '../../models/httpVariableResolveResult';
 import { VariableType } from '../../models/variableType';
 import { RequestVariableCache } from '../requestVariableCache';
 import { RequestVariableCacheValueProcessor } from '../requestVariableCacheValueProcessor';
@@ -20,8 +25,7 @@ export class RequestVariableProvider implements HttpVariableProvider {
 
     private readonly requestVariableCache = new DocumentCache<string[]>();
 
-    private constructor() {
-    }
+    private constructor() {}
 
     public readonly type: VariableType = VariableType.Request;
 
@@ -42,7 +46,10 @@ export class RequestVariableProvider implements HttpVariableProvider {
             return { name: variableName, warning: ResolveWarningMessage.RequestVariableNotSent };
         }
 
-        const resolveResult = RequestVariableCacheValueProcessor.resolveRequestVariable(value, name);
+        const resolveResult = RequestVariableCacheValueProcessor.resolveRequestVariable(
+            value,
+            name
+        );
         return this.convertToHttpVariable(variableName, resolveResult);
     }
 
@@ -57,11 +64,14 @@ export class RequestVariableProvider implements HttpVariableProvider {
         }
 
         const fileContent = document.getText();
-        const requestVariableReferenceRegex = new RegExp(Constants.RequestVariableDefinitionWithNameRegexFactory('\\w+'), 'mg');
+        const requestVariableReferenceRegex = new RegExp(
+            Constants.RequestVariableDefinitionWithNameRegexFactory('\\w+'),
+            'mg'
+        );
 
         const variableNames = new Set<string>();
         let match: RegExpExecArray | null;
-        while (match = requestVariableReferenceRegex.exec(fileContent)) {
+        while ((match = requestVariableReferenceRegex.exec(fileContent))) {
             const name = match[1];
             variableNames.add(name);
         }

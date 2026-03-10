@@ -9,7 +9,7 @@ import { MimeUtility } from './mimeUtility';
 import { getContentType, getHeader, removeHeader } from './misc';
 import { parseRequestHeaders, resolveRequestBodyPath } from './requestParserUtil';
 import { convertStreamToString } from './streamUtility';
-import { VariableProcessor } from "./variableProcessor";
+import { VariableProcessor } from './variableProcessor';
 
 const CombinedStream = require('combined-stream');
 const encodeurl = require('encodeurl');
@@ -22,12 +22,15 @@ enum ParseState {
 
 export class HttpRequestParser implements RequestParser {
     private readonly defaultMethod = 'GET';
-    private readonly queryStringLinePrefix = /^\s*[&\?]/;
-    private readonly inputFileSyntax = /^<(?:(?<processVariables>@)(?<encoding>\w+)?)?\s+(?<filepath>.+?)\s*$/;
+    private readonly queryStringLinePrefix = /^\s*[&?]/;
+    private readonly inputFileSyntax =
+        /^<(?:(?<processVariables>@)(?<encoding>\w+)?)?\s+(?<filepath>.+?)\s*$/;
     private readonly defaultFileEncoding = 'utf8';
 
-    public constructor(private readonly requestRawText: string, private readonly settings: IRestClientSettings) {
-    }
+    public constructor(
+        private readonly requestRawText: string,
+        private readonly settings: IRestClientSettings
+    ) {}
 
     public async parseHttpRequest(name?: string): Promise<HttpRequest> {
         // parse follows http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
@@ -45,8 +48,7 @@ export class HttpRequestParser implements RequestParser {
             switch (state) {
                 case ParseState.URL:
                     requestLines.push(currentLine.trim());
-                    if (nextLine === undefined
-                        || this.queryStringLinePrefix.test(nextLine)) {
+                    if (nextLine === undefined || this.queryStringLinePrefix.test(nextLine)) {
                         // request with request line only
                     } else if (nextLine.trim()) {
                         state = ParseState.Header;
@@ -76,7 +78,11 @@ export class HttpRequestParser implements RequestParser {
         const requestLine = this.parseRequestLine(requestLines.map(l => l.trim()).join(''));
 
         // parse headers lines
-        const headers = parseRequestHeaders(headersLines, this.settings.defaultHeaders, requestLine.url);
+        const headers = parseRequestHeaders(
+            headersLines,
+            this.settings.defaultHeaders,
+            requestLine.url
+        );
 
         // let underlying node.js library recalculate the content length
         removeHeader(headers, 'content-length');
@@ -90,7 +96,7 @@ export class HttpRequestParser implements RequestParser {
             const firstEmptyLine = bodyLines.findIndex(value => value.trim() === '');
             if (firstEmptyLine !== -1) {
                 variableLines.push(...bodyLines.splice(firstEmptyLine + 1));
-                bodyLines.pop();    // remove the empty line between body and variables
+                bodyLines.pop(); // remove the empty line between body and variables
             }
         }
 
@@ -99,14 +105,20 @@ export class HttpRequestParser implements RequestParser {
         let body = await this.parseBody(bodyLines, contentTypeHeader);
         if (isGraphQlRequest) {
             body = await this.createGraphQlBody(variableLines, contentTypeHeader, body);
-        } else if (this.settings.formParamEncodingStrategy !== FormParamEncodingStrategy.Never && typeof body === 'string' && MimeUtility.isFormUrlEncoded(contentTypeHeader)) {
+        } else if (
+            this.settings.formParamEncodingStrategy !== FormParamEncodingStrategy.Never &&
+            typeof body === 'string' &&
+            MimeUtility.isFormUrlEncoded(contentTypeHeader)
+        ) {
             if (this.settings.formParamEncodingStrategy === FormParamEncodingStrategy.Always) {
                 const stringPairs = body.split('&');
                 const encodedStringPairs: string[] = [];
                 for (const stringPair of stringPairs) {
                     const [name, ...values] = stringPair.split('=');
                     const value = values.join('=');
-                    encodedStringPairs.push(`${encodeURIComponent(name)}=${encodeURIComponent(value)}`);
+                    encodedStringPairs.push(
+                        `${encodeURIComponent(name)}=${encodeURIComponent(value)}`
+                    );
                 }
                 body = encodedStringPairs.join('&');
             } else {
@@ -122,10 +134,21 @@ export class HttpRequestParser implements RequestParser {
             requestLine.url = `${scheme}://${host}${requestLine.url}`;
         }
 
-        return new HttpRequest(requestLine.method, requestLine.url, headers, body, bodyLines.join(EOL), name);
+        return new HttpRequest(
+            requestLine.method,
+            requestLine.url,
+            headers,
+            body,
+            bodyLines.join(EOL),
+            name
+        );
     }
 
-    private async createGraphQlBody(variableLines: string[], contentTypeHeader: string | undefined, body: string | Stream | undefined) {
+    private async createGraphQlBody(
+        variableLines: string[],
+        contentTypeHeader: string | undefined,
+        body: string | Stream | undefined
+    ) {
         let variables = await this.parseBody(variableLines, contentTypeHeader);
         if (variables && typeof variables !== 'string') {
             variables = await convertStreamToString(variables);
@@ -135,24 +158,29 @@ export class HttpRequestParser implements RequestParser {
             body = await convertStreamToString(body);
         }
 
-        const matched = body?.match(/^\s*query\s+([^@\{\(\s]+)/i);
+        const matched = body?.match(/^\s*query\s+([^@{(\s]+)/i);
         const operationName = matched?.[1];
 
         const graphQlPayload = {
             query: body,
             operationName,
-            variables: variables ? JSON.parse(variables) : {}
+            variables: variables ? JSON.parse(variables) : {},
         };
         return JSON.stringify(graphQlPayload);
     }
 
-    private parseRequestLine(line: string): { method: string, url: string } {
+    private parseRequestLine(line: string): { method: string; url: string } {
         // Request-Line = Method SP Request-URI SP HTTP-Version CRLF
         let method: string;
         let url: string;
 
         let match: RegExpExecArray | null;
-        if (match = /^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE|LOCK|UNLOCK|PROPFIND|PROPPATCH|COPY|MOVE|MKCOL|MKCALENDAR|ACL|SEARCH)\s+/i.exec(line)) {
+        if (
+            (match =
+                /^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE|LOCK|UNLOCK|PROPFIND|PROPPATCH|COPY|MOVE|MKCOL|MKCALENDAR|ACL|SEARCH)\s+/i.exec(
+                    line
+                ))
+        ) {
             method = match[1];
             url = line.substr(match[0].length);
         } else {
@@ -163,14 +191,17 @@ export class HttpRequestParser implements RequestParser {
 
         url = url.trim();
 
-        if (match = /\s+HTTP\/.*$/i.exec(url)) {
+        if ((match = /\s+HTTP\/.*$/i.exec(url))) {
             url = url.substr(0, match.index);
         }
 
         return { method, url };
     }
 
-    private async parseBody(lines: string[], contentTypeHeader: string | undefined): Promise<string | Stream | undefined> {
+    private async parseBody(
+        lines: string[],
+        contentTypeHeader: string | undefined
+    ): Promise<string | Stream | undefined> {
         if (lines.length === 0) {
             return undefined;
         }
@@ -179,7 +210,7 @@ export class HttpRequestParser implements RequestParser {
         if (lines.every(line => !this.inputFileSyntax.test(line))) {
             if (MimeUtility.isFormUrlEncoded(contentTypeHeader)) {
                 return lines.reduce((p, c, i) => {
-                    p += `${(i === 0 || c.startsWith('&') ? '' : EOL)}${c}`;
+                    p += `${i === 0 || c.startsWith('&') ? '' : EOL}${c}`;
                     return p;
                 }, '');
             } else {
@@ -202,8 +233,12 @@ export class HttpRequestParser implements RequestParser {
                         if (fileAbsolutePath) {
                             if (groupsValues.processVariables) {
                                 const buffer = await fs.readFile(fileAbsolutePath);
-                                const fileContent = buffer.toString((groupsValues.encoding || this.defaultFileEncoding) as BufferEncoding);
-                                const resolvedContent = await VariableProcessor.processRawRequest(fileContent);
+                                const fileContent = buffer.toString(
+                                    (groupsValues.encoding ||
+                                        this.defaultFileEncoding) as BufferEncoding
+                                );
+                                const resolvedContent =
+                                    await VariableProcessor.processRawRequest(fileContent);
                                 combinedStream.append(resolvedContent);
                             } else {
                                 combinedStream.append(fs.createReadStream(fileAbsolutePath));
@@ -216,7 +251,10 @@ export class HttpRequestParser implements RequestParser {
                     combinedStream.append(line);
                 }
 
-                if ((index !== lines.length - 1) || MimeUtility.isMultiPartFormData(contentTypeHeader)) {
+                if (
+                    index !== lines.length - 1 ||
+                    MimeUtility.isMultiPartFormData(contentTypeHeader)
+                ) {
                     combinedStream.append(this.getLineEnding(contentTypeHeader));
                 }
             }

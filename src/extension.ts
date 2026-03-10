@@ -1,7 +1,16 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { commands, ExtensionContext, languages, Range, TextDocument, Uri, window, workspace } from 'vscode';
+import {
+    commands,
+    ExtensionContext,
+    languages,
+    Range,
+    TextDocument,
+    Uri,
+    window,
+    workspace,
+} from 'vscode';
 import { CodeSnippetController } from './controllers/codeSnippetController';
 import { EnvironmentController } from './controllers/environmentController';
 import { HistoryController } from './controllers/historyController';
@@ -16,7 +25,7 @@ import { HttpCodeLensProvider } from './providers/httpCodeLensProvider';
 import { HttpCompletionItemProvider } from './providers/httpCompletionItemProvider';
 import { HttpDocumentSymbolProvider } from './providers/httpDocumentSymbolProvider';
 import { MarkdownCodeLensProvider } from './providers/markdownCodeLensProvider';
-import { RequestVariableCompletionItemProvider } from "./providers/requestVariableCompletionItemProvider";
+import { RequestVariableCompletionItemProvider } from './providers/requestVariableCompletionItemProvider';
 import { RequestVariableDefinitionProvider } from './providers/requestVariableDefinitionProvider';
 import { RequestVariableHoverProvider } from './providers/requestVariableHoverProvider';
 import { ConfigurationDependentRegistration } from './utils/dependentRegistration';
@@ -36,56 +45,134 @@ export async function activate(context: ExtensionContext) {
     context.subscriptions.push(historyController);
     context.subscriptions.push(codeSnippetController);
     context.subscriptions.push(environmentController);
-    context.subscriptions.push(commands.registerCommand('rest-client.request', ((_document: TextDocument, range: Range) => requestController.run(range))));
-    context.subscriptions.push(commands.registerCommand('rest-client.run-all-requests-sequentially', () => requestController.runAllSequentially()));
-    context.subscriptions.push(commands.registerCommand('rest-client.rerun-last-request', () => requestController.rerun()));
-    context.subscriptions.push(commands.registerCommand('rest-client.cancel-request', () => requestController.cancel()));
-    context.subscriptions.push(commands.registerCommand('rest-client.history', () => historyController.save()));
-    context.subscriptions.push(commands.registerCommand('rest-client.clear-history', () => historyController.clear()));
-    context.subscriptions.push(commands.registerCommand('rest-client.generate-codesnippet', () => codeSnippetController.run()));
-    context.subscriptions.push(commands.registerCommand('rest-client.copy-request-as-curl', () => codeSnippetController.copyAsCurl()));
-    context.subscriptions.push(commands.registerCommand('rest-client.switch-environment', () => environmentController.switchEnvironment()));
-    context.subscriptions.push(commands.registerCommand('rest-client.clear-cookies', () => requestController.clearCookies()));
-    context.subscriptions.push(commands.registerCommand('rest-client._openDocumentLink', args => {
-        workspace.openTextDocument(Uri.parse(args.path)).then(window.showTextDocument, error => {
-            window.showErrorMessage(error.message);
-        });
-    }));
-    context.subscriptions.push(commands.registerCommand('rest-client.import-swagger', async () => swaggerController.import()));
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.request', (_document: TextDocument, range: Range) =>
+            requestController.run(range)
+        )
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.run-all-requests-sequentially', () =>
+            requestController.runAllSequentially()
+        )
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.rerun-last-request', () => requestController.rerun())
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.cancel-request', () => requestController.cancel())
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.history', () => historyController.save())
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.clear-history', () => historyController.clear())
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.generate-codesnippet', () =>
+            codeSnippetController.run()
+        )
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.copy-request-as-curl', () =>
+            codeSnippetController.copyAsCurl()
+        )
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.switch-environment', () =>
+            environmentController.switchEnvironment()
+        )
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.clear-cookies', () =>
+            requestController.clearCookies()
+        )
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client._openDocumentLink', args => {
+            workspace
+                .openTextDocument(Uri.parse(args.path))
+                .then(window.showTextDocument, error => {
+                    window.showErrorMessage(error.message);
+                });
+        })
+    );
+    context.subscriptions.push(
+        commands.registerCommand('rest-client.import-swagger', async () =>
+            swaggerController.import()
+        )
+    );
 
+    const documentSelector = [{ language: 'http', scheme: '*' }];
 
-    const documentSelector = [
-        { language: 'http', scheme: '*' }
-    ];
+    const mdDocumentSelector = [{ language: 'markdown', scheme: '*' }];
 
-    const mdDocumentSelector = [
-        { language: 'markdown', scheme: '*' }
-    ];
-
-    context.subscriptions.push(languages.registerCompletionItemProvider(documentSelector, new HttpCompletionItemProvider()));
-    context.subscriptions.push(languages.registerCompletionItemProvider(documentSelector, new RequestVariableCompletionItemProvider(), '.'));
-    context.subscriptions.push(languages.registerHoverProvider(documentSelector, new EnvironmentOrFileVariableHoverProvider()));
-    context.subscriptions.push(languages.registerHoverProvider(documentSelector, new RequestVariableHoverProvider()));
+    context.subscriptions.push(
+        languages.registerCompletionItemProvider(documentSelector, new HttpCompletionItemProvider())
+    );
+    context.subscriptions.push(
+        languages.registerCompletionItemProvider(
+            documentSelector,
+            new RequestVariableCompletionItemProvider(),
+            '.'
+        )
+    );
+    context.subscriptions.push(
+        languages.registerHoverProvider(
+            documentSelector,
+            new EnvironmentOrFileVariableHoverProvider()
+        )
+    );
+    context.subscriptions.push(
+        languages.registerHoverProvider(documentSelector, new RequestVariableHoverProvider())
+    );
     context.subscriptions.push(
         new ConfigurationDependentRegistration(
             () => languages.registerCodeLensProvider(documentSelector, new HttpCodeLensProvider()),
-            s => s.enableSendRequestCodeLens));
+            s => s.enableSendRequestCodeLens
+        )
+    );
     context.subscriptions.push(
         new ConfigurationDependentRegistration(
-            () => languages.registerCodeLensProvider(documentSelector, new FileVariableReferencesCodeLensProvider()),
-            s => s.enableCustomVariableReferencesCodeLens));
+            () =>
+                languages.registerCodeLensProvider(
+                    documentSelector,
+                    new FileVariableReferencesCodeLensProvider()
+                ),
+            s => s.enableCustomVariableReferencesCodeLens
+        )
+    );
     context.subscriptions.push(
         new ConfigurationDependentRegistration(
-            () => languages.registerCodeLensProvider(mdDocumentSelector, new MarkdownCodeLensProvider()),
-            s => s.enableSendRequestCodeLens));
-    context.subscriptions.push(languages.registerDocumentLinkProvider(documentSelector, new RequestBodyDocumentLinkProvider()));
-    context.subscriptions.push(languages.registerDefinitionProvider(documentSelector, new FileVariableDefinitionProvider()));
-    context.subscriptions.push(languages.registerDefinitionProvider(documentSelector, new RequestVariableDefinitionProvider()));
-    context.subscriptions.push(languages.registerReferenceProvider(documentSelector, new FileVariableReferenceProvider()));
-    context.subscriptions.push(languages.registerDocumentSymbolProvider(documentSelector, new HttpDocumentSymbolProvider()));
-
+            () =>
+                languages.registerCodeLensProvider(
+                    mdDocumentSelector,
+                    new MarkdownCodeLensProvider()
+                ),
+            s => s.enableSendRequestCodeLens
+        )
+    );
+    context.subscriptions.push(
+        languages.registerDocumentLinkProvider(
+            documentSelector,
+            new RequestBodyDocumentLinkProvider()
+        )
+    );
+    context.subscriptions.push(
+        languages.registerDefinitionProvider(documentSelector, new FileVariableDefinitionProvider())
+    );
+    context.subscriptions.push(
+        languages.registerDefinitionProvider(
+            documentSelector,
+            new RequestVariableDefinitionProvider()
+        )
+    );
+    context.subscriptions.push(
+        languages.registerReferenceProvider(documentSelector, new FileVariableReferenceProvider())
+    );
+    context.subscriptions.push(
+        languages.registerDocumentSymbolProvider(documentSelector, new HttpDocumentSymbolProvider())
+    );
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {
-}
+export function deactivate() {}

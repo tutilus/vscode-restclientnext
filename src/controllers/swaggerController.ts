@@ -12,15 +12,20 @@ export class SwaggerController {
     }
 
     async import() {
-        const existingFiles = this.context.workspaceState.get<{ [fileName: string]: { content: string, timestamp: number } }>('importedFiles') || {};
+        const existingFiles =
+            this.context.workspaceState.get<{
+                [fileName: string]: { content: string; timestamp: number };
+            }>('importedFiles') || {};
         const importFromFileItem: vscode.QuickPickItem = {
             label: 'Import from file...',
             detail: 'Import from Swagger/OpenAPI',
         };
-        const recentImportsItems: vscode.QuickPickItem[] = Object.keys(existingFiles).map((fileName) => ({
-            label: fileName,
-            detail: `${dayjs().to(existingFiles[fileName].timestamp)}`,
-        }));
+        const recentImportsItems: vscode.QuickPickItem[] = Object.keys(existingFiles).map(
+            fileName => ({
+                label: fileName,
+                detail: `${dayjs().to(existingFiles[fileName].timestamp)}`,
+            })
+        );
         const clearStateItem: vscode.QuickPickItem = {
             label: 'Clear imported files',
         };
@@ -64,7 +69,10 @@ export class SwaggerController {
     }
 
     private storeImportedFile(fileName: string, content: string) {
-        const existingFiles = this.context.workspaceState.get<{ [fileName: string]: { content: string, timestamp: number } }>('importedFiles') || {};
+        const existingFiles =
+            this.context.workspaceState.get<{
+                [fileName: string]: { content: string; timestamp: number };
+            }>('importedFiles') || {};
         existingFiles[fileName] = {
             content,
             timestamp: Date.now(),

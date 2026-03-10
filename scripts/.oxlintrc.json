@@ -1,11 +1,21 @@
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript"],
+  "plugins": null,
   "categories": {},
   "rules": {},
   "settings": {
+    "jsx-a11y": {
+      "polymorphicPropName": null,
+      "components": {},
+      "attributes": {}
+    },
     "next": {
       "rootDir": []
+    },
+    "react": {
+      "formComponents": [],
+      "linkComponents": [],
+      "version": null,
+      "componentWrapperFunctions": []
     },
     "jsdoc": {
       "ignorePrivate": false,
@@ -16,11 +26,14 @@
       "implementsReplacesDocs": false,
       "exemptDestructuredRootsFromChecks": false,
       "tagNamePreference": {}
+    },
+    "vitest": {
+      "typecheck": false
     }
   },
   "env": {
     "builtin": true
   },
   "globals": {},
-  "ignorePatterns": ["dist", "node_modules", "out"]
+  "ignorePatterns": []
 }

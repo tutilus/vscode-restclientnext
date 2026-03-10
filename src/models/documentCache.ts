@@ -20,7 +20,7 @@ export class DocumentCache<T> {
 
         const { value, version } = result;
 
-        return this.ignoreVersion ? value : (version === document.version ? value : undefined);
+        return this.ignoreVersion ? value : version === document.version ? value : undefined;
     }
 
     public set(document: TextDocument, value: T): this {

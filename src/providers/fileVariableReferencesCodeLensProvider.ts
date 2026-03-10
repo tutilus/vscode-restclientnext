@@ -1,4 +1,12 @@
-import { CancellationToken, CodeLens, CodeLensProvider, Command, Location, Range, TextDocument } from 'vscode';
+import {
+    CancellationToken,
+    CodeLens,
+    CodeLensProvider,
+    Command,
+    Location,
+    Range,
+    TextDocument,
+} from 'vscode';
 import * as Constants from '../common/constants';
 import { DocumentCache } from '../models/documentCache';
 import { Selector } from '../utils/selector';
@@ -7,14 +15,19 @@ import { VariableUtility } from '../utils/variableUtility';
 export class FileVariableReferencesCodeLensProvider implements CodeLensProvider {
     private readonly fileVariableReferenceCache = new DocumentCache<CodeLens[]>();
 
-    public provideCodeLenses(document: TextDocument, _token: CancellationToken): Promise<CodeLens[]> {
+    public provideCodeLenses(
+        document: TextDocument,
+        _token: CancellationToken
+    ): Promise<CodeLens[]> {
         if (this.fileVariableReferenceCache.has(document)) {
             return Promise.resolve(this.fileVariableReferenceCache.get(document)!);
         }
 
         const blocks: CodeLens[] = [];
         const lines: string[] = document.getText().split(Constants.LineSplitterRegex);
-        const requestRanges: [number, number][] = Selector.getRequestRanges(lines, { ignoreFileVariableDefinitionLine: false });
+        const requestRanges: [number, number][] = Selector.getRequestRanges(lines, {
+            ignoreFileVariableDefinitionLine: false,
+        });
 
         for (let [blockStart, blockEnd] of requestRanges) {
             for (; blockStart <= blockEnd; blockStart++) {
@@ -27,12 +40,22 @@ export class FileVariableReferencesCodeLensProvider implements CodeLensProvider 
 
                 const range = new Range(blockStart, 0, blockEnd, 0);
                 let match: RegExpExecArray | null;
-                if (match = Constants.FileVariableDefinitionRegex.exec(line)) {
+                if ((match = Constants.FileVariableDefinitionRegex.exec(line))) {
                     const variableName = match[1];
-                    const locations = VariableUtility.getFileVariableReferenceRanges(lines, variableName);
+                    const locations = VariableUtility.getFileVariableReferenceRanges(
+                        lines,
+                        variableName
+                    );
                     const cmd: Command = {
-                        arguments: [document.uri, range.start, locations.map(loc => new Location(document.uri, loc))],
-                        title: locations.length === 1 ? '1 reference' : `${locations.length} references`,
+                        arguments: [
+                            document.uri,
+                            range.start,
+                            locations.map(loc => new Location(document.uri, loc)),
+                        ],
+                        title:
+                            locations.length === 1
+                                ? '1 reference'
+                                : `${locations.length} references`,
                         command: locations.length ? 'editor.action.showReferences' : '',
                     };
                     blocks.push(new CodeLens(range, cmd));
@@ -44,5 +67,4 @@ export class FileVariableReferencesCodeLensProvider implements CodeLensProvider 
 
         return Promise.resolve(blocks);
     }
-
 }

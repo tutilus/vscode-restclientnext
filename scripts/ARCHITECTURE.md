@@ -16,7 +16,6 @@ This document describes the structure of the repository and the primary purpose 
 - **`.vscodeignore`** – lists files to exclude from the VSIX package.
 - **`CHANGELOG.md`**, **`README.md`**, **`NOTE.md`** – user-facing documentation.
 
-
 ## `src/` tree overview
 
 The source code is organised into a few broad categories.
@@ -40,14 +39,13 @@ header names, environment variable names, storage keys.
 
 High-level objects that orchestrate features and business logic.
 
-| File | Responsibility |
-|------|----------------|
-| `requestController.ts` | Main flow for sending HTTP requests, handling responses, managing status bar. |
-| `historyController.ts` | Stores and retrieves request history. |
-| `codeSnippetController.ts` | Generates code snippets from HAR requests using `httpsnippet`. |
-| `environmentController.ts` | Manages environment variable files and switching. |
-| `swaggerController.ts` | Imports Swagger/OpenAPI files as requests. |
-
+| File                       | Responsibility                                                                |
+| -------------------------- | ----------------------------------------------------------------------------- |
+| `requestController.ts`     | Main flow for sending HTTP requests, handling responses, managing status bar. |
+| `historyController.ts`     | Stores and retrieves request history.                                         |
+| `codeSnippetController.ts` | Generates code snippets from HAR requests using `httpsnippet`.                |
+| `environmentController.ts` | Manages environment variable files and switching.                             |
+| `swaggerController.ts`     | Imports Swagger/OpenAPI files as requests.                                    |
 
 ### `views/`
 
@@ -58,10 +56,9 @@ Webview and text‑based UI components used to render responses / snippets.
 - `httpResponseTextDocumentView.ts` – alternative response view rendered in text editor.
 - `codeSnippetWebview.ts` – UI for displaying generated code snippets.
 
-
 ### `providers/`
 
-VS Code *provider* implementations that integrate with the editor.
+VS Code _provider_ implementations that integrate with the editor.
 
 - Completion item providers (`httpCompletionItemProvider.ts`, `requestVariableCompletionItemProvider.ts`, ...)
 - Definition/reference providers (`fileVariableDefinitionProvider.ts`, `requestVariableDefinitionProvider.ts`, etc.)
@@ -70,7 +67,6 @@ VS Code *provider* implementations that integrate with the editor.
 
 These files register with VS Code via `languages.register*` inside `extension.ts`.
 
-
 ### `models/`
 
 Plain data classes/interfaces representing domain concepts, such as
@@ -78,10 +74,10 @@ Plain data classes/interfaces representing domain concepts, such as
 some utility logic (parsing, caches, etc.).
 
 Examples:
+
 - `httpRequest.ts` / `httpResponse.ts` – representations of HTTP messages.
 - `httpVariableResolveResult.ts` – return type used by variable resolution.
 - `documentCache.ts` – simple in‑memory cache for parsed HTTP documents.
-
 
 ### `utils/`
 
@@ -96,13 +92,11 @@ Major categories:
 
 These utilities keep controller code lean and facilitate testing.
 
-
 ### `auth/` subfolder
 
 Contains helpers for various authentication schemes used in request headers.
 In the `security/replace-adal-node` branch, the code for Azure AD v1/v2 may
 live here (e.g. `awsCognito.ts`, `oidcClient.ts`).
-
 
 ### `providers/httpVariableProviders/`
 
@@ -110,12 +104,10 @@ Implementations of variable providers used when resolving variables in
 HTTP files. Examples: `systemVariableProvider` (date, faker, env vars),
 `fileVariableProvider`, etc.
 
-
 ### `test/`
 
 Contains test files (`extension.test.ts` etc.) and the `README.md` we added.
 Use the VS Code test harness to run suite via `npm run test`.
-
 
 ## Dependency notes
 
@@ -125,7 +117,6 @@ Use the VS Code test harness to run suite via `npm run test`.
 - **Various helpers** (dayjs, fs-extra, uuid, faker, etc.).
 
 Most third‑party code is bundled by Webpack into `extension.js` during build.
-
 
 ## Build and release
 

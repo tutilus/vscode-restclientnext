@@ -21,7 +21,7 @@ export class MimeUtility {
         'image/gif',
         'image/webp',
         'image/png',
-        'image/bmp'
+        'image/bmp',
     ];
 
     public static parse(contentTypeString: string) {
@@ -33,7 +33,10 @@ export class MimeUtility {
         return new MimeType(type, subtype, charset);
     }
 
-    public static getExtension(contentTypeString: string | undefined, mimeAndFileExtensionMapping: { [key: string]: string }): string {
+    public static getExtension(
+        contentTypeString: string | undefined,
+        mimeAndFileExtensionMapping: { [key: string]: string }
+    ): string {
         if (!contentTypeString) {
             return '';
         }
@@ -65,7 +68,12 @@ export class MimeUtility {
         }
 
         const { subtype, essence } = this.parse(contentTypeString);
-        return essence === 'application/json' || essence === 'text/json' || subtype.endsWith('+json') || subtype.startsWith('x-amz-json');
+        return (
+            essence === 'application/json' ||
+            essence === 'text/json' ||
+            subtype.endsWith('+json') ||
+            subtype.startsWith('x-amz-json')
+        );
     }
 
     public static isXml(contentTypeString: string | undefined): boolean {

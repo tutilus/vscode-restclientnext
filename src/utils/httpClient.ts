@@ -38,7 +38,10 @@ export class HttpClient {
         this.cookieStore = new CookieJar(new FileCookieStore(cookieFilePath));
     }
 
-    public async send(httpRequest: HttpRequest, settings?: IRestClientSettings): Promise<HttpResponse> {
+    public async send(
+        httpRequest: HttpRequest,
+        settings?: IRestClientSettings
+    ): Promise<HttpResponse> {
         const settingsToUse = settings || SystemSettings.Instance;
 
         const options = await this.prepareOptions(httpRequest, settingsToUse);
@@ -48,15 +51,21 @@ export class HttpClient {
         const requestUrl = encodeUrl(httpRequest.url);
         const request: CancelableRequest<Response<Buffer>> = got(requestUrl, options);
         httpRequest.setUnderlyingRequest(request);
-        (request as any).on('response', (res: { rawHeaders: any[]; on: (arg0: string, arg1: (chunk: any) => void) => void; }) => {
-            if (res.rawHeaders) {
-                headersSize += res.rawHeaders.map(h => h.length).reduce((a, b) => a + b, 0);
-                headersSize += (res.rawHeaders.length) / 2;
+        (request as any).on(
+            'response',
+            (res: {
+                rawHeaders: any[];
+                on: (arg0: string, arg1: (chunk: any) => void) => void;
+            }) => {
+                if (res.rawHeaders) {
+                    headersSize += res.rawHeaders.map(h => h.length).reduce((a, b) => a + b, 0);
+                    headersSize += res.rawHeaders.length / 2;
+                }
+                res.on('data', chunk => {
+                    bodySize += chunk.length;
+                });
             }
-            res.on('data', chunk => {
-                bodySize += chunk.length;
-            });
-        });
+        );
 
         const response = await request;
 
@@ -67,18 +76,23 @@ export class HttpClient {
         }
 
         if (!encoding) {
-            encoding = "utf8";
+            encoding = 'utf8';
         }
 
         const bodyBuffer = response.body;
-        let bodyString = iconv.encodingExists(encoding) ? iconv.decode(bodyBuffer, encoding) : bodyBuffer.toString();
+        let bodyString = iconv.encodingExists(encoding)
+            ? iconv.decode(bodyBuffer, encoding)
+            : bodyBuffer.toString();
 
         if (settingsToUse.decodeEscapedUnicodeCharacters) {
             bodyString = this.decodeEscapedUnicodeCharacters(bodyString);
         }
 
         // adjust response header case, due to the response headers in nodejs http module is in lowercase
-        const responseHeaders: ResponseHeaders = HttpClient.normalizeHeaderNames(response.headers, response.rawHeaders);
+        const responseHeaders: ResponseHeaders = HttpClient.normalizeHeaderNames(
+            response.headers,
+            response.rawHeaders
+        );
 
         const requestBody = options.body;
 
@@ -97,15 +111,17 @@ export class HttpClient {
                 requestUrl,
                 HttpClient.normalizeHeaderNames(
                     (response as any).request.options.headers as RequestHeaders,
-                    Object.keys(httpRequest.headers)),
+                    Object.keys(httpRequest.headers)
+                ),
                 Buffer.isBuffer(requestBody)
                     ? convertBufferToStream(requestBody)
-                    : (typeof requestBody === 'string' || requestBody === undefined
-                        ? requestBody
-                        : undefined),
+                    : typeof requestBody === 'string' || requestBody === undefined
+                      ? requestBody
+                      : undefined,
                 httpRequest.rawBody,
                 httpRequest.name
-            ));
+            )
+        );
     }
 
     public async clearCookies() {
@@ -113,7 +129,10 @@ export class HttpClient {
         this.cookieStore = new CookieJar(new FileCookieStore(UserDataManager.cookieFilePath));
     }
 
-    private async prepareOptions(httpRequest: HttpRequest, settings: IRestClientSettings): Promise<OptionsOfBufferResponseBody> {
+    private async prepareOptions(
+        httpRequest: HttpRequest,
+        settings: IRestClientSettings
+    ): Promise<OptionsOfBufferResponseBody> {
         const originalRequestBody = httpRequest.body;
         let requestBody: string | Buffer | undefined;
         if (originalRequestBody) {
@@ -142,8 +161,8 @@ export class HttpClient {
                 beforeRequest: [],
             },
             https: {
-                rejectUnauthorized: false
-            }
+                rejectUnauthorized: false,
+            },
         };
 
         if (settings.timeoutInMilliseconds > 0) {
@@ -189,24 +208,29 @@ export class HttpClient {
                     break;
                 case 'aws':
                     if (args.length >= 3) {
-                       removeHeader(options.headers!, 'Authorization');
+                        removeHeader(options.headers!, 'Authorization');
                         options.hooks!.beforeRequest!.push(awsSignature(authorization));
                     } else {
-                        window.showWarningMessage(`Invalid AWS authorization header, the format should be "Authorization: AWS [region:<region>] [service:<service>] [token:<sessionToken>] <accessKeyId> <secretAccessKey>". The Authorization header will be sent as is.`);
+                        window.showWarningMessage(
+                            `Invalid AWS authorization header, the format should be "Authorization: AWS [region:<region>] [service:<service>] [token:<sessionToken>] <accessKeyId> <secretAccessKey>". The Authorization header will be sent as is.`
+                        );
                     }
                     break;
                 case 'cognito':
                     if (args.length >= 4) {
-                       removeHeader(options.headers!, 'Authorization');
-                       options.hooks!.beforeRequest!.push(await awsCognito(authorization));
+                        removeHeader(options.headers!, 'Authorization');
+                        options.hooks!.beforeRequest!.push(await awsCognito(authorization));
                     } else {
-                        window.showWarningMessage(`Invalid Cognito authorization header, the format should be "Authorization: Cognito [...] <username> <password> <userPoolId> <clientId>". The Authorization header will be sent as is.`);
+                        window.showWarningMessage(
+                            `Invalid Cognito authorization header, the format should be "Authorization: Cognito [...] <username> <password> <userPoolId> <clientId>". The Authorization header will be sent as is.`
+                        );
                     }
                     break;
                 default:
-                    window.showWarningMessage(`Authorization scheme ${scheme} is not supported, the Authorization header will be sent as is.`);
+                    window.showWarningMessage(
+                        `Authorization scheme ${scheme} is not supported, the Authorization header will be sent as is.`
+                    );
             }
- 
         }
 
         // set certificate
@@ -221,12 +245,12 @@ export class HttpClient {
             if (httpRequest.url.startsWith('http:')) {
                 const { HttpProxyAgent } = await import('http-proxy-agent');
                 options.agent = {
-                    http: new HttpProxyAgent(settings.proxy)
+                    http: new HttpProxyAgent(settings.proxy),
                 };
             } else {
                 const { HttpsProxyAgent } = await import('https-proxy-agent');
                 options.agent = {
-                    https: new HttpsProxyAgent(settings.proxy)
+                    https: new HttpsProxyAgent(settings.proxy),
                 };
             }
         }
@@ -241,13 +265,21 @@ export class HttpClient {
         });
     }
 
-    private getRequestCertificate(requestUrl: string, settings: IRestClientSettings): Certificate | null {
+    private getRequestCertificate(
+        requestUrl: string,
+        settings: IRestClientSettings
+    ): Certificate | null {
         const host = url.parse(requestUrl).host;
         if (!host || !(host in settings.hostCertificates)) {
             return null;
         }
 
-        const { cert: certPath, key: keyPath, pfx: pfxPath, passphrase } = settings.hostCertificates[host];
+        const {
+            cert: certPath,
+            key: keyPath,
+            pfx: pfxPath,
+            passphrase,
+        } = settings.hostCertificates[host];
         const cert = this.resolveCertificate(certPath);
         const key = this.resolveCertificate(keyPath);
         const pfx = this.resolveCertificate(pfxPath);
@@ -262,10 +294,12 @@ export class HttpClient {
         const resolvedUrl = url.parse(requestUrl);
         const hostName = resolvedUrl.hostname?.toLowerCase();
         const port = resolvedUrl.port;
-        const excludeHostsProxyList = Array.from(new Set(excludeHostsForProxy.map(eh => eh.toLowerCase())));
+        const excludeHostsProxyList = Array.from(
+            new Set(excludeHostsForProxy.map(eh => eh.toLowerCase()))
+        );
 
         for (const eh of excludeHostsProxyList) {
-            const urlParts = eh.split(":");
+            const urlParts = eh.split(':');
             if (!port) {
                 // if no port specified in request url, host name must exactly match
                 if (urlParts.length === 1 && urlParts[0] === hostName) {
@@ -290,7 +324,9 @@ export class HttpClient {
 
         if (path.isAbsolute(absoluteOrRelativePath)) {
             if (!fs.existsSync(absoluteOrRelativePath)) {
-                window.showWarningMessage(`Certificate path ${absoluteOrRelativePath} doesn't exist, please make sure it exists.`);
+                window.showWarningMessage(
+                    `Certificate path ${absoluteOrRelativePath} doesn't exist, please make sure it exists.`
+                );
                 return undefined;
             } else {
                 return fs.readFileSync(absoluteOrRelativePath);
@@ -305,7 +341,9 @@ export class HttpClient {
             if (fs.existsSync(absolutePath)) {
                 return fs.readFileSync(absolutePath);
             } else {
-                window.showWarningMessage(`Certificate path ${absoluteOrRelativePath} doesn't exist, please make sure it exists.`);
+                window.showWarningMessage(
+                    `Certificate path ${absoluteOrRelativePath} doesn't exist, please make sure it exists.`
+                );
                 return undefined;
             }
         }
@@ -319,19 +357,26 @@ export class HttpClient {
         if (fs.existsSync(absolutePath)) {
             return fs.readFileSync(absolutePath);
         } else {
-            window.showWarningMessage(`Certificate path ${absoluteOrRelativePath} doesn't exist, please make sure it exists.`);
+            window.showWarningMessage(
+                `Certificate path ${absoluteOrRelativePath} doesn't exist, please make sure it exists.`
+            );
             return undefined;
         }
     }
 
-    private static normalizeHeaderNames<T extends RequestHeaders | ResponseHeaders>(headers: T, rawHeaders: string[]): T {
+    private static normalizeHeaderNames<T extends RequestHeaders | ResponseHeaders>(
+        headers: T,
+        rawHeaders: string[]
+    ): T {
         const headersDic: { [key: string]: string } = rawHeaders.reduce(
             (prev: { [key: string]: string }, cur: string) => {
                 if (!(cur.toLowerCase() in prev)) {
                     prev[cur.toLowerCase()] = cur;
                 }
                 return prev;
-            }, {});
+            },
+            {}
+        );
         const adjustedResponseHeaders = {} as RequestHeaders | ResponseHeaders;
         for (const header in headers) {
             const adjustedHeaderName = headersDic[header] || header;

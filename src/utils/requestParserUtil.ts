@@ -1,11 +1,15 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { Uri } from 'vscode';
-import { RequestHeaders } from "../models/base";
+import { RequestHeaders } from '../models/base';
 import { removeHeader } from './misc';
 import { getCurrentTextDocument, getWorkspaceRootPath } from './workspaceUtility';
 
-export function parseRequestHeaders(headerLines: string[], defaultHeaders: RequestHeaders, url: string): RequestHeaders {
+export function parseRequestHeaders(
+    headerLines: string[],
+    defaultHeaders: RequestHeaders,
+    url: string
+): RequestHeaders {
     // message-header = field-name ":" [ field-value ]
     const headers: RequestHeaders = {};
     const headerNames: { [key: string]: string } = {};
