@@ -156,7 +156,7 @@ export class HttpClient {
 
         const authorization = getHeader(options.headers!, 'Authorization') as string | undefined;
         if (authorization) {
-            const [scheme, user, ...args] = authorization.split(/\s+/);
+            const [scheme, ...args] = authorization.split(/\s+/);
             const normalizedScheme = scheme.toLowerCase();
 
             switch (normalizedScheme) {
@@ -165,19 +165,20 @@ export class HttpClient {
                     if (args.length > 0) {
                         removeHeader(options.headers!, 'Authorization');
                         // Issue #8 : Check if the username contains ":", if yes, split it into username and password
-                        var username = user;
-                        var password = args.join(' ');
-                        if (user.includes(':')) {
-                            const [userPart, ...firstChunkPass] = user.split(':');
-                            username = userPart;
-                            password = [...firstChunkPass, ...args].join(' ');
+                        var leftSide = args.shift()!;
+                        var rightSide = args.join(' ');
+                        if (args.length === 0 && leftSide.includes(':')) {
+                            const [userPart, ...firstChunkPass] = leftSide.split(':');
+                            leftSide = userPart;
+                            rightSide = [...firstChunkPass, ...args].join(' ');
                         }
-                        options.username = username;
-                        options.password = password;
+                        options.username = leftSide;
+                        options.password = rightSide;
                     }
                     break;
                 case 'digest':
                     if (args.length > 0) {
+                        const user = args.shift()!;
                         const pass = args.join(' ');
                         removeHeader(options.headers!, 'Authorization');
                         options.hooks!.afterResponse!.push(digest(user, pass));

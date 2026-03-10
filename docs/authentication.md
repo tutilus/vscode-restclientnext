@@ -33,6 +33,7 @@ Authorization: Basic user passwd
 ## Digest Auth
 
 Similar to Basic Auth but more secure challenge-response:
+Format supported: `username` and `password` separated by space (auto-encoded)
 
 ```http
 GET https://httpbin.org/digest-auth/auth/user/passwd
