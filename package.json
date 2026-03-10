@@ -769,7 +769,7 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "25.x",
     "@types/node-fetch": "^2.6.13",
-    "@types/sanitize-html": "^2.16.0",
+    "@types/sanitize-html": "^2.16.1",
     "@types/vscode": "^1.106.0",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
