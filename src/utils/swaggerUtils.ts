@@ -7,27 +7,42 @@ export class SwaggerUtils {
         const paths = openApiYaml.paths;
         const components = openApiYaml.components;
 
-        let restClientOutput = "";
+        let restClientOutput = '';
         restClientOutput += `### ${info.title}\n`;
 
         for (const endpoint in paths) {
             const methods = paths[endpoint];
             for (const operation in methods) {
                 const details = methods[operation];
-                restClientOutput += this.generateOperationBlock(operation, baseUrl, endpoint, details, components);
+                restClientOutput += this.generateOperationBlock(
+                    operation,
+                    baseUrl,
+                    endpoint,
+                    details,
+                    components
+                );
             }
         }
         return restClientOutput;
     }
 
-    generateOperationBlock(operation: string, baseUrl: string, endpoint: string, details: any, components: any): string {
-        const summary = details.summary ? `- ${details.summary}` : "";
+    generateOperationBlock(
+        operation: string,
+        baseUrl: string,
+        endpoint: string,
+        details: any,
+        components: any
+    ): string {
+        const summary = details.summary ? `- ${details.summary}` : '';
         let operationBlock = `\n#${operation.toUpperCase()} ${summary}\n`;
 
         if (details.requestBody) {
             const content = details.requestBody.content;
             for (const content_type in content) {
-                const exampleObject = this.getExampleObjectFromSchema(components, content[content_type].schema);
+                const exampleObject = this.getExampleObjectFromSchema(
+                    components,
+                    content[content_type].schema
+                );
                 operationBlock += `${operation.toUpperCase()} ${baseUrl}${endpoint} HTTP/1.1\n`;
                 operationBlock += `Content-Type: ${content_type}\n`;
                 operationBlock += `${JSON.stringify(exampleObject, null, 2)}\n\n`;
@@ -46,22 +61,24 @@ export class SwaggerUtils {
 
         if (schema.$ref) {
             const schemaRef = schema.$ref;
-            const schemaPath = schemaRef.replace("#/components/", "").split("/");
+            const schemaPath = schemaRef.replace('#/components/', '').split('/');
             schema = schemaPath.reduce((obj: any, key: string) => obj[key], components);
         }
 
         switch (schema.type) {
-            case "object":
+            case 'object':
                 const obj: { [key: string]: any } = {};
                 for (const prop in schema.properties) {
                     if (schema.anyOf) {
-                        return this.getExampleObjectFromSchema(components,
-                            schema.anyOf[0]);
+                        return this.getExampleObjectFromSchema(components, schema.anyOf[0]);
                     }
-                    obj[prop] = this.getExampleObjectFromSchema(components, schema.properties[prop]);
+                    obj[prop] = this.getExampleObjectFromSchema(
+                        components,
+                        schema.properties[prop]
+                    );
                 }
                 return obj;
-            case "array":
+            case 'array':
                 return [this.getExampleObjectFromSchema(components, schema.items)];
             default:
                 return schema.example || schema.type;
@@ -69,11 +86,7 @@ export class SwaggerUtils {
     }
 
     parseOpenApiYaml(data: string): string | undefined {
-        try {
-            const openApiYaml = yaml.load(data);
-            return this.generateRestClientOutput(openApiYaml);
-        } catch (error) {
-            throw error;
-        }
+        const openApiYaml = yaml.load(data);
+        return this.generateRestClientOutput(openApiYaml);
     }
 }

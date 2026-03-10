@@ -1,19 +1,33 @@
-import { CancellationToken, CompletionItem, CompletionItemKind, CompletionItemProvider, MarkdownString, Position, TextDocument } from 'vscode';
-import * as Constants from "../common/constants";
-import { ElementType } from "../models/httpElement";
+import {
+    CancellationToken,
+    CompletionItem,
+    CompletionItemKind,
+    CompletionItemProvider,
+    MarkdownString,
+    Position,
+    TextDocument,
+} from 'vscode';
+import * as Constants from '../common/constants';
+import { ElementType } from '../models/httpElement';
 import { HttpResponse } from '../models/httpResponse';
-import { ResolveState, ResolveWarningMessage } from "../models/httpVariableResolveResult";
+import { ResolveState, ResolveWarningMessage } from '../models/httpVariableResolveResult';
 import { RequestVariableProvider } from '../utils/httpVariableProviders/requestVariableProvider';
-import { RequestVariableCacheValueProcessor } from "../utils/requestVariableCacheValueProcessor";
-import { VariableUtility } from "../utils/variableUtility";
-
+import { RequestVariableCacheValueProcessor } from '../utils/requestVariableCacheValueProcessor';
+import { VariableUtility } from '../utils/variableUtility';
 
 const firstPartRegex: RegExp = /^(\w+)\.$/;
 const secondPartRegex: RegExp = /^(\w+)\.(request|response)\.$/;
 
 export class RequestVariableCompletionItemProvider implements CompletionItemProvider {
-    public async provideCompletionItems(document: TextDocument, position: Position, _token: CancellationToken): Promise<CompletionItem[] | undefined> {
-        const wordRange = VariableUtility.getPartialRequestVariableReferencePathRange(document, position);
+    public async provideCompletionItems(
+        document: TextDocument,
+        position: Position,
+        _token: CancellationToken
+    ): Promise<CompletionItem[] | undefined> {
+        const wordRange = VariableUtility.getPartialRequestVariableReferencePathRange(
+            document,
+            position
+        );
 
         let fullPath = document.getText(wordRange);
 
@@ -24,13 +38,13 @@ export class RequestVariableCompletionItemProvider implements CompletionItemProv
 
         if (firstPartRegex.test(fullPath)) {
             return [
-                new CompletionItem("request", CompletionItemKind.Field),
-                new CompletionItem("response", CompletionItemKind.Field),
+                new CompletionItem('request', CompletionItemKind.Field),
+                new CompletionItem('response', CompletionItemKind.Field),
             ];
         } else if (secondPartRegex.test(fullPath)) {
             return [
-                new CompletionItem("body", CompletionItemKind.Field),
-                new CompletionItem("headers", CompletionItemKind.Field),
+                new CompletionItem('body', CompletionItemKind.Field),
+                new CompletionItem('headers', CompletionItemKind.Field),
             ];
         }
 
@@ -42,9 +56,15 @@ export class RequestVariableCompletionItemProvider implements CompletionItemProv
                 // Remove last dot if present
                 fullPath = fullPath.replace(/\.$/, '');
 
-                const result = RequestVariableCacheValueProcessor.resolveRequestVariable(value as HttpResponse | undefined, fullPath);
-                if (result.state === ResolveState.Warning && result.message === ResolveWarningMessage.MissingHeaderName) {
-                    const {value} = result;
+                const result = RequestVariableCacheValueProcessor.resolveRequestVariable(
+                    value as HttpResponse | undefined,
+                    fullPath
+                );
+                if (
+                    result.state === ResolveState.Warning &&
+                    result.message === ResolveWarningMessage.MissingHeaderName
+                ) {
+                    const { value } = result;
                     return Object.keys(value).map(p => {
                         const item = new CompletionItem(p);
                         item.detail = `HTTP ${ElementType[ElementType.RequestCustomVariable]}`;
@@ -62,7 +82,9 @@ export class RequestVariableCompletionItemProvider implements CompletionItemProv
 
     private checkIfRequestVariableDefined(document: TextDocument, variableName: string) {
         const text = document.getText();
-        const regex = new RegExp(Constants.RequestVariableDefinitionWithNameRegexFactory(variableName, "m"));
+        const regex = new RegExp(
+            Constants.RequestVariableDefinitionWithNameRegexFactory(variableName, 'm')
+        );
         return regex.test(text);
     }
 }

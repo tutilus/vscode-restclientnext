@@ -50,6 +50,7 @@ content-type: application/json
 ```
 
 To send a prepared request, you can:
+
 - Click the `Send Request` link above the request
 - Use the shortcut `Ctrl+Alt+R` (`Cmd+Alt+R` for macOS)
 - Right-click in the editor and select `Send Request`
@@ -58,7 +59,7 @@ To send a prepared request, you can:
 The response will be previewed in a separate webview panel inside Visual Studio Code.
 
 ![Demo]({{ '/assets/images/demo.gif' | relative_url }})
-*Send request with Rest Client Next demonstration*
+_Send request with Rest Client Next demonstration_
 
 ## Documentation Sections
 

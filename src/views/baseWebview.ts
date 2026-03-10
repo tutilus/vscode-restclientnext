@@ -3,7 +3,6 @@ import { commands, Event, EventEmitter, ExtensionContext, Uri, WebviewPanel } fr
 import { SystemSettings } from '../models/configurationSettings';
 
 export abstract class BaseWebview {
-
     protected _onDidCloseAllWebviewPanels = new EventEmitter<void>();
 
     protected readonly settings: SystemSettings = SystemSettings.Instance;
@@ -24,10 +23,18 @@ export abstract class BaseWebview {
 
     protected constructor(protected readonly context: ExtensionContext) {
         this.baseFilePath = Uri.file(this.context.asAbsolutePath(path.join('styles', 'reset.css')));
-        this.vscodeStyleFilePath = Uri.file(this.context.asAbsolutePath(path.join('styles', 'vscode.css')));
-        this.customStyleFilePath = Uri.file(this.context.asAbsolutePath(path.join('styles', 'rest-client.css')));
-        this.scriptFilePath = Uri.file(this.context.asAbsolutePath(path.join('scripts', 'main.js')));
-        this.iconFilePath = Uri.file(this.context.asAbsolutePath(path.join('images', 'rest_icon.png')));
+        this.vscodeStyleFilePath = Uri.file(
+            this.context.asAbsolutePath(path.join('styles', 'vscode.css'))
+        );
+        this.customStyleFilePath = Uri.file(
+            this.context.asAbsolutePath(path.join('styles', 'rest-client.css'))
+        );
+        this.scriptFilePath = Uri.file(
+            this.context.asAbsolutePath(path.join('scripts', 'main.js'))
+        );
+        this.iconFilePath = Uri.file(
+            this.context.asAbsolutePath(path.join('images', 'rest_icon.png'))
+        );
     }
 
     public get onDidCloseAllWebviewPanels(): Event<void> {

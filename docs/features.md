@@ -27,13 +27,13 @@ REST Client Next includes a rich set of features designed to make API testing co
 - Send cURL commands directly in the editor
 - Copy HTTP requests as cURL commands (`Rest Client: Copy Request As cURL`)
 - Supported cURL options:
-  - `-X, --request`
-  - `-L, --location, --url`
-  - `-H, --header` (no `@` support)
-  - `-I, --head`
-  - `-b, --cookie` (no cookie jar file support)
-  - `-u, --user` (Basic auth only)
-  - `-d, --data, --data-ascii, --data-binary, --data-raw`
+    - `-X, --request`
+    - `-L, --location, --url`
+    - `-H, --header` (no `@` support)
+    - `-I, --head`
+    - `-b, --cookie` (no cookie jar file support)
+    - `-u, --user` (Basic auth only)
+    - `-d, --data, --data-ascii, --data-binary, --data-raw`
 
 ![Curl Request]({{ '/assets/images/curl-request.png' | relative_url }})
 
@@ -53,10 +53,10 @@ REST Client Next includes a rich set of features designed to make API testing co
 - Save response body only with appropriate file extension based on MIME type
 - Fold/unfold response body for easier navigation
 - Preview response in different modes:
-  - **Full**: complete response with headers and body
-  - **Headers**: headers only
-  - **Body**: body only
-  - **Exchange**: both request and response
+    - **Full**: complete response with headers and body
+    - **Headers**: headers only
+    - **Body**: body only
+    - **Exchange**: both request and response
 - View images directly in the preview pane
 - Customize font size, family, and weight for response preview
 - Copy response body to clipboard
@@ -88,10 +88,10 @@ REST Client Next supports multiple authentication schemes:
 - **Shared environment** (`$shared`) for common variables
 - Switch environments via `Ctrl+Alt+E` (`Cmd+Alt+E` on macOS)
 - Four variable types:
-  - **Environment variables** - Shared across files
-  - **File variables** - Scoped to the current file
-  - **Request variables** - For request chaining
-  - **Prompt variables** - Interactive input per request
+    - **Environment variables** - Shared across files
+    - **File variables** - Scoped to the current file
+    - **Request variables** - For request chaining
+    - **Prompt variables** - Interactive input per request
 - System variables for dynamic values (GUIDs, timestamps, random numbers, etc.)
 - Variable auto-completion and hover support
 - Go to definition for variables

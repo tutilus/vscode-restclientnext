@@ -2,15 +2,15 @@ import { EOL } from 'os';
 import { StatusBarAlignment, StatusBarItem, window } from 'vscode';
 import { HttpResponse } from '../models/httpResponse';
 
-import { filesize }  from 'filesize';
+import { filesize } from 'filesize';
 
 type NonReceivedRequestStatus = {
-    state: RequestState.Closed | RequestState.Cancelled | RequestState.Error | RequestState.Pending
+    state: RequestState.Closed | RequestState.Cancelled | RequestState.Error | RequestState.Pending;
 };
 
 type ReceivedRequestStatus = {
-    state: RequestState.Received,
-    response: HttpResponse
+    state: RequestState.Received;
+    response: HttpResponse;
 };
 
 type RequestStatus = ReceivedRequestStatus | NonReceivedRequestStatus;
@@ -50,7 +50,11 @@ export class RequestStatusEntry {
                 break;
 
             case RequestState.Pending:
-                this.showDurationEntry('$(sync~spin) Waiting...', 'Click to cancel', 'rest-client.cancel-request');
+                this.showDurationEntry(
+                    '$(sync~spin) Waiting...',
+                    'Click to cancel',
+                    'rest-client.cancel-request'
+                );
                 break;
 
             case RequestState.Cancelled:
@@ -66,7 +70,7 @@ export class RequestStatusEntry {
                     `TCP: ${response.timingPhases.tcp?.toFixed(1) ?? 0}ms`,
                     `Request: ${response.timingPhases.request?.toFixed(1) ?? 0}ms`,
                     `FirstByte: ${response.timingPhases.firstByte?.toFixed(1) ?? 0}ms`,
-                    `Download: ${response.timingPhases.download?.toFixed(1) ?? 0}ms`
+                    `Download: ${response.timingPhases.download?.toFixed(1) ?? 0}ms`,
                 ].join(EOL);
 
                 this.showDurationEntry(`$(clock) ${response.timingPhases.total ?? 0}ms`, tooltip);
@@ -80,7 +84,7 @@ export class RequestStatusEntry {
         this.sizeEntry.tooltip = [
             'Breakdown of Response Size:',
             `Headers: ${filesize(response.headersSizeInBytes)}`,
-            `Body: ${filesize(response.bodySizeInBytes)}`
+            `Body: ${filesize(response.bodySizeInBytes)}`,
         ].join(EOL);
         this.sizeEntry.show();
     }

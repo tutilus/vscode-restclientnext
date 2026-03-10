@@ -6,7 +6,6 @@ import { isJSONString } from './misc';
 const pd = require('pretty-data').pd;
 
 export class ResponseFormatUtility {
-
     private static readonly jsonSpecialTokenMapping = {
         [SyntaxKind.OpenBraceToken]: '{',
         [SyntaxKind.CloseBraceToken]: '}',
@@ -16,16 +15,22 @@ export class ResponseFormatUtility {
         [SyntaxKind.CommaToken]: ',',
         [SyntaxKind.NullKeyword]: 'null',
         [SyntaxKind.TrueKeyword]: 'true',
-        [SyntaxKind.FalseKeyword]: 'false'
+        [SyntaxKind.FalseKeyword]: 'false',
     };
 
-    public static formatBody(body: string, contentType: string | undefined, suppressValidation: boolean): string {
+    public static formatBody(
+        body: string,
+        contentType: string | undefined,
+        suppressValidation: boolean
+    ): string {
         if (contentType) {
             if (MimeUtility.isJSON(contentType)) {
                 if (isJSONString(body)) {
                     body = this.jsonPrettify(body);
                 } else if (body && !suppressValidation) {
-                    window.showWarningMessage('The content type of response is application/json, while response body is not a valid json string');
+                    window.showWarningMessage(
+                        'The content type of response is application/json, while response body is not a valid json string'
+                    );
                 }
             } else if (MimeUtility.isXml(contentType)) {
                 body = pd.xml(body);
@@ -56,7 +61,7 @@ export class ResponseFormatUtility {
             const offset = scanner.getTokenOffset();
             const length = scanner.getTokenLength();
             const value = text.substr(offset, length);
-            return [ token, value ];
+            return [token, value];
         }
 
         let [firstToken, firstTokenValue] = scanNext();
@@ -88,16 +93,20 @@ export class ResponseFormatUtility {
                 case SyntaxKind.TrueKeyword:
                 case SyntaxKind.FalseKeyword:
                     result += this.jsonSpecialTokenMapping[firstToken];
-                    if (secondToken === SyntaxKind.CloseBraceToken
-                        || secondToken === SyntaxKind.CloseBracketToken) {
+                    if (
+                        secondToken === SyntaxKind.CloseBraceToken ||
+                        secondToken === SyntaxKind.CloseBracketToken
+                    ) {
                         indentLevel--;
                         result += newLineAndIndent();
                     }
                     break;
                 case SyntaxKind.CommaToken:
                     result += this.jsonSpecialTokenMapping[firstToken];
-                    if (secondToken === SyntaxKind.CloseBraceToken
-                        || secondToken === SyntaxKind.CloseBracketToken) {
+                    if (
+                        secondToken === SyntaxKind.CloseBraceToken ||
+                        secondToken === SyntaxKind.CloseBracketToken
+                    ) {
                         indentLevel--;
                     }
                     result += newLineAndIndent();
@@ -109,8 +118,10 @@ export class ResponseFormatUtility {
                 case SyntaxKind.NumericLiteral:
                 case SyntaxKind.Unknown:
                     result += firstTokenValue;
-                    if (secondToken === SyntaxKind.CloseBraceToken
-                        || secondToken === SyntaxKind.CloseBracketToken) {
+                    if (
+                        secondToken === SyntaxKind.CloseBraceToken ||
+                        secondToken === SyntaxKind.CloseBracketToken
+                    ) {
                         indentLevel--;
                         result += newLineAndIndent();
                     }

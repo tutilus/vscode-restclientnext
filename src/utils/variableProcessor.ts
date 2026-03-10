@@ -1,5 +1,5 @@
 import { TextDocument } from 'vscode';
-import { VariableType } from "../models/variableType";
+import { VariableType } from '../models/variableType';
 import { EnvironmentVariableProvider } from './httpVariableProviders/environmentVariableProvider';
 import { FileVariableProvider } from './httpVariableProviders/fileVariableProvider';
 import { HttpVariableProvider } from './httpVariableProviders/httpVariableProvider';
@@ -8,7 +8,6 @@ import { SystemVariableProvider } from './httpVariableProviders/systemVariablePr
 import { getCurrentTextDocument } from './workspaceUtility';
 
 export class VariableProcessor {
-
     private static readonly providers: [HttpVariableProvider, boolean][] = [
         [SystemVariableProvider.Instance, false],
         [RequestVariableProvider.Instance, true],
@@ -16,13 +15,15 @@ export class VariableProcessor {
         [EnvironmentVariableProvider.Instance, true],
     ];
 
-    public static async processRawRequest(request: string, resolvedVariables: Map<string, string> = new Map<string, string>()) {
+    public static async processRawRequest(
+        request: string,
+        resolvedVariables: Map<string, string> = new Map<string, string>()
+    ) {
         const variableReferenceRegex = /\{{2}(.+?)\}{2}/g;
         let result = '';
         let match: RegExpExecArray | null;
         let lastIndex = 0;
-        variable:
-        while (match = variableReferenceRegex.exec(request)) {
+        variable: while ((match = variableReferenceRegex.exec(request))) {
             result += request.substring(lastIndex, match.index);
             lastIndex = variableReferenceRegex.lastIndex;
             const name = match[1].trim();
@@ -53,11 +54,17 @@ export class VariableProcessor {
         return result;
     }
 
-    public static async getAllVariablesDefinitions(document: TextDocument): Promise<Map<string, VariableType[]>> {
+    public static async getAllVariablesDefinitions(
+        document: TextDocument
+    ): Promise<Map<string, VariableType[]>> {
         const [, [requestProvider], [fileProvider], [environmentProvider]] = this.providers;
-        const requestVariables = await (requestProvider as RequestVariableProvider).getAll(document);
+        const requestVariables = await (requestProvider as RequestVariableProvider).getAll(
+            document
+        );
         const fileVariables = await (fileProvider as FileVariableProvider).getAll(document);
-        const environmentVariables = await (environmentProvider as EnvironmentVariableProvider).getAll();
+        const environmentVariables = await (
+            environmentProvider as EnvironmentVariableProvider
+        ).getAll();
 
         const variableDefinitions = new Map<string, VariableType[]>();
 

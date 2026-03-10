@@ -1,4 +1,4 @@
-import { Event, EventEmitter, TextDocument } from "vscode";
+import { Event, EventEmitter, TextDocument } from 'vscode';
 import { DocumentCache } from '../models/documentCache';
 import { HttpResponse } from '../models/httpResponse';
 

@@ -4,8 +4,7 @@ import { SystemSettings } from '../models/configurationSettings';
 class ConditionalRegistration {
     private registration: Disposable | undefined;
 
-    public constructor(private readonly doRegister: () => Disposable) {
-    }
+    public constructor(private readonly doRegister: () => Disposable) {}
 
     public dispose() {
         if (this.registration) {
@@ -32,7 +31,10 @@ export class ConfigurationDependentRegistration {
     private readonly settings: SystemSettings = SystemSettings.Instance;
     private readonly registration: ConditionalRegistration;
 
-    public constructor(register: () => Disposable, private readonly settingValueFunc: (settings: SystemSettings) => boolean) {
+    public constructor(
+        register: () => Disposable,
+        private readonly settingValueFunc: (settings: SystemSettings) => boolean
+    ) {
         this.registration = new ConditionalRegistration(register);
         this.update();
         this.settings.onDidChangeConfiguration(this.update, this);

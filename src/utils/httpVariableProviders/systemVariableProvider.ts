@@ -18,24 +18,47 @@ import { faker } from '@faker-js/faker';
 dayjs.extend(utc);
 
 type SystemVariableValue = Pick<HttpVariable, Exclude<keyof HttpVariable, 'name'>>;
-type ResolveSystemVariableFunc = (name: string, document: TextDocument, context: HttpVariableContext) => Promise<SystemVariableValue>;
+type ResolveSystemVariableFunc = (
+    name: string,
+    document: TextDocument,
+    context: HttpVariableContext
+) => Promise<SystemVariableValue>;
 
 export class SystemVariableProvider implements HttpVariableProvider {
-
     private readonly clipboard: Clipboard;
-    private readonly resolveFuncs: Map<string, ResolveSystemVariableFunc> = new Map<string, ResolveSystemVariableFunc>();
-    private readonly timestampRegex: RegExp = new RegExp(`\\${Constants.TimeStampVariableName}(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`);
-    private readonly datetimeRegex: RegExp = new RegExp(`\\${Constants.DateTimeVariableName}\\s(rfc1123|iso8601|\'.+\'|\".+\")(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`);
-    private readonly localDatetimeRegex: RegExp = new RegExp(`\\${Constants.LocalDateTimeVariableName}\\s(rfc1123|iso8601|\'.+\'|\".+\")(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`);
-    private readonly randomIntegerRegex: RegExp = new RegExp(`\\${Constants.RandomIntVariableName}\\s(\\-?\\d+)\\s(\\-?\\d+)`);
-    private readonly processEnvRegex: RegExp = new RegExp(`\\${Constants.ProcessEnvVariableName}\\s(\\%)?(\\w+)`);
+    private readonly resolveFuncs: Map<string, ResolveSystemVariableFunc> = new Map<
+        string,
+        ResolveSystemVariableFunc
+    >();
+    private readonly timestampRegex: RegExp = new RegExp(
+        `\\${Constants.TimeStampVariableName}(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`
+    );
+    private readonly datetimeRegex: RegExp = new RegExp(
+        `\\${Constants.DateTimeVariableName}\\s(rfc1123|iso8601|\'.+\'|\".+\")(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`
+    );
+    private readonly localDatetimeRegex: RegExp = new RegExp(
+        `\\${Constants.LocalDateTimeVariableName}\\s(rfc1123|iso8601|\'.+\'|\".+\")(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`
+    );
+    private readonly randomIntegerRegex: RegExp = new RegExp(
+        `\\${Constants.RandomIntVariableName}\\s(\\-?\\d+)\\s(\\-?\\d+)`
+    );
+    private readonly processEnvRegex: RegExp = new RegExp(
+        `\\${Constants.ProcessEnvVariableName}\\s(\\%)?(\\w+)`
+    );
 
-    private readonly dotenvRegex: RegExp = new RegExp(`\\${Constants.DotenvVariableName}\\s(\\%)?([\\w-.]+)`);
+    private readonly dotenvRegex: RegExp = new RegExp(
+        `\\${Constants.DotenvVariableName}\\s(\\%)?([\\w-.]+)`
+    );
 
-    private readonly oidcRegex: RegExp = new RegExp(`\\s*(\\${Constants.OidcVariableName})(?:\\s+(${Constants.OIdcForceNewOption}))?(?:\\s*clientId:([\\w|.|:|/|_|-]+))?(?:\\s*issuer:([\\w|.|:|/]+))?(?:\\s*callbackDomain:([\\w|.|:|/|_|-]+))?(?:\\s*callbackPort:([\\w|_]+))?(?:\\s*authorizeEndpoint:([\\w|.|:|/|_|-]+))?(?:\\s*tokenEndpoint:([\\w|.|:|/|_|-]+))?(?:\\s*scopes:([\\w|.|:|/|_|-]+))?(?:\\s*audience:([\\w|.|:|/|_|-]+))?`);
-    private readonly fakerRegex: RegExp = new RegExp(`\\${Constants.FakerVariableName}\\s+([\\w.]+)(?:\\s+(.*))?`);
+    private readonly oidcRegex: RegExp = new RegExp(
+        `\\s*(\\${Constants.OidcVariableName})(?:\\s+(${Constants.OIdcForceNewOption}))?(?:\\s*clientId:([\\w|.|:|/|_|-]+))?(?:\\s*issuer:([\\w|.|:|/]+))?(?:\\s*callbackDomain:([\\w|.|:|/|_|-]+))?(?:\\s*callbackPort:([\\w|_]+))?(?:\\s*authorizeEndpoint:([\\w|.|:|/|_|-]+))?(?:\\s*tokenEndpoint:([\\w|.|:|/|_|-]+))?(?:\\s*scopes:([\\w|.|:|/|_|-]+))?(?:\\s*audience:([\\w|.|:|/|_|-]+))?`
+    );
+    private readonly fakerRegex: RegExp = new RegExp(
+        `\\${Constants.FakerVariableName}\\s+([\\w.]+)(?:\\s+(.*))?`
+    );
 
-    private readonly innerSettingsEnvironmentVariableProvider: EnvironmentVariableProvider =  EnvironmentVariableProvider.Instance;
+    private readonly innerSettingsEnvironmentVariableProvider: EnvironmentVariableProvider =
+        EnvironmentVariableProvider.Instance;
     private static _instance: SystemVariableProvider;
 
     public static get Instance(): SystemVariableProvider {
@@ -64,25 +87,29 @@ export class SystemVariableProvider implements HttpVariableProvider {
 
     public async has(name: string, _document: TextDocument): Promise<boolean> {
         const [variableName] = name.split(' ').filter(Boolean);
-        
+
         // Check for exact match first
         if (this.resolveFuncs.has(variableName)) {
             return true;
         }
-        
+
         // For compound variables like $faker.internet.email, check if it starts with a registered key
         for (const key of this.resolveFuncs.keys()) {
             if (variableName.startsWith(key + '.')) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
-    public async get(name: string, document: TextDocument, context: HttpVariableContext): Promise<HttpVariable> {
+    public async get(
+        name: string,
+        document: TextDocument,
+        context: HttpVariableContext
+    ): Promise<HttpVariable> {
         const [variableName] = name.split(' ').filter(Boolean);
-        
+
         // Find the matching resolver function key
         let resolverKey = variableName;
         if (!this.resolveFuncs.has(variableName)) {
@@ -104,7 +131,10 @@ export class SystemVariableProvider implements HttpVariableProvider {
         return { name: variableName, ...result };
     }
 
-    public async getAll(_document: undefined, _context: HttpVariableContext): Promise<HttpVariable[]> {
+    public async getAll(
+        _document: undefined,
+        _context: HttpVariableContext
+    ): Promise<HttpVariable[]> {
         return [...this.resolveFuncs.keys()].map(name => ({ name }));
     }
 
@@ -113,9 +143,13 @@ export class SystemVariableProvider implements HttpVariableProvider {
             const groups = this.timestampRegex.exec(name);
             if (groups !== null && groups.length === 3) {
                 const [, offset, option] = groups;
-                const ts = offset && option
-                    ? dayjs.utc().add(+offset, option as ManipulateType).unix()
-                    : dayjs.utc().unix();
+                const ts =
+                    offset && option
+                        ? dayjs
+                              .utc()
+                              .add(+offset, option as ManipulateType)
+                              .unix()
+                        : dayjs.utc().unix();
                 return { value: ts.toString() };
             }
 
@@ -183,7 +217,9 @@ export class SystemVariableProvider implements HttpVariableProvider {
                 const minNum = Number(min);
                 const maxNum = Number(max);
                 if (minNum < maxNum) {
-                    return { value: (Math.floor(Math.random() * (maxNum - minNum)) + minNum).toString() };
+                    return {
+                        value: (Math.floor(Math.random() * (maxNum - minNum)) + minNum).toString(),
+                    };
                 }
             }
 
@@ -193,11 +229,12 @@ export class SystemVariableProvider implements HttpVariableProvider {
     private registerProcessEnvVariable() {
         this.resolveFuncs.set(Constants.ProcessEnvVariableName, async name => {
             const groups = this.processEnvRegex.exec(name);
-            if (groups !== null && groups.length === 3 ) {
+            if (groups !== null && groups.length === 3) {
                 const [, refToggle, environmentVarName] = groups;
                 let processEnvName = environmentVarName;
                 if (refToggle !== undefined) {
-                    processEnvName = await this.resolveSettingsEnvironmentVariable(environmentVarName);
+                    processEnvName =
+                        await this.resolveSettingsEnvironmentVariable(environmentVarName);
                 }
                 const envValue = process.env[processEnvName];
                 if (envValue !== undefined) {
@@ -213,20 +250,25 @@ export class SystemVariableProvider implements HttpVariableProvider {
     private registerDotenvVariable() {
         this.resolveFuncs.set(Constants.DotenvVariableName, async (name, document) => {
             let folderPath = path.dirname(document.fileName);
-            const { name : environmentName } = await EnvironmentController.getCurrentEnvironment();
+            const { name: environmentName } = await EnvironmentController.getCurrentEnvironment();
 
             let pathsFound = [false, false];
 
-            while ((pathsFound = await Promise.all([
-                fs.pathExists(path.join(folderPath, `.env.${environmentName}`)),
-                fs.pathExists(path.join(folderPath, '.env'))
-            ])).every(result => result === false)) {
+            while (
+                (pathsFound = await Promise.all([
+                    fs.pathExists(path.join(folderPath, `.env.${environmentName}`)),
+                    fs.pathExists(path.join(folderPath, '.env')),
+                ])).every(result => result === false)
+            ) {
                 folderPath = path.join(folderPath, '..');
                 if (folderPath === path.parse(process.cwd()).root) {
                     return { warning: ResolveWarningMessage.DotenvFileNotFound };
                 }
             }
-            const absolutePath = path.join(folderPath, pathsFound[0] ? `.env.${environmentName}` : '.env');
+            const absolutePath = path.join(
+                folderPath,
+                pathsFound[0] ? `.env.${environmentName}` : '.env'
+            );
             const groups = this.dotenvRegex.exec(name);
             if (groups !== null && groups.length === 3) {
                 const parsed = dotenv.parse(await fs.readFile(absolutePath));
@@ -249,21 +291,41 @@ export class SystemVariableProvider implements HttpVariableProvider {
     private registerOidcTokenVariable() {
         this.resolveFuncs.set(Constants.OidcVariableName, async (name, _document, _context) => {
             const matchVar = this.oidcRegex.exec(name) ?? [];
-            const [_, _1, forceNew, clientId, _3, callbackDomain, callbackPort, authorizeEndpoint, tokenEndpoint,  scopes, audience] = matchVar;
+            const [
+                _,
+                _1,
+                forceNew,
+                clientId,
+                _3,
+                callbackDomain,
+                callbackPort,
+                authorizeEndpoint,
+                tokenEndpoint,
+                scopes,
+                audience,
+            ] = matchVar;
 
-            const access_token = await OidcClient.getAccessToken(forceNew ? true : false, clientId, callbackDomain, parseInt(callbackPort ?? CALLBACK_PORT), authorizeEndpoint, tokenEndpoint, scopes, audience);
-            await this.clipboard.writeText(access_token ?? "");
-            return { value: access_token ?? "" };
+            const access_token = await OidcClient.getAccessToken(
+                forceNew ? true : false,
+                clientId,
+                callbackDomain,
+                parseInt(callbackPort ?? CALLBACK_PORT),
+                authorizeEndpoint,
+                tokenEndpoint,
+                scopes,
+                audience
+            );
+            await this.clipboard.writeText(access_token ?? '');
+            return { value: access_token ?? '' };
         });
     }
 
     private registerAadV2TokenVariable() {
-        this.resolveFuncs.set(Constants.AzureActiveDirectoryV2TokenVariableName,
-            async (name) => {
-                const aadV2TokenProvider = new AadV2TokenProvider();
-                const token = await aadV2TokenProvider.acquireToken(name);
-                return {value: token};
-            });
+        this.resolveFuncs.set(Constants.AzureActiveDirectoryV2TokenVariableName, async name => {
+            const aadV2TokenProvider = new AadV2TokenProvider();
+            const token = await aadV2TokenProvider.acquireToken(name);
+            return { value: token };
+        });
     }
 
     private registerFakerVariable() {
@@ -281,20 +343,27 @@ export class SystemVariableProvider implements HttpVariableProvider {
                             return { warning: `Faker method not found: ${path}` };
                         }
                     }
-                    
+
                     // Parse and call with parameters
                     if (typeof target === 'function') {
-                        const params = paramsStr ? paramsStr.trim().split(/\s+/).map(p => {
-                            const num = Number(p);
-                            return isNaN(num) ? p : num;
-                        }) : [];
+                        const params = paramsStr
+                            ? paramsStr
+                                  .trim()
+                                  .split(/\s+/)
+                                  .map(p => {
+                                      const num = Number(p);
+                                      return isNaN(num) ? p : num;
+                                  })
+                            : [];
                         const result = target(...params);
                         return { value: String(result) };
                     } else {
                         return { value: String(target) };
                     }
                 } catch (error) {
-                    return { warning: `Faker error: ${error instanceof Error ? error.message : "Unknown error"}` };
+                    return {
+                        warning: `Faker error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                    };
                 }
             }
             return { warning: ResolveWarningMessage.IncorrectFakerVariableFormat };
@@ -303,7 +372,8 @@ export class SystemVariableProvider implements HttpVariableProvider {
 
     private async resolveSettingsEnvironmentVariable(name: string) {
         if (await this.innerSettingsEnvironmentVariableProvider.has(name)) {
-            const { value, error, warning } =  await this.innerSettingsEnvironmentVariableProvider.get(name);
+            const { value, error, warning } =
+                await this.innerSettingsEnvironmentVariableProvider.get(name);
             if (!error && !warning) {
                 return value!.toString();
             } else {
@@ -313,5 +383,4 @@ export class SystemVariableProvider implements HttpVariableProvider {
             return name;
         }
     }
-
 }

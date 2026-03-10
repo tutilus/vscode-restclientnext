@@ -35,20 +35,19 @@ export class FileVariableProvider implements HttpVariableProvider {
 
     private readonly fileVariableCache = new DocumentCache<FileVariableValue[]>();
 
-    private constructor() {
-    }
+    private constructor() {}
 
     public readonly type: VariableType = VariableType.File;
 
     public async has(name: string, document: TextDocument): Promise<boolean> {
-        name = name.replace(/^%/, "");
+        name = name.replace(/^%/, '');
         const variables = await this.getFileVariables(document);
         return variables.some(v => v.name === name);
     }
 
     public async get(name: string, document: TextDocument): Promise<HttpVariable> {
-        const isEncoded = name.startsWith("%");
-        name = name.replace(/^%/, "");
+        const isEncoded = name.startsWith('%');
+        name = name.replace(/^%/, '');
         const variables = await this.getFileVariables(document);
         const variable = variables.find(v => v.name === name);
         if (!variable) {
@@ -70,7 +69,7 @@ export class FileVariableProvider implements HttpVariableProvider {
         return [...variableMap.entries()].map(([name, value]) => ({
             name,
             value,
-            description: variableMapWithDescriptions.get(name)
+            description: variableMapWithDescriptions.get(name),
         }));
     }
 
@@ -83,8 +82,10 @@ export class FileVariableProvider implements HttpVariableProvider {
         const variables = new Map<string, FileVariableValue>();
         for (const line of fileContent.split(Constants.LineSplitterRegex)) {
             const match = Constants.FileVariableDefinitionRegex.exec(line);
-            if (!match) { continue; }
-            
+            if (!match) {
+                continue;
+            }
+
             const [, key, rightSide] = match;
             const { value, description } = this.parseVariableValueAndDescription(rightSide);
             const fileVar: FileVariableValue = { name: key, value };
@@ -99,12 +100,15 @@ export class FileVariableProvider implements HttpVariableProvider {
         return values;
     }
 
-    private parseVariableValueAndDescription(rightSide: string): { value: string; description?: string } {
+    private parseVariableValueAndDescription(rightSide: string): {
+        value: string;
+        description?: string;
+    } {
         let values: string[] = [];
         let descs: string[] = [];
         let remaining = rightSide;
         let reason: ParseReason = 'endOfLine';
-        
+
         do {
             const parsed = this.parseQuotedValue(remaining, true);
             values.push(parsed.value);
@@ -112,21 +116,24 @@ export class FileVariableProvider implements HttpVariableProvider {
             reason = parsed.reason;
         } while (reason === 'endOfString');
 
-        if ( reason === 'descriptionMark') {
+        if (reason === 'descriptionMark') {
             do {
                 const parsed = this.parseQuotedValue(remaining);
                 descs.push(parsed.value);
                 remaining = parsed.remaining;
                 reason = parsed.reason;
             } while (reason === 'endOfString');
-            
+
             return { value: values.join(' '), description: descs.join(' ') };
         }
 
         return { value: values.join(' '), description: undefined };
     }
 
-    private parseQuotedValue(value: string, stopAtPipe: boolean = false): { value: string; remaining: string; reason: ParseReason } {
+    private parseQuotedValue(
+        value: string,
+        stopAtPipe: boolean = false
+    ): { value: string; remaining: string; reason: ParseReason } {
         let quoteChar = '';
         let inQuote = false;
         let inEscape = false;
@@ -147,7 +154,6 @@ export class FileVariableProvider implements HttpVariableProvider {
         }
 
         while (idx < trimmed.length) {
-
             if (trimmed[idx] === '"' || trimmed[idx] === "'") {
                 // Handle escape character first
                 if (inEscape) {
@@ -158,24 +164,29 @@ export class FileVariableProvider implements HttpVariableProvider {
                 }
 
                 if (inQuote && trimmed[idx] === quoteChar) {
-                    return { value: chunk, remaining: trimmed.slice(idx + 1).trim(), reason: 'endOfString' };
+                    return {
+                        value: chunk,
+                        remaining: trimmed.slice(idx + 1).trim(),
+                        reason: 'endOfString',
+                    };
                 }
                 chunk += trimmed[idx];
-
             } else if (trimmed[idx] === '\\' && inQuote) {
                 if (inEscape) {
                     inEscape = false;
                     chunk += trimmed[idx];
                     idx++;
                     continue;
-                } 
+                }
                 inEscape = true;
-                
             } else if (trimmed[idx] === '|' && !inQuote && stopAtPipe) {
-                return { value: chunk, remaining: trimmed.slice(idx + 1).trim(), reason: 'descriptionMark' };
-        
+                return {
+                    value: chunk,
+                    remaining: trimmed.slice(idx + 1).trim(),
+                    reason: 'descriptionMark',
+                };
             } else if (trimmed[idx] === '#' && !inQuote) {
-                // Start of comment, stop processing further  
+                // Start of comment, stop processing further
                 reason = 'commentMark';
                 break;
             } else {
@@ -208,23 +219,33 @@ export class FileVariableProvider implements HttpVariableProvider {
         return { value: chunk, remaining: trimmed.slice(idx).trim(), reason };
     }
 
-
-    private async resolveFileVariables(document: TextDocument, variables: FileVariableValue[]): Promise<Map<string, string>> {
+    private async resolveFileVariables(
+        document: TextDocument,
+        variables: FileVariableValue[]
+    ): Promise<Map<string, string>> {
         // Resolve non-file variables in variable value
         const fileVariableNames = new Set(variables.map(v => v.name));
-        const resolvedVariables = await Promise.all(variables.map(
-            async ({ name, value }) => {
-                const parsedValue = await this.processNonFileVariableValue(document, value, fileVariableNames);
+        const resolvedVariables = await Promise.all(
+            variables.map(async ({ name, value }) => {
+                const parsedValue = await this.processNonFileVariableValue(
+                    document,
+                    value,
+                    fileVariableNames
+                );
                 return { name, value: parsedValue };
-            }
-        ));
+            })
+        );
 
-        const variableMap = new Map(resolvedVariables.map(({ name, value }): [string, string] => [name, value]));
+        const variableMap = new Map(
+            resolvedVariables.map(({ name, value }): [string, string] => [name, value])
+        );
         const dependentVariables = new Map<string, string[]>();
         const dependencyCount = new Map<string, number>();
         const noDependencyVariables: string[] = [];
         for (const [name, value] of variableMap) {
-            const dependentVariableNames = new Set(this.resolveDependentFileVariableNames(value).filter(v => variableMap.has(v)));
+            const dependentVariableNames = new Set(
+                this.resolveDependentFileVariableNames(value).filter(v => variableMap.has(v))
+            );
             if (dependentVariableNames.size === 0) {
                 noDependencyVariables.push(name);
             } else {
@@ -250,7 +271,8 @@ export class FileVariableProvider implements HttpVariableProvider {
                 const originalValue = variableMap.get(d);
                 const currentValue = originalValue!.replace(
                     new RegExp(`{{\\s*${current}\\s*}}`, 'g'),
-                    variableMap.get(current!)!);
+                    variableMap.get(current!)!
+                );
                 variableMap.set(d, currentValue);
                 const newCount = dependencyCount.get(d)! - 1;
                 if (newCount === 0) {
@@ -265,13 +287,16 @@ export class FileVariableProvider implements HttpVariableProvider {
         return variableMap;
     }
 
-    private async processNonFileVariableValue(document: TextDocument, value: string, variables: Set<string>): Promise<string> {
+    private async processNonFileVariableValue(
+        document: TextDocument,
+        value: string,
+        variables: Set<string>
+    ): Promise<string> {
         const variableReferenceRegex = /\{{2}(.+?)\}{2}/g;
         let result = '';
         let match: RegExpExecArray | null;
         let lastIndex = 0;
-        variable:
-        while (match = variableReferenceRegex.exec(value)) {
+        variable: while ((match = variableReferenceRegex.exec(value))) {
             result += value.substring(lastIndex, match.index);
             lastIndex = variableReferenceRegex.lastIndex;
             const name = match[1].trim();
@@ -279,7 +304,11 @@ export class FileVariableProvider implements HttpVariableProvider {
                 const context = { rawRequest: value, parsedRequest: result };
                 for (const provider of this.innerVariableProviders) {
                     if (await provider.has(name, document, context)) {
-                        const { value, error, warning } = await provider.get(name, document, context);
+                        const { value, error, warning } = await provider.get(
+                            name,
+                            document,
+                            context
+                        );
                         if (!error && !warning) {
                             result += value;
                             continue variable;
@@ -300,7 +329,7 @@ export class FileVariableProvider implements HttpVariableProvider {
         const variableReferenceRegex = /\{{2}(.+?)\}{2}/g;
         let match: RegExpExecArray | null;
         const result: string[] = [];
-        while (match = variableReferenceRegex.exec(value)) {
+        while ((match = variableReferenceRegex.exec(value))) {
             result.push(match[1].trim());
         }
         return result;

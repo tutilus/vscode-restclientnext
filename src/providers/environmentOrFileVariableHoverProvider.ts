@@ -1,12 +1,25 @@
-import { CancellationToken, Hover, HoverProvider, MarkdownString, Position, TextDocument } from 'vscode';
+import {
+    CancellationToken,
+    Hover,
+    HoverProvider,
+    MarkdownString,
+    Position,
+    TextDocument,
+} from 'vscode';
 import { EnvironmentVariableProvider } from '../utils/httpVariableProviders/environmentVariableProvider';
 import { FileVariableProvider } from '../utils/httpVariableProviders/fileVariableProvider';
 import { VariableUtility } from '../utils/variableUtility';
 
 export class EnvironmentOrFileVariableHoverProvider implements HoverProvider {
-
-    public async provideHover(document: TextDocument, position: Position, _token: CancellationToken): Promise<Hover | undefined> {
-        const wordRange = VariableUtility.getEnvironmentOrFileVariableReferenceNameRange(document, position);
+    public async provideHover(
+        document: TextDocument,
+        position: Position,
+        _token: CancellationToken
+    ): Promise<Hover | undefined> {
+        const wordRange = VariableUtility.getEnvironmentOrFileVariableReferenceNameRange(
+            document,
+            position
+        );
         if (!wordRange) {
             return undefined;
         }
@@ -14,7 +27,8 @@ export class EnvironmentOrFileVariableHoverProvider implements HoverProvider {
         const selectedVariableName = document.getText(wordRange);
 
         if (await FileVariableProvider.Instance.has(selectedVariableName, document)) {
-            const { name, value, description, error, warning } = await FileVariableProvider.Instance.get(selectedVariableName, document);
+            const { name, value, description, error, warning } =
+                await FileVariableProvider.Instance.get(selectedVariableName, document);
             if (!warning && !error) {
                 const contents: MarkdownString[] = [new MarkdownString(value as string)];
                 if (description) {
@@ -28,7 +42,8 @@ export class EnvironmentOrFileVariableHoverProvider implements HoverProvider {
         }
 
         if (await EnvironmentVariableProvider.Instance.has(selectedVariableName)) {
-            const { name, value, description, error, warning } = await EnvironmentVariableProvider.Instance.get(selectedVariableName);
+            const { name, value, description, error, warning } =
+                await EnvironmentVariableProvider.Instance.get(selectedVariableName);
             if (!warning && !error) {
                 const contents: MarkdownString[] = [new MarkdownString(value as string)];
                 if (description) {

@@ -1,5 +1,13 @@
 import * as url from 'url';
-import { CancellationToken, DocumentSymbolProvider, Location, Range, SymbolInformation, SymbolKind, TextDocument } from 'vscode';
+import {
+    CancellationToken,
+    DocumentSymbolProvider,
+    Location,
+    Range,
+    SymbolInformation,
+    SymbolKind,
+    TextDocument,
+} from 'vscode';
 import * as Constants from '../common/constants';
 import { RequestParserFactory } from '../models/requestParserFactory';
 import { Selector } from '../utils/selector';
@@ -7,20 +15,23 @@ import { VariableProcessor } from '../utils/variableProcessor';
 import { getCurrentHttpFileName } from '../utils/workspaceUtility';
 
 export class HttpDocumentSymbolProvider implements DocumentSymbolProvider {
-    public async provideDocumentSymbols(document: TextDocument, _token: CancellationToken): Promise<SymbolInformation[]> {
+    public async provideDocumentSymbols(
+        document: TextDocument,
+        _token: CancellationToken
+    ): Promise<SymbolInformation[]> {
         const symbols: SymbolInformation[] = [];
         const lines: string[] = document.getText().split(Constants.LineSplitterRegex);
-        const requestRange: [number, number][] = Selector.getRequestRanges(
-            lines,
-            { ignoreCommentLine: false , ignoreFileVariableDefinitionLine: false });
+        const requestRange: [number, number][] = Selector.getRequestRanges(lines, {
+            ignoreCommentLine: false,
+            ignoreFileVariableDefinitionLine: false,
+        });
 
         for (let [blockStart, blockEnd] of requestRange) {
             // get real start for current requestRange
             let requestName: string | undefined;
             while (blockStart <= blockEnd) {
                 const line = lines[blockStart];
-                if (Selector.isEmptyLine(line) ||
-                    Selector.isCommentLine(line)) {
+                if (Selector.isEmptyLine(line) || Selector.isCommentLine(line)) {
                     if (Selector.isRequestVariableDefinitionLine(line)) {
                         requestName = Selector.getRequestVariableDefinitionName(line);
                     }
@@ -34,7 +45,10 @@ export class HttpDocumentSymbolProvider implements DocumentSymbolProvider {
                             container,
                             new Location(
                                 document.uri,
-                                new Range(blockStart, 0, blockStart, line.length))));
+                                new Range(blockStart, 0, blockStart, line.length)
+                            )
+                        )
+                    );
                     blockStart++;
                 } else {
                     break;
@@ -46,7 +60,10 @@ export class HttpDocumentSymbolProvider implements DocumentSymbolProvider {
             }
 
             if (blockStart <= blockEnd) {
-                const [name, container] = await this.getRequestSymbolInfo(lines[blockStart], requestName);
+                const [name, container] = await this.getRequestSymbolInfo(
+                    lines[blockStart],
+                    requestName
+                );
                 symbols.push(
                     new SymbolInformation(
                         name,
@@ -54,7 +71,10 @@ export class HttpDocumentSymbolProvider implements DocumentSymbolProvider {
                         container,
                         new Location(
                             document.uri,
-                            new Range(blockStart, 0, blockEnd, lines[blockEnd].length))));
+                            new Range(blockStart, 0, blockEnd, lines[blockEnd].length)
+                        )
+                    )
+                );
             }
         }
         return symbols;
@@ -66,7 +86,10 @@ export class HttpDocumentSymbolProvider implements DocumentSymbolProvider {
         return [line.substring(1, line.indexOf('=')).trim(), fileName!];
     }
 
-    private async getRequestSymbolInfo(rawText: string, name: string | undefined): Promise<[string, string]> {
+    private async getRequestSymbolInfo(
+        rawText: string,
+        name: string | undefined
+    ): Promise<[string, string]> {
         // For request with name, return the request name and file name instead
         if (name) {
             return [name, getCurrentHttpFileName()!];

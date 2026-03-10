@@ -1,10 +1,17 @@
 import * as crypto from 'crypto';
-import { RequestHeaders, RequestHeaderValue, ResponseHeaders, ResponseHeaderValue } from '../models/base';
-
+import {
+    RequestHeaders,
+    RequestHeaderValue,
+    ResponseHeaders,
+    ResponseHeaderValue,
+} from '../models/base';
 
 export function getHeader(headers: ResponseHeaders, name: string): ResponseHeaderValue;
 export function getHeader(headers: RequestHeaders, name: string): RequestHeaderValue;
-export function getHeader(headers: RequestHeaders | ResponseHeaders, name: string): RequestHeaderValue | ResponseHeaderValue {
+export function getHeader(
+    headers: RequestHeaders | ResponseHeaders,
+    name: string
+): RequestHeaderValue | ResponseHeaderValue {
     if (!headers || !name) {
         return undefined;
     }
@@ -19,7 +26,11 @@ export function getContentType(headers: RequestHeaders | ResponseHeaders): strin
 }
 
 export function hasHeader(headers: RequestHeaders | ResponseHeaders, name: string): boolean {
-    return !!(headers && name && Object.keys(headers).some(h => h.toLowerCase() === name.toLowerCase()));
+    return !!(
+        headers &&
+        name &&
+        Object.keys(headers).some(h => h.toLowerCase() === name.toLowerCase())
+    );
 }
 
 export function removeHeader(headers: RequestHeaders | ResponseHeaders, name: string) {

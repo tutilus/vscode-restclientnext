@@ -6,31 +6,30 @@ url: https://tutilus.github.io
 markdown: kramdown
 theme: null
 plugins:
-  - jekyll-seo-tag
-  - jekyll-sitemap
+    - jekyll-seo-tag
+    - jekyll-sitemap
 
 navigation:
-  - title: Home
-    url: /
-  - title: Features
-    url: /features
-  - title: Usage
-    url: /usage
-  - title: Commands
-    url: /commands
-  - title: Authentication
-    url: /authentication
-  - title: Variables
-    url: /variables
-  - title: Settings
-    url: /settings
-  - title: HTTP Language
-    url: /http-language
+    - title: Home
+      url: /
+    - title: Features
+      url: /features
+    - title: Usage
+      url: /usage
+    - title: Commands
+      url: /commands
+    - title: Authentication
+      url: /authentication
+    - title: Variables
+      url: /variables
+    - title: Settings
+      url: /settings
+    - title: HTTP Language
+      url: /http-language
 
 defaults:
-  -
-    scope:
-      path: ""
-    values:
-      layout: page
-      author: REST Client Next Team
+    - scope:
+          path: ''
+      values:
+          layout: page
+          author: REST Client Next Team

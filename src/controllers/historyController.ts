@@ -12,20 +12,19 @@ import { UserDataManager } from '../utils/userDataManager';
 dayjs.extend(relativeTime);
 
 export class HistoryController {
-    public constructor() {
-    }
+    public constructor() {}
 
     public async save() {
         const requests = await UserDataManager.getRequestHistory();
         if (requests.length === 0) {
-            window.showInformationMessage("No request history items are found!");
+            window.showInformationMessage('No request history items are found!');
             return;
         }
 
         const itemPickList = requests.map(request => {
             const item: QuickPickItem & { rawRequest: HistoricalHttpRequest } = {
                 label: `${request.method.toUpperCase()} ${request.url}`,
-                rawRequest: request
+                rawRequest: request,
             };
             if (typeof request.body === 'string' && request.body.length > 0) {
                 item.description = `${request.body.length} body bytes`;
@@ -36,7 +35,7 @@ export class HistoryController {
             return item;
         });
 
-        const item = await window.showQuickPick(itemPickList, { placeHolder: "" });
+        const item = await window.showQuickPick(itemPickList, { placeHolder: '' });
         if (!item) {
             return;
         }
@@ -49,7 +48,8 @@ export class HistoryController {
         const btn = await window.showInformationMessage(
             'Do you really want to clear request history?',
             { title: 'Yes' },
-            { title: 'No' });
+            { title: 'No' }
+        );
         if (btn?.title === 'Yes') {
             await UserDataManager.clearRequestHistory();
             window.showInformationMessage('Request history has been cleared');
@@ -73,6 +73,5 @@ export class HistoryController {
         return file;
     }
 
-    public dispose() {
-    }
+    public dispose() {}
 }

@@ -1,4 +1,12 @@
-import { Clipboard, commands, env, ExtensionContext, ViewColumn, WebviewPanel, window } from 'vscode';
+import {
+    Clipboard,
+    commands,
+    env,
+    ExtensionContext,
+    ViewColumn,
+    WebviewPanel,
+    window,
+} from 'vscode';
 import { disposeAll } from '../utils/dispose';
 import { BaseWebview } from './baseWebview';
 
@@ -6,7 +14,6 @@ const hljs = require('highlight.js');
 const codeHighlightLinenums = require('code-highlight-linenums');
 
 export class CodeSnippetWebview extends BaseWebview {
-
     protected get viewType(): string {
         return 'rest-code-snippet';
     }
@@ -22,20 +29,18 @@ export class CodeSnippetWebview extends BaseWebview {
     public constructor(context: ExtensionContext) {
         super(context);
 
-        this.context.subscriptions.push(commands.registerCommand('rest-client.copy-codesnippet', this.copy, this));
+        this.context.subscriptions.push(
+            commands.registerCommand('rest-client.copy-codesnippet', this.copy, this)
+        );
     }
 
     public async render(convertResult: string, title: string, lang: string) {
         let panel: WebviewPanel;
         if (this.panels.length === 0) {
-            panel = window.createWebviewPanel(
-                this.viewType,
-                title,
-                ViewColumn.Two,
-                {
-                    enableFindWidget: true,
-                    retainContextWhenHidden: true
-                });
+            panel = window.createWebviewPanel(this.viewType, title, ViewColumn.Two, {
+                enableFindWidget: true,
+                retainContextWhenHidden: true,
+            });
 
             panel.onDidDispose(() => {
                 this.setPreviewActiveContext(false);

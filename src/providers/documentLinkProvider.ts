@@ -1,12 +1,19 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as url from 'url';
-import { CancellationToken, DocumentLink, DocumentLinkProvider, Position, Range, TextDocument, Uri } from 'vscode';
+import {
+    CancellationToken,
+    DocumentLink,
+    DocumentLinkProvider,
+    Position,
+    Range,
+    TextDocument,
+    Uri,
+} from 'vscode';
 import * as Constants from '../common/constants';
 import { getWorkspaceRootPath } from '../utils/workspaceUtility';
 
 export class RequestBodyDocumentLinkProvider implements DocumentLinkProvider {
-
     private _linkPattern = /^(\<(?:@(?:\w+)?)?\s+)(.+)(\s*)$/g;
 
     public provideDocumentLinks(document: TextDocument, _token: CancellationToken): DocumentLink[] {
@@ -18,15 +25,17 @@ export class RequestBodyDocumentLinkProvider implements DocumentLinkProvider {
         for (let index = 0; index < lines.length; index++) {
             const line = lines[index];
             let match: RegExpMatchArray | null;
-            if (match = this._linkPattern.exec(line)) {
+            if ((match = this._linkPattern.exec(line))) {
                 const filePath = match[2];
                 const offset = match[1].length;
                 const linkStart = new Position(index, offset);
                 const linkEnd = new Position(index, offset + filePath.length);
-                results.push(new DocumentLink(
-                    new Range(linkStart, linkEnd),
-                    this.normalizeLink(filePath, base)
-                ));
+                results.push(
+                    new DocumentLink(
+                        new Range(linkStart, linkEnd),
+                        this.normalizeLink(filePath, base)
+                    )
+                );
             }
         }
 
@@ -54,6 +63,8 @@ export class RequestBodyDocumentLinkProvider implements DocumentLinkProvider {
             }
         }
 
-        return Uri.parse(`command:rest-client._openDocumentLink?${encodeURIComponent(JSON.stringify({ path: resourcePath }))}`);
+        return Uri.parse(
+            `command:rest-client._openDocumentLink?${encodeURIComponent(JSON.stringify({ path: resourcePath }))}`
+        );
     }
 }

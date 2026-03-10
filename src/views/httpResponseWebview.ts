@@ -1,6 +1,16 @@
 import * as fs from 'fs-extra';
 import * as os from 'os';
-import { Clipboard, commands, env, ExtensionContext, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
+import {
+    Clipboard,
+    commands,
+    env,
+    ExtensionContext,
+    Uri,
+    ViewColumn,
+    WebviewPanel,
+    window,
+    workspace,
+} from 'vscode';
 import { SystemSettings } from '../models/configurationSettings';
 import { HttpRequest } from '../models/httpRequest';
 import { HttpResponse } from '../models/httpResponse';
@@ -21,8 +31,7 @@ const COPYPATH = 'Copy Path';
 type FoldingRange = [number, number];
 
 export class HttpResponseWebview extends BaseWebview {
-
-    private readonly urlRegex = /(https?:\/\/[^\s"'<>\]\)\\]+)/gi;
+    private readonly urlRegex = /(https?:\/\/[^\s"'<>\])\\]+)/gi;
 
     private readonly panelResponses: Map<WebviewPanel, HttpResponse>;
 
@@ -58,14 +67,32 @@ export class HttpResponseWebview extends BaseWebview {
         // Init response webview map
         this.panelResponses = new Map<WebviewPanel, HttpResponse>();
 
-        this.context.subscriptions.push(commands.registerCommand('rest-client.fold-response', this.foldResponseBody, this));
-        this.context.subscriptions.push(commands.registerCommand('rest-client.unfold-response', this.unfoldResponseBody, this));
-        this.context.subscriptions.push(commands.registerCommand('rest-client.preview-html-response-body', this.previewResponseBody, this));
-        this.context.subscriptions.push(commands.registerCommand('rest-client.show-raw-response', this.showRawResponse, this));
+        this.context.subscriptions.push(
+            commands.registerCommand('rest-client.fold-response', this.foldResponseBody, this)
+        );
+        this.context.subscriptions.push(
+            commands.registerCommand('rest-client.unfold-response', this.unfoldResponseBody, this)
+        );
+        this.context.subscriptions.push(
+            commands.registerCommand(
+                'rest-client.preview-html-response-body',
+                this.previewResponseBody,
+                this
+            )
+        );
+        this.context.subscriptions.push(
+            commands.registerCommand('rest-client.show-raw-response', this.showRawResponse, this)
+        );
 
-        this.context.subscriptions.push(commands.registerCommand('rest-client.copy-response-body', this.copyBody, this));
-        this.context.subscriptions.push(commands.registerCommand('rest-client.save-response', this.save, this));
-        this.context.subscriptions.push(commands.registerCommand('rest-client.save-response-body', this.saveBody, this));
+        this.context.subscriptions.push(
+            commands.registerCommand('rest-client.copy-response-body', this.copyBody, this)
+        );
+        this.context.subscriptions.push(
+            commands.registerCommand('rest-client.save-response', this.save, this)
+        );
+        this.context.subscriptions.push(
+            commands.registerCommand('rest-client.save-response-body', this.saveBody, this)
+        );
     }
 
     public async render(response: HttpResponse, column: ViewColumn) {
@@ -78,8 +105,9 @@ export class HttpResponseWebview extends BaseWebview {
                 {
                     enableFindWidget: true,
                     enableScripts: true,
-                    retainContextWhenHidden: true
-                });
+                    retainContextWhenHidden: true,
+                }
+            );
 
             panel.onDidDispose(() => {
                 if (panel === this.activePanel) {
@@ -130,11 +158,11 @@ export class HttpResponseWebview extends BaseWebview {
     }
 
     private foldResponseBody() {
-        this.activePanel?.webview.postMessage({ 'command': 'foldAll' });
+        this.activePanel?.webview.postMessage({ command: 'foldAll' });
     }
 
     private unfoldResponseBody() {
-        this.activePanel?.webview.postMessage({ 'command': 'unfoldAll' });
+        this.activePanel?.webview.postMessage({ command: 'unfoldAll' });
     }
 
     private previewResponseBody() {
@@ -145,7 +173,10 @@ export class HttpResponseWebview extends BaseWebview {
 
     private showRawResponse() {
         if (this.activeResponse && this.activePanel) {
-            this.activePanel.webview.html = this.getHtmlForWebview(this.activePanel, this.activeResponse);
+            this.activePanel.webview.html = this.getHtmlForWebview(
+                this.activePanel,
+                this.activeResponse
+            );
         }
     }
 
@@ -158,7 +189,9 @@ export class HttpResponseWebview extends BaseWebview {
     private async save() {
         if (this.activeResponse) {
             const fullResponse = this.getFullResponseString(this.activeResponse);
-            const defaultFilePath = UserDataManager.getResponseSaveFilePath(`Response-${Date.now()}.http`);
+            const defaultFilePath = UserDataManager.getResponseSaveFilePath(
+                `Response-${Date.now()}.http`
+            );
             try {
                 await this.openSaveDialog(defaultFilePath, fullResponse);
             } catch {
@@ -169,7 +202,10 @@ export class HttpResponseWebview extends BaseWebview {
 
     private async saveBody() {
         if (this.activeResponse) {
-            const fileName = HttpResponseWebview.getResponseBodyOuptutFilename(this.activeResponse, this.settings);
+            const fileName = HttpResponseWebview.getResponseBodyOuptutFilename(
+                this.activeResponse,
+                this.settings
+            );
             const defaultFilePath = UserDataManager.getResponseBodySaveFilePath(fileName);
 
             try {
@@ -180,25 +216,37 @@ export class HttpResponseWebview extends BaseWebview {
         }
     }
 
-    private static getResponseBodyOuptutFilename(activeResponse: HttpResponse, settings: SystemSettings) {
+    private static getResponseBodyOuptutFilename(
+        activeResponse: HttpResponse,
+        settings: SystemSettings
+    ) {
         if (settings.useContentDispositionFilename) {
             const cdHeader = getHeader(activeResponse.headers, 'content-disposition');
             if (cdHeader) {
                 const disposition = contentDisposition.parse(cdHeader);
-                if ((disposition?.type === "attachment" || disposition?.type === "inline") && disposition?.parameters?.hasOwnProperty("filename")) {
+                if (
+                    (disposition?.type === 'attachment' || disposition?.type === 'inline') &&
+                    disposition?.parameters?.hasOwnProperty('filename')
+                ) {
                     const serverProvidedFilename = disposition.parameters.filename;
                     return serverProvidedFilename;
                 }
             }
         }
 
-        const extension = MimeUtility.getExtension(activeResponse.contentType, settings.mimeAndFileExtensionMapping);
-        const defaultFileName = !extension ? `Response-${Date.now()}` : `Response-${Date.now()}.${extension}`;
+        const extension = MimeUtility.getExtension(
+            activeResponse.contentType,
+            settings.mimeAndFileExtensionMapping
+        );
+        const defaultFileName = !extension
+            ? `Response-${Date.now()}`
+            : `Response-${Date.now()}.${extension}`;
         return defaultFileName;
     }
 
     private getTitle(response: HttpResponse): string {
-        const prefix = (this.settings.requestNameAsResponseTabTitle && response.request.name) || 'Response';
+        const prefix =
+            (this.settings.requestNameAsResponseTabTitle && response.request.name) || 'Response';
         return `${prefix}(${response.timingPhases.total ?? 0}ms)`;
     }
 
@@ -217,7 +265,11 @@ export class HttpResponseWebview extends BaseWebview {
 
         const filePath = uri.fsPath;
         await fs.writeFile(filePath, content, { flag: 'w' });
-        const btn = await window.showInformationMessage(`Saved to ${filePath}`, { title: OPEN }, { title: COPYPATH });
+        const btn = await window.showInformationMessage(
+            `Saved to ${filePath}`,
+            { title: OPEN },
+            { title: COPYPATH }
+        );
         if (btn?.title === OPEN) {
             workspace.openTextDocument(filePath).then(window.showTextDocument);
         } else if (btn?.title === COPYPATH) {
@@ -232,7 +284,10 @@ export class HttpResponseWebview extends BaseWebview {
         if (contentType) {
             contentType = contentType.trim();
         }
-        if (MimeUtility.isBrowserSupportedImageFormat(contentType) && !HttpResponseWebview.isHeadRequest(response)) {
+        if (
+            MimeUtility.isBrowserSupportedImageFormat(contentType) &&
+            !HttpResponseWebview.isHeadRequest(response)
+        ) {
             innerHtml = `<img src="data:${contentType};base64,${base64(response.bodyBuffer)}">`;
         } else {
             const code = this.highlightResponse(response);
@@ -259,9 +314,13 @@ export class HttpResponseWebview extends BaseWebview {
     </head>
     <body>
         <div>
-            ${this.settings.disableAddingHrefLinkForLargeResponse && response.bodySizeInBytes > this.settings.largeResponseBodySizeLimitInMB * 1024 * 1024
-                ? innerHtml
-                : this.addUrlLinks(innerHtml)}
+            ${
+                this.settings.disableAddingHrefLinkForLargeResponse &&
+                response.bodySizeInBytes >
+                    this.settings.largeResponseBodySizeLimitInMB * 1024 * 1024
+                    ? innerHtml
+                    : this.addUrlLinks(innerHtml)
+            }
             <a id="scroll-to-top" role="button" aria-label="scroll to top" title="Scroll To Top"><span class="icon"></span></a>
         </div>
         <script type="text/javascript" src="${panel.webview.asWebviewUri(this.scriptFilePath)}" nonce="${nonce}" charset="UTF-8"></script>
@@ -282,7 +341,10 @@ ${formatHeaders(request.headers)}`;
                     request.body = 'NOTE: Request Body From File Is Not Shown';
                 }
                 const requestBodyPart = `${ResponseFormatUtility.formatBody(request.body, request.contentType, true)}`;
-                const bodyLanguageAlias = HttpResponseWebview.getHighlightLanguageAlias(request.contentType, request.body);
+                const bodyLanguageAlias = HttpResponseWebview.getHighlightLanguageAlias(
+                    request.contentType,
+                    request.body
+                );
                 if (bodyLanguageAlias) {
                     code += hljs.highlight(bodyLanguageAlias, requestBodyPart).value;
                 } else {
@@ -297,16 +359,25 @@ ${formatHeaders(request.headers)}`;
         if (previewOption !== PreviewOption.Body) {
             const responseNonBodyPart = `HTTP/${response.httpVersion} ${response.statusCode} ${response.statusMessage}
 ${formatHeaders(response.headers)}`;
-            code += hljs.highlight('http', responseNonBodyPart + (previewOption !== PreviewOption.Headers ? '\r\n' : '')).value;
+            code += hljs.highlight(
+                'http',
+                responseNonBodyPart + (previewOption !== PreviewOption.Headers ? '\r\n' : '')
+            ).value;
         }
 
         if (previewOption !== PreviewOption.Headers) {
             const responseBodyPart = `${ResponseFormatUtility.formatBody(response.body, response.contentType, this.settings.suppressResponseBodyContentTypeValidationWarning)}`;
-            if (this.settings.disableHighlightResponseBodyForLargeResponse &&
-                response.bodySizeInBytes > this.settings.largeResponseBodySizeLimitInMB * 1024 * 1024) {
+            if (
+                this.settings.disableHighlightResponseBodyForLargeResponse &&
+                response.bodySizeInBytes >
+                    this.settings.largeResponseBodySizeLimitInMB * 1024 * 1024
+            ) {
                 code += responseBodyPart;
             } else {
-                const bodyLanguageAlias = HttpResponseWebview.getHighlightLanguageAlias(response.contentType, responseBodyPart);
+                const bodyLanguageAlias = HttpResponseWebview.getHighlightLanguageAlias(
+                    response.contentType,
+                    responseBodyPart
+                );
                 if (bodyLanguageAlias) {
                     code += hljs.highlight(bodyLanguageAlias, responseBodyPart).value;
                 } else {
@@ -321,13 +392,16 @@ ${formatHeaders(response.headers)}`;
     private getSettingsOverrideStyles(width: number): string {
         return [
             '<style>',
-            (this.settings.fontFamily || this.settings.fontSize || this.settings.fontWeight ? [
-                'code {',
-                this.settings.fontFamily ? `font-family: ${this.settings.fontFamily};` : '',
-                this.settings.fontSize ? `font-size: ${this.settings.fontSize}px;` : '',
-                this.settings.fontWeight ? `font-weight: ${this.settings.fontWeight};` : '',
-                '}',
-            ] : []).join('\n'),
+            (this.settings.fontFamily || this.settings.fontSize || this.settings.fontWeight
+                ? [
+                      'code {',
+                      this.settings.fontFamily ? `font-family: ${this.settings.fontFamily};` : '',
+                      this.settings.fontSize ? `font-size: ${this.settings.fontSize}px;` : '',
+                      this.settings.fontWeight ? `font-weight: ${this.settings.fontWeight};` : '',
+                      '}',
+                  ]
+                : []
+            ).join('\n'),
             'code .line {',
             `padding-left: calc(${width}ch + 20px );`,
             '}',
@@ -341,7 +415,8 @@ ${formatHeaders(response.headers)}`;
             '.line.collapsed .icon {',
             `left: calc(${width}ch + 3px)`,
             '}',
-            '</style>'].join('\n');
+            '</style>',
+        ].join('\n');
     }
 
     private getCsp(nonce: string): string {
@@ -349,7 +424,7 @@ ${formatHeaders(response.headers)}`;
     }
 
     private addLineNums(code: string): string {
-        code = code.replace(/([\r\n]\s*)(<\/span>)/ig, '$2$1');
+        code = code.replace(/([\r\n]\s*)(<\/span>)/gi, '$2$1');
         code = this.cleanLineBreaks(code);
 
         const codeChunks: string[] = code.split(/\r\n|\r|\n/);
@@ -370,7 +445,7 @@ ${formatHeaders(response.headers)}`;
 
     private cleanLineBreaks(code: string): string {
         const openSpans: string[] = [],
-            matcher = /<\/?span[^>]*>|\r\n|\r|\n/ig,
+            matcher = /<\/?span[^>]*>|\r\n|\r|\n/gi,
             newline = /\r\n|\r|\n/,
             closingTag = /^<\//;
 
@@ -393,10 +468,10 @@ ${formatHeaders(response.headers)}`;
 
     private addUrlLinks(innerHtml: string) {
         return innerHtml.replace(this.urlRegex, (match: string): string => {
-            const encodedEndCharacters = ["&lt;", "&gt;", "&quot;", "&apos;"];
+            const encodedEndCharacters = ['&lt;', '&gt;', '&quot;', '&apos;'];
             let urlEndPosition = match.length;
 
-            encodedEndCharacters.forEach((char) => {
+            encodedEndCharacters.forEach(char => {
                 const index = match.indexOf(char);
                 if (index > -1 && index < urlEndPosition) {
                     urlEndPosition = index;
@@ -406,7 +481,14 @@ ${formatHeaders(response.headers)}`;
             const url = match.substr(0, urlEndPosition);
             const extraCharacters = match.substr(urlEndPosition);
 
-            return '<a href="' + url + '" target="_blank" rel="noopener noreferrer">' + url + '</a>' + extraCharacters;
+            return (
+                '<a href="' +
+                url +
+                '" target="_blank" rel="noopener noreferrer">' +
+                url +
+                '</a>' +
+                extraCharacters
+            );
         });
     }
 
@@ -427,7 +509,7 @@ ${formatHeaders(response.headers)}`;
                 stack.push([prevLineIndex, prevCount]);
             } else if (prevCount > count) {
                 let prev;
-                while ((prev = stack.slice(-1)[0]) && (prev[1] >= count)) {
+                while ((prev = stack.slice(-1)[0]) && prev[1] >= count) {
                     stack.pop();
                     result.set(prev[0] + 1, [prev[0] + 1, lineIndex]);
                 }
@@ -436,7 +518,10 @@ ${formatHeaders(response.headers)}`;
         return result;
     }
 
-    private static getHighlightLanguageAlias(contentType: string | undefined, content: string | null = null): string | null {
+    private static getHighlightLanguageAlias(
+        contentType: string | undefined,
+        content: string | null = null
+    ): string | null {
         if (MimeUtility.isJSON(contentType)) {
             return 'json';
         } else if (MimeUtility.isJavaScript(contentType)) {

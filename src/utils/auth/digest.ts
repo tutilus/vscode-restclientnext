@@ -1,13 +1,15 @@
 import { md5 } from '../misc';
 import { v4 as uuidv4 } from 'uuid';
 
-import { AfterResponseHook, } from 'got';
+import { AfterResponseHook } from 'got';
 
 export function digest(user: string, pass: string): AfterResponseHook {
     return (response, retryWithMergedOptions) => {
-        if (response.statusCode === 401
-            && response.headers['www-authenticate']
-            && response.headers['www-authenticate'].split(' ')[0].toLowerCase() === 'digest') {
+        if (
+            response.statusCode === 401 &&
+            response.headers['www-authenticate'] &&
+            response.headers['www-authenticate'].split(' ')[0].toLowerCase() === 'digest'
+        ) {
             const authHeader = response.headers['www-authenticate'];
             const method = (response as any).request.options.method;
             const path = new URL(response.url).pathname;
@@ -16,7 +18,7 @@ export function digest(user: string, pass: string): AfterResponseHook {
                 algorithm: '',
                 realm: '',
                 nonce: '',
-                opaque: ''
+                opaque: '',
             };
             const re = /([a-z0-9_-]+)=(?:"([^"]+)"|([a-z0-9_-]+))/gi;
 
@@ -29,7 +31,14 @@ export function digest(user: string, pass: string): AfterResponseHook {
                 challenge[match[1]] = match[2] || match[3];
             }
 
-            const ha1Compute = function (algorithm: string | undefined, user: string, realm: string, pass: string, nonce: string, cnonce: string) {
+            const ha1Compute = function (
+                algorithm: string | undefined,
+                user: string,
+                realm: string,
+                pass: string,
+                nonce: string,
+                cnonce: string
+            ) {
                 const ha1 = md5(user + ':' + realm + ':' + pass);
                 if (algorithm?.toLowerCase() === 'md5-sess') {
                     return md5(ha1 + ':' + nonce + ':' + cnonce);
@@ -41,7 +50,14 @@ export function digest(user: string, pass: string): AfterResponseHook {
             const qop = /(^|,)\s*auth\s*($|,)/.test(challenge.qop) && 'auth';
             const nc = qop && '00000001';
             const cnonce = qop ? uuidv4().replace(/-/g, '') : '';
-            const ha1 = ha1Compute(challenge.algorithm, user, challenge.realm, pass, challenge.nonce, cnonce);
+            const ha1 = ha1Compute(
+                challenge.algorithm,
+                user,
+                challenge.realm,
+                pass,
+                challenge.nonce,
+                cnonce
+            );
             const ha2 = md5(method + ':' + path);
             const digestResponse = qop
                 ? md5(ha1 + ':' + challenge.nonce + ':' + nc + ':' + cnonce + ':' + qop + ':' + ha2)
@@ -56,7 +72,7 @@ export function digest(user: string, pass: string): AfterResponseHook {
                 nc: nc,
                 cnonce: cnonce,
                 algorithm: challenge.algorithm,
-                opaque: challenge.opaque
+                opaque: challenge.opaque,
             };
 
             const authParams: string[] = [];
@@ -71,8 +87,8 @@ export function digest(user: string, pass: string): AfterResponseHook {
             }
             const updatedOptions = {
                 headers: {
-                    authorization: 'Digest ' + authParams.join(', ')
-                }
+                    authorization: 'Digest ' + authParams.join(', '),
+                },
             };
             return retryWithMergedOptions(updatedOptions);
         }
