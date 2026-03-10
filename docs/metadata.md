@@ -169,14 +169,13 @@ Content-Type: application/json
 #### Extracting Headers
 
 ```http
-# @name login
+{% raw %}# @name login
 POST https://api.example.com/login HTTP/1.1
 
 ###
-
 # @set authToken = response.headers.x-auth-token
 GET https://api.example.com/data HTTP/1.1
-Authorization: Bearer {{authToken}}
+Authorization: Bearer {{authToken}}{% endraw %}
 ```
 
 Header names are case-insensitive.
@@ -186,14 +185,13 @@ Header names are case-insensitive.
 For complex JSON responses, use JSONPath syntax:
 
 ```http
-# @name searchUsers
+{% raw %}# @name searchUsers
 GET https://api.example.com/users?q=john
 
 ###
-
 # @set firstUserId = response.body.$.users[0].id
 # @set totalCount = response.body.$.total
-DELETE https://api.example.com/users/{{firstUserId}}
+DELETE https://api.example.com/users/{{firstUserId}}{% endraw %}
 ```
 
 The `$` represents the root of the response body.
@@ -285,7 +283,7 @@ GET https://api.example.com/public-data HTTP/1.1
 You can combine multiple directives on a single request:
 
 ```http
-# @name createUser
+{% raw %}# @name createUser
 # @prompt userName
 # @note This will create a new user account
 # @no-cookie-jar
@@ -300,7 +298,7 @@ Content-Type: application/json
 ###
 
 # @set userId = response.body.id
-# @set userToken = response.headers.x-auth-token
+# @set userToken = response.headers.x-auth-token{% endraw %}
 ```
 
 Directives are processed in this order:

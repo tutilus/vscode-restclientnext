@@ -138,7 +138,7 @@ name=foo
 
 > **Tip:** Ctrl/Cmd + Click on a document link to open the file in a new tab.
 
-## Per-Request Settings in Code
+### Per-Request Settings in Code
 
 Add special comments (metadata directives) before a request to modify its behavior. These include:
 
@@ -152,8 +152,7 @@ Add special comments (metadata directives) before a request to modify its behavi
 For detailed documentation, examples, and best practices, see [Metadata Directives]({{ '/metadata' | relative_url }}).
 
 ```http
-```http
-###
+{% raw %}###
 # @name first
 GET https://api.example.com/user
 
@@ -163,7 +162,7 @@ POST https://api.example.com/login HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 
 name={{ first.response.body.$.name }}
-&password=bar
+&password=bar{% endraw %}
 ```
 
 ### Multiple Requests in One File
