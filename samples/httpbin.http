@@ -23,6 +23,7 @@ GET {{host}}/cookies
 # @name testXml
 POST {{host}}/post
 Content-Type: application/xml
+Authorization: Basic user pass
 
 <note>
   <to>User</to>
