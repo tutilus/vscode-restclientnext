@@ -128,19 +128,6 @@ In the response preview panel, use the title bar icons:
     - Copy Response Body
     - Preview in New Editor
 
-## Per-Request Settings in Code
-
-Add special comments before a request to modify its behavior:
-
-```http
-# @note Critical request - double check!
-# @no-redirect
-# @no-cookie-jar
-DELETE https://api.example.com/data
-```
-
-These are processed as commands for that specific request only.
-
 ## Enabling/Disabling Commands
 
 Some commands can be toggled via settings:
@@ -184,7 +171,7 @@ Understanding when commands are available:
 
 - Place cursor inside the desired request block
 - Use selected text to send specific portion
-- Named requests with `# @name` can be referenced via request variables
+- Named requests with `# @name` can be referenced via request variables [cf. Metadata directives]({{ '/metadata#@name' | relative_url }})
 
 ## Complete Command List (JSON)
 

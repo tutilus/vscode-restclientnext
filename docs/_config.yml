@@ -18,6 +18,8 @@ navigation:
       url: /usage
     - title: Commands
       url: /commands
+    - title: Metadata Directives
+      url: /metadata
     - title: Authentication
       url: /authentication
     - title: Variables
