@@ -778,7 +778,7 @@
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
     "conventional-changelog-cli": "^5.0.0",
-    "oxfmt": "^0.37.0",
+    "oxfmt": "^0.38.0",
     "oxlint": "^1.52.0",
     "standard-version": "^9.5.0",
     "ts-loader": "^9.5.4",
