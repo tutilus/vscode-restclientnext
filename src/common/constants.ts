@@ -1,6 +1,3 @@
-export const ExtensionId: string = 'tutilus.rest-client-next';
-export const AiKey: string = 'ad746e27-4a36-441c-8b94-5db178f81ae3';
-
 export const NoEnvironmentSelectedName: string = 'c0cfe680-4fcd-4b71-a4ba-8cfaee57680a';
 
 export const TimeStampVariableName = '$timestamp';
@@ -33,8 +30,6 @@ export const OidcDescription =
 export const OIdcForceNewOption = 'new';
 
 export const FakerVariableName = '$faker';
-export const FakerVariableDescription =
-    'Generate fake data using Faker.js (e.g., {{$faker.internet.email}}, {{$faker.person.fullName}}, {{$faker.number.int 1 100}})';
 
 /**
  * NOTE: The client id represents an AAD app people sign in to. The client id is sent to AAD to indicate what app
@@ -43,7 +38,6 @@ export const FakerVariableDescription =
  * overarching app people will think of when they are signing in.
  */
 export const AzureActiveDirectoryForceNewOption = 'new';
-export const AzureActiveDirectoryDefaultDisplayName = 'Default Directory';
 export const AzureClouds: { [key: string]: { aad: string; arm: string; armAudience?: string } } = {
     // default cloud must be first
     public: {
@@ -74,8 +68,6 @@ export const RequestMetadataRegex: RegExp = /^\s*(?:#|\/{2})\s*@([\w-]+)(?:\s+(.
 export const CommentIdentifiersRegex: RegExp = /^\s*(#|\/{2})/;
 
 export const FileVariableDefinitionRegex: RegExp = /^\s*@([^\s=]+)\s*=\s*(.*)$/;
-
-export const FileVariableDescriptionRegex: RegExp = /^\s*(|)\s*(.*)$/;
 
 export const RequestVariableDefinitionWithNameRegexFactory = (
     name: string,

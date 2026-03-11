@@ -5,7 +5,7 @@ import { fromString as ParseReqMetaKey, RequestMetadata } from '../models/reques
 import { SelectedRequest } from '../models/SelectedRequest';
 import { VariableProcessor } from './variableProcessor';
 
-export interface RequestRangeOptions {
+interface RequestRangeOptions {
     ignoreCommentLine?: boolean;
     ignoreEmptyLine?: boolean;
     ignoreFileVariableDefinitionLine?: boolean;

@@ -1,7 +1,7 @@
 import { ParsedUrlQuery } from 'querystring';
 import { parse as urlParse } from 'url';
 
-export interface HARNameValue {
+interface HARNameValue {
     name: string;
     value: string;
 }

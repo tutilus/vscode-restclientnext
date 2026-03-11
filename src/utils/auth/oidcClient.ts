@@ -35,7 +35,7 @@ type ServerAuthorizationCodeResponse = {
     accountId?: string;
 };
 
-export class CodeLoopbackClient {
+class CodeLoopbackClient {
     port: number = 0; // default port, which will be set to a random available port
     private server!: http.Server | https.Server;
 
@@ -347,7 +347,7 @@ export class CodeLoopbackClient {
 
 export const CALLBACK_PORT = 7777;
 
-export const remoteOutput = window.createOutputChannel('REST-OIDC');
+const remoteOutput = window.createOutputChannel('REST-OIDC');
 
 const reportError = (msg: string, ex: Error | null = null) => {
     window.showWarningMessage(`Message: ${msg} Exception: ${ex?.message}`);
@@ -621,10 +621,10 @@ export class OidcClient {
     }
 }
 
-export function toBase64UrlEncoding(buffer: Buffer) {
+function toBase64UrlEncoding(buffer: Buffer) {
     return buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
-export function sha256(buffer: string | Uint8Array): Buffer {
+function sha256(buffer: string | Uint8Array): Buffer {
     return crypto.createHash('sha256').update(buffer).digest();
 }

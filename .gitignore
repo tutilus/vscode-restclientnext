@@ -11,3 +11,4 @@ NOTE.md
 docs/_site/
 .jekyll-cache/
 .sass-cache/
+tsdconfig.tsbuildinfo

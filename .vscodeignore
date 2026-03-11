@@ -1,5 +1,4 @@
 .vscode/**
-.vscode-test/**
 out/**
 node_modules/**
 src/**
@@ -13,11 +12,9 @@ vsc-extension-quickstart.md
 **/eslint.config.mjs
 **/*.map
 **/*.ts
-**/.vscode-test.*
 **/*.test.ts
 **/test/**
 scripts/
-.vscode-test.mjs
 oxlintrc.json
 oxfmtrc.json
 CODE_OF_CONDUCT.md
