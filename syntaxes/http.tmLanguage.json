@@ -10,7 +10,7 @@
       "end": "^\\s*(\\#{3,}.*?)?\\s*$",
       "endCaptures": {
         "0": {
-          "name": "comment.line.sharp.http"
+          "name": "entity.name.type.http"
         }
       },
       "patterns": [
@@ -25,7 +25,7 @@
       "end": "^\\s*(\\#{3,}.*?)?\\s*$",
       "endCaptures": {
         "0": {
-          "name": "comment.line.sharp.http"
+          "name": "entity.name.type.http"
         }
       },
       "patterns": [
@@ -43,7 +43,7 @@
       "end": "^\\s*(\\#{3,}.*?)?\\s*$",
       "endCaptures": {
         "0": {
-          "name": "comment.line.sharp.http"
+          "name": "entity.name.type.http"
         }
       },
       "patterns": [
@@ -58,7 +58,7 @@
       "end": "^\\s*(\\#{3,}.*?)?\\s*$",
       "endCaptures": {
         "0": {
-          "name": "comment.line.sharp.http"
+          "name": "entity.name.type.http"
         }
       },
       "patterns": [
@@ -76,6 +76,10 @@
           "include": "source.graphql"
         }
       ]
+    },
+    {
+      "match": "^\\s*\\#{3,}.*$",
+      "name": "entity.name.type.http"
     },
     {
       "include": "#metadata"
@@ -147,7 +151,7 @@
           ]
         }
       },
-      "match": "^([\\w\\-]+)\\s*(\\:)\\s*([^\/].*?)\\s*$",
+      "match": "^([\\w\\-]+)\\s*(\\:)\\s*([^\\/].*?)\\s*$",
       "name": "http.headers"
     },
     {
@@ -331,7 +335,7 @@
     "comments": {
       "patterns": [
         {
-          "match": "^\\s*\\#{1,}.*$",
+          "match": "^\\s*\\#{1,2}.*$",
           "name": "comment.line.sharp.http"
         },
         {

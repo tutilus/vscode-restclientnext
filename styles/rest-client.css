@@ -17,6 +17,17 @@ pre .hljs-comment {
     font-style: italic;
 }
 
+/* Style pour les séparateurs de requêtes (###) - plus visible */
+.hljs-entity-name-separator-http,
+pre .hljs-entity-name-separator-http {
+    color: #0004ff !important;
+    font-weight: bold;
+    font-style: normal;
+    background-color: rgba(118, 122, 124, 0.15) !important;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
 .vscode-light pre .hljs-attribute {
     color: #c82829;
 }
