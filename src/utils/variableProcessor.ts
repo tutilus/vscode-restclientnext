@@ -4,8 +4,8 @@ import { EnvironmentVariableProvider } from './httpVariableProviders/environment
 import { FileVariableProvider } from './httpVariableProviders/fileVariableProvider';
 import { HttpVariableProvider } from './httpVariableProviders/httpVariableProvider';
 import { RequestVariableProvider } from './httpVariableProviders/requestVariableProvider';
-import { ScriptVariableProvider } from './httpVariableProviders/scriptVariableProvider';
 import { SystemVariableProvider } from './httpVariableProviders/systemVariableProvider';
+import { ScriptVariableProvider } from './httpVariableProviders/scriptVariableProvider';
 import { getCurrentTextDocument } from './workspaceUtility';
 
 export class VariableProcessor {

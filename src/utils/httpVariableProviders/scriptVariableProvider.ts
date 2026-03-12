@@ -1,5 +1,3 @@
-
-
 import {OutgoingHttpHeaders} from 'http';
 import Module from 'module';
 import { dirname } from 'path';
@@ -28,7 +26,7 @@ const ArrowFunctionRegex = /\(?\s?([0-9a-zA-z ,]*)\)?\s?=>\s?(.*)?/;
 
 export class ScriptVariableProvider implements HttpVariableProvider {
 
-  private providerRequestCache = {};
+  private providerRequestCache: Record<string, Promise<any>> = {};
 
   public readonly type: VariableType = VariableType.Script;
 
@@ -43,7 +41,7 @@ export class ScriptVariableProvider implements HttpVariableProvider {
     return this._instance;
   }
 
-  public async has(name: string, document?: TextDocument, context?: HttpVariableContext | undefined): Promise<boolean> {
+  public async has(name: string, _document?: TextDocument, _context?: HttpVariableContext | undefined): Promise<boolean> {
     return !!this.parseScript(name);
   }
   public async get(name: string, document: TextDocument, context: HttpVariableContext): Promise<HttpVariable> {
@@ -61,7 +59,7 @@ export class ScriptVariableProvider implements HttpVariableProvider {
         };
       }
     }
-  public async getAll(document?: TextDocument, context?: HttpVariableContext | undefined): Promise<HttpVariable[]> {
+  public async getAll(_document?: TextDocument, _context?: HttpVariableContext | undefined): Promise<HttpVariable[]> {
     return [];
   }
 
@@ -128,9 +126,9 @@ export class ScriptVariableProvider implements HttpVariableProvider {
         lineOffset: 0,
         displayErrors: true
       });
-      const scripteRequire: any = (id) => scriptModule.require(id);
+      const scripteRequire: any = (id: string) => scriptModule.require(id);
       // see https://github.com/nodejs/node/blob/master/lib/internal/modules/cjs/loader.js#L823-L911
-      scripteRequire.resolve = req => (Module as any)._resolveFilename(req, scriptModule);
+      scripteRequire.resolve = (req: string) => (Module as any)._resolveFilename(req, scriptModule);
       compiledWrapper.apply(scriptModule.exports, [scriptModule.exports, scripteRequire, scriptModule, fileName, dir, ...scriptArgValues]);
 
       let value = scriptModule.exports;
@@ -181,9 +179,9 @@ export class ScriptVariableProvider implements HttpVariableProvider {
         if (!this.providerRequestCache[arg]) {
           const promise = provider.get(arg, document, context);
           this.providerRequestCache[arg] = promise;
-          const result = await promise;
+          const providerResult = await promise;
           delete this.providerRequestCache[arg];
-          return result.value;
+          return providerResult.value;
         }
       }
     }
