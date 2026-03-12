@@ -182,6 +182,66 @@ Authorization: Basic {{username}}:{{password}}
 
 When you send the request, an input dialog appears for each prompt variable. Enter values and the request uses them. Values are **not stored** for subsequent requests.
 
+### Script Variables
+
+Run JavaScript code to compute values dynamically. Access Node.js APIs and make HTTP requests.
+
+#### Syntax
+
+```http
+@variableName = (arg1, arg2, ...) => expression
+```
+
+**Example:**
+
+```http
+{% raw %}@fullName = (firstName, lastName) => `${firstName} ${lastName}`{% endraw %}
+```
+
+#### How it works
+
+- Arguments (in parentheses) are evaluated first
+- Function body returns the value
+- Can use other variables: `@baseUrl`, `{{requestVar}}`, `{$systemVar}`
+
+#### Special features
+
+- **`require()`**: Load Node.js modules (`const crypto = require('crypto')`)
+- **`send()`**: Make HTTP requests from script
+
+```http
+{% raw %}@exchangeRate = (currency) => {
+  const response = send({
+    method: 'GET',
+    url: `https://api.exchangerate-api.com/v4/latest/${currency}`
+  });
+  return JSON.parse(response.body).rates.USD;
+}{% endraw %}
+```
+
+- Returns a `Promise`, so `async/await` works
+- Cached per document (only for file-level variables with same arguments)
+
+#### Example: Transform API response
+
+```http
+{% raw %}# @name getUser
+GET https://api.example.com/user/123
+Accept: application/json
+
+###
+
+@userName = (response) => response.body.name
+
+# @name updateUser
+PUT https://api.example.com/user/123
+Content-Type: application/json
+
+{
+  "name": "{{userName}}"
+}{% endraw %}
+```
+
 ## System Variables
 
 Pre-defined dynamic variables, format: `{% raw %}{{$variableName}}{% endraw %}` (case-sensitive).
@@ -213,22 +273,19 @@ Generate fake data using `Faker.js`.
 | `random`   | `number`, `float`, `arrayElement`, `objectElement`, `uuid`, `alphaNumeric`                           | `{% raw %}{{$faker random.number 1000 9999}}{% endraw %}`, `{% raw %}{{$faker random.arrayElement @array}}{% endraw %}` |
 | `system`   | `fileName`, `mimeType`, `directory`, `fileType`, `commonFileName`, `semver`                          | `{% raw %}{{$faker system.fileName}}{% endraw %}`, `{% raw %}{{$faker system.mimeType}}{% endraw %}`                    |
 
-**Examples with parameters:**
+**Examples:**
 
 ```http
-{% raw %}{{$faker string.alphanumeric 10}}{% endraw %}  // Alphanumeric string of 10 characters
-{% raw %}{{$faker random.number 100 999}}{% endraw %}   // Number between 100 and 999
-{% raw %}{{$faker date.past 2 d}}{% endraw %}          // Date within the last 2 days
-{% raw %}{{$faker internet.email}}{% endraw %}         // Random email
-{% raw %}{{$faker name.fullName}}{% endraw %}          // Full name
-{% raw %}{{$faker phone.number}}{% endraw %}           // Phone number
+{% raw %}{{$faker random.number 100 999}}{% endraw %}
+{% raw %}{{$faker internet.email}}{% endraw %}
+{% raw %}{{$faker name.fullName}}{% endraw %}
 ```
 
-> **Note:** The complete list of modules and properties is available in the [Faker.js documentation](https://fakerjs.dev/).
+> Full list: [Faker.js docs](https://fakerjs.dev/)
 
 ### Random Integer
 
-`{% raw %}{{$randomInt min max}}{% endraw %}` - Random integer between `min` (inclusive) and `max` (exclusive)
+`{% raw %}{{$randomInt min max}}{% endraw %}` - Random integer between min and max
 
 ```http
 {% raw %}{{$randomInt 1 100}}{% endraw %}  // 1-99
@@ -240,26 +297,13 @@ Generate fake data using `Faker.js`.
 - `{% raw %}{{$datetime format [offset option]}}{% endraw %}` - Formatted datetime
 - `{% raw %}{{$localDatetime format [offset option]}}{% endraw %}` - Formatted datetime in local timezone
 
+- `{% raw %}{{$datetime iso8601}}{% endraw %}` - Current time (ISO 8601)
+- `{% raw %}{{$datetime "YYYY-MM-DD" 2 d}}{% endraw %}` - Day after tomorrow
 **Formats:**
 
 - `rfc1123` - RFC 1123 format (e.g., `Wed, 01 Jan 2020 00:00:00 GMT`)
 - `iso8601` - ISO 8601 format (e.g., `2020-01-01T00:00:00.000Z`)
 - `"custom"` or `'custom'` - Custom Day.js format (e.g., `{% raw %}{{$datetime "YYYY-MM-DD"}}{% endraw %}`)
-
-**Offset Options:**
-
-- `y` (year), `M` (month), `w` (week), `d` (day), `h` (hour), `m` (minute), `s` (second), `ms` (millisecond)
-
-**Examples:**
-
-```http
-{% raw %}{{$timestamp}}{% endraw %}                      // Now
-{% raw %}{{$timestamp -3 h}}{% endraw %}                 // 3 hours ago
-{% raw %}{{$datetime iso8601}}{% endraw %}               // Current time ISO 8601
-{% raw %}{{$datetime iso8601 1 y}}{% endraw %}           // One year from now
-{% raw %}{{$datetime "YYYY-MM-DD" 2 d}}{% endraw %}      // Day after tomorrow
-{% raw %}{{$localDatetime "DD/MM/YYYY"}}{% endraw %}     // Local time, custom format
-```
 
 ### Environment Variables
 

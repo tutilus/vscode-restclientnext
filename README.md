@@ -8,6 +8,8 @@ inside VS Code --- no external tools required.
 
 REST Client Next continues the maintenance of the popular [REST Client](https://github.com/Huachao/vscode-restclient) extension for Visual Studio Code, originally created by Huachao. This project focuses on keeping dependencies up to date while preserving compatibility and ensuring a seamless experience for existing users. 
 
+Full documentation is available in Github Page: [Link](https://tutilus.github.io/vscode-restclientnext/)
+
 ------------------------------------------------------------------------
 
 ## Table of contents
@@ -18,7 +20,6 @@ REST Client Next continues the maintenance of the popular [REST Client](https://
   - [Elementary example](#elementary-example)
   - [Installation](#installation)
   - [Build \& Run locally](#build--run-locally)
-  - [Documentation](#documentation)
   - [Basic Example with variables](#basic-example-with-variables)
   - [Why REST Client Next?](#why-rest-client-next)
   - [License](#license)
@@ -86,13 +87,6 @@ To package a production build:
 ```bash
 npm run package
 ```
-
-------------------------------------------------------------------------
-
-## Documentation
-
-Full documentation is available in Github Page [https://tutilus.github.io/vscode-restclientnext/]
-
 ------------------------------------------------------------------------
 
 ## Basic Example with variables
@@ -155,6 +149,7 @@ This project includes contributions originally made to the upstream repository:
 
 | Pull Request                                                         | Title            | Version |
 |----------------------------------------------------------------------|------------------|---------|
+| [PR #764](https://github.com/Huachao/vscode-restclient/pull/674)   | feat: Add script variable |     |
 | [PR #1388](https://github.com/Huachao/vscode-restclient/pull/1388) | feat: Implement "Run All Requests Sequentially" command | V1.3.0 |
 | [PR #1104](https://github.com/Huachao/vscode-restclient/pull/1104) | Chore: CORS comment | V1.3.0 |
 | [PR #¹#1356](https://github.com/Huachao/vscode-restclient/pull/1356) | Chore: README Graphql syntax | V1.3.0 |
