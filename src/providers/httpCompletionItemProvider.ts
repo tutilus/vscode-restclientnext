@@ -29,7 +29,7 @@ export class HttpCompletionItemProvider implements CompletionItemProvider {
             return setItems;
         }
 
-        if (!!VariableUtility.getPartialRequestVariableReferencePathRange(document, position)) {
+        if (VariableUtility.getPartialRequestVariableReferencePathRange(document, position)) {
             return undefined;
         }
 

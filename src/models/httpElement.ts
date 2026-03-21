@@ -8,7 +8,6 @@ export class HttpElement {
         public description?: string | MarkdownString,
         public text?: string | SnippetString
     ) {
-        this.text = text;
         if (!this.text) {
             this.text = name;
         }

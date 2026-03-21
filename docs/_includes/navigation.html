@@ -5,9 +5,15 @@
         <li>
             <a
                 href="{{ nav.url | relative_url }}"
-                {% if page.url == nav.url %}
+                {%
+                if
+                page.url=""
+                ="nav.url"
+                %}
                 class="active"
-                {% endif %}
+                {%
+                endif
+                %}
             >
                 {{ nav.title }}
             </a>

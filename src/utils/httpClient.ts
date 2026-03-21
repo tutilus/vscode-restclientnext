@@ -286,7 +286,7 @@ export class HttpClient {
         return { cert, key, pfx, passphrase };
     }
 
-    private static ignoreProxy(requestUrl: string, excludeHostsForProxy: string[]): Boolean {
+    private static ignoreProxy(requestUrl: string, excludeHostsForProxy: string[]): boolean {
         if (!excludeHostsForProxy || excludeHostsForProxy.length === 0) {
             return false;
         }

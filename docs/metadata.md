@@ -7,14 +7,14 @@ Metadata directives are special `@` commands placed in comments before a request
 
 ## Supported Metadata Directives
 
-| Directive          | Description                                          |
-| ------------------ | ---------------------------------------------------- |
-| `@name`            | Assign a name to the request for cross-referencing  |
-| `@prompt`          | Prompt for user input before sending                |
-| `@set`             | Extract response values to variables                |
-| `@note`            | Show confirmation dialog before sending             |
-| `@no-redirect`     | Disable automatic following of redirects            |
-| `@no-cookie-jar`   | Disable cookie jar for this request                 |
+| Directive        | Description                                        |
+| ---------------- | -------------------------------------------------- |
+| `@name`          | Assign a name to the request for cross-referencing |
+| `@prompt`        | Prompt for user input before sending               |
+| `@set`           | Extract response values to variables               |
+| `@note`          | Show confirmation dialog before sending            |
+| `@no-redirect`   | Disable automatic following of redirects           |
+| `@no-cookie-jar` | Disable cookie jar for this request                |
 
 ## Syntax
 
@@ -114,6 +114,7 @@ Extract specific values from a request's response and store them in variables fo
 GET https://api.example.com/profile HTTP/1.1
 Authorization: Bearer {{authToken}}
 ```
+
 Variable `userId` would be set for all `.http` files.
 
 To avoid accidental variable creation from typos, `@set` targets must be predeclared in the `$shared` environment:
@@ -130,13 +131,14 @@ To avoid accidental variable creation from typos, `@set` targets must be predecl
 Or use file variable definitions:
 
 ```http
-@authToken = 
-@userId = 
+@authToken =
+@userId =
 ```
 
 ### Examples
 
 #### Extracting Body Values
+
 ```http
 # @name login
 POST https://api.example.com/login HTTP/1.1
@@ -302,12 +304,12 @@ Content-Type: application/json
 ```
 
 Directives are processed in this order:
+
 1. `@note` (confirmation first)
 2. `@prompt` (input collection)
 3. `@no-redirect` / `@no-cookie-jar` (behavior modifiers)
 4. Request execution
 5. `@set` (variable extraction after response)
-
 
 ## Troubleshooting
 
@@ -334,7 +336,6 @@ Directives are processed in this order:
 
 - Some VS Code settings may suppress dialogs; check `window.openDialogs`
 - If running background tasks, ensure UI dialogs are allowed
-
 
 ## Best Practices
 
