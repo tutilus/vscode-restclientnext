@@ -5,7 +5,6 @@
 REST Client Next lets you send HTTP requests and view responses directly
 inside VS Code --- no external tools required.
 
-
 REST Client Next continues the maintenance of the popular [REST Client](https://github.com/Huachao/vscode-restclient) extension for Visual Studio Code, originally created by Huachao. This project focuses on keeping dependencies up to date while preserving compatibility and ensuring a seamless experience for existing users. 
 
 ------------------------------------------------------------------------
@@ -17,10 +16,10 @@ REST Client Next continues the maintenance of the popular [REST Client](https://
   - [Features](#features)
   - [Elementary example](#elementary-example)
   - [Installation](#installation)
-  - [Build \& Run locally](#build--run-locally)
   - [Documentation](#documentation)
   - [Basic Example with variables](#basic-example-with-variables)
   - [Why REST Client Next?](#why-rest-client-next)
+  - [Build \& Run locally](#build--run-locally)
   - [License](#license)
   - [Change Log](#change-log)
   - [Credits](#credits)
@@ -69,29 +68,9 @@ Search for: **REST Client Next**
 
 ------------------------------------------------------------------------
 
-## Build & Run locally
-
-To build and run the extension locally for development:
-
-```bash
-npm install
-# build once
-npm run compile
-# or watch for changes during development
-npm run watch
-```
-
-To package a production build:
-
-```bash
-npm run package
-```
-
-------------------------------------------------------------------------
-
 ## Documentation
 
-Full documentation is available in Github Page [https://tutilus.github.io/vscode-restclientnext/]
+Full documentation is available in [tutilus.github.io](https://tutilus.github.io/vscode-restclientnext/) github page.
 
 ------------------------------------------------------------------------
 
@@ -133,15 +112,35 @@ Authorization: Basic user pass
 
 ## Why REST Client Next?
 
-There is already an excellent fork called [http-yac](https://github.com/anweber/vscode-httpyac), but my goal with REST Client Next is to preserve the simplicity of the original REST Client and continue using its lightweight approach while modernizing it for recent VS Code versions. 
-
-So my main goal is:
+There is already an excellent fork called [http-yac](https://github.com/anweber/vscode-httpyac), but my goal with REST Client Next is to preserve the simplicity of the original REST Client and continue using its lightweight approach while modernizing it for recent VS Code versions. So, meaning:
 
 - Updated dependencies
 - Modern TypeScript support
 - Compatible with latest VS Code versions
 - Fix the main issues
 - Probably add functionalities as long as the compatibility is preserved
+
+------------------------------------------------------------------------
+
+## Build & Run locally
+
+To build and run the extension locally for development:
+
+```bash
+npm install
+# build once
+npm run compile
+# or watch for changes during development
+npm run watch
+```
+
+To package a production build:
+
+```bash
+npm run package
+```
+
+------------------------------------------------------------------------
 
 ## License
 [MIT License](LICENSE)
