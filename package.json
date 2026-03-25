@@ -799,7 +799,7 @@
     "got": "^14.6.6",
     "highlight.js": "^11.11.1",
     "http-proxy-agent": "^8.0.0",
-    "https-proxy-agent": "^7.0.6",
+    "https-proxy-agent": "^8.0.0",
     "httpsnippet": "^3.0.9",
     "iconv-lite": "^0.7.2",
     "js-yaml": "^4.1.1",
