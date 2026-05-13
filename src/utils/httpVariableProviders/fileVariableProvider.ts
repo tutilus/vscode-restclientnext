@@ -111,10 +111,12 @@ export class FileVariableProvider implements HttpVariableProvider {
 
         do {
             const parsed = this.parseQuotedValue(remaining, true);
-            values.push(parsed.value);
+            if (parsed.value.length > 0) {
+                values.push(parsed.value);
+            }
             remaining = parsed.remaining;
             reason = parsed.reason;
-        } while (reason === 'endOfString');
+        } while (reason === 'endOfString' && remaining.length > 0);
 
         if (reason === 'descriptionMark') {
             do {
