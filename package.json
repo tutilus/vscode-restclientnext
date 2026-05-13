@@ -785,7 +785,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.3.0",
     "@szmarczak/http-timer": "^5.0.1",
-    "@xmldom/xmldom": "^0.9.9",
+    "@xmldom/xmldom": "^0.9.10",
     "aws-amplify": "^6.16.3",
     "aws4": "^1.13.2",
     "code-highlight-linenums": "^0.2.1",
