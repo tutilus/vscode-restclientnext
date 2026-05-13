@@ -243,6 +243,7 @@ export class HttpClient {
             !HttpClient.ignoreProxy(httpRequest.url, settings.excludeHostsForProxy)
         ) {
             if (httpRequest.url.startsWith('http:')) {
+                // Dynamically import to avoid loading the module when not needed
                 const { HttpProxyAgent } = await import('http-proxy-agent');
                 options.agent = {
                     http: new HttpProxyAgent(settings.proxy),

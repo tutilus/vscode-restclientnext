@@ -7,15 +7,17 @@
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "src",
-    "strict": true /* enable all strict type-checking options */,
+    "strict": true, /* enable all strict type-checking options */
     /* Additional Checks */
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
-    //    "esModuleInterop": true,
+    // "esModuleInterop": true,
     "experimentalDecorators": true,
-    "incremental": true
+    "incremental": true,
+    "typeRoots": ["node_modules/@types"],
+    "types": ["mocha"]
   },
   "exclude": ["node_modules", ".vscode-test"]
 }
