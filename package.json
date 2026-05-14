@@ -773,7 +773,7 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "25.x",
     "@types/sanitize-html": "^2.16.1",
-    "@types/vscode": "^1.110.0",
+    "@types/vscode": "^1.106.0",
     "http-proxy-agent": "^9.0.0",
     "https-proxy-agent": "^9.0.0",
     "knip": "^5.86.0",
