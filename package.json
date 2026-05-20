@@ -793,7 +793,7 @@
     "aws4": "^1.13.2",
     "code-highlight-linenums": "^0.2.1",
     "combined-stream": "^1.0.8",
-    "content-disposition": "^1.0.1",
+    "content-disposition": "^2.0.0",
     "dayjs": "^1.11.20",
     "dotenv": "^17.3.1",
     "encodeurl": "^2.0.0",
