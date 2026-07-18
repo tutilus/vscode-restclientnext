@@ -1,46 +1,42 @@
-name: Release
+name: Release Please
 
 on:
     push:
-        tags:
-            - 'v*.*.*'
+        branches:
+            - main
+
+permissions:
+    contents: write
+    pull-requests: write
 
 jobs:
-    publish:
+    release-please:
         runs-on: ubuntu-latest
-
-        permissions:
-            contents: write
-
         steps:
-            - name: Checkout
-              uses: actions/checkout@v5
+            - uses: googleapis/release-please-action@v5
+              id: release
+              with:
+                  release-type: node
 
-            - name: Check version
-              run: |
-                  PACKAGE_VERSION=$(node -p "require('./package.json').version")
-                  TAG_VERSION=${GITHUB_REF#refs/tags/v}
-                  if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
-                    echo "Version mismatch!"
-                    exit 1
-                  fi
+            - name: Checkout code
+              if: ${{ steps.release.outputs.release_created }}
+              uses: actions/checkout@v4
 
             - name: Use Node.js
+              if: ${{ steps.release.outputs.release_created }}
               uses: actions/setup-node@v4
               with:
                   node-version: '22'
+                  cache: 'npm' # Optimize build runtime
 
             - name: Install dependencies
+              if: ${{ steps.release.outputs.release_created }}
               run: npm ci
 
             - name: Build extension
+              if: ${{ steps.release.outputs.release_created }}
               run: npm run compile
 
-            - name: Install vsce
-              run: npm install -g @vscode/vsce
-
             - name: Publish extension
-              run: vsce publish --pat ${{ secrets.VSCE_PAT }}
-
-            - name: Create GitHub Release
-              uses: softprops/action-gh-release@v2
+              if: ${{ steps.release.outputs.release_created }}
+              run: npx @vscode/vsce publish --pat ${{ secrets.VSCE_PAT }}
