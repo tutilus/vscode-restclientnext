@@ -12,7 +12,7 @@ import { VariableType } from '../../models/variableType';
 import { AadV2TokenProvider } from '../aadV2TokenProvider';
 import { CALLBACK_PORT, OidcClient } from '../auth/oidcClient';
 import { EnvironmentVariableProvider } from './environmentVariableProvider';
-import { HttpVariable, HttpVariableContext, HttpVariableProvider } from './httpVariableProvider';
+import { HttpVariable, HttpVariableContext, HttpVariableProvider } from '../../models/httpVariable';
 import { faker } from '@faker-js/faker';
 
 dayjs.extend(utc);

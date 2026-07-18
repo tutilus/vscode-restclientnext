@@ -1,6 +1,6 @@
 import { TextDocument } from 'vscode';
-import { HttpResponse } from '../../models/httpResponse';
-import { VariableType } from '../../models/variableType';
+import { HttpResponse } from './httpResponse';
+import { VariableType } from './variableType';
 
 export type HttpVariableValue = string | {} | HttpResponse;
 

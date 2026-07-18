@@ -4,7 +4,7 @@ import { SystemSettings } from '../../models/configurationSettings';
 import { ResolveErrorMessage } from '../../models/httpVariableResolveResult';
 import { UserDataManager } from '../userDataManager';
 import { VariableType } from '../../models/variableType';
-import { HttpVariable, HttpVariableProvider } from './httpVariableProvider';
+import { HttpVariable, HttpVariableProvider } from '../../models/httpVariable';
 
 export class EnvironmentVariableProvider implements HttpVariableProvider {
     private static _instance: EnvironmentVariableProvider;

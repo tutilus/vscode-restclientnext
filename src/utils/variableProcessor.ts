@@ -1,19 +1,40 @@
 import { TextDocument } from 'vscode';
+import { HttpVariable, HttpVariableContext } from '../models/httpVariable';
 import { VariableType } from '../models/variableType';
 import { EnvironmentVariableProvider } from './httpVariableProviders/environmentVariableProvider';
 import { FileVariableProvider } from './httpVariableProviders/fileVariableProvider';
-import { HttpVariableProvider } from './httpVariableProviders/httpVariableProvider';
 import { RequestVariableProvider } from './httpVariableProviders/requestVariableProvider';
 import { SystemVariableProvider } from './httpVariableProviders/systemVariableProvider';
 import { getCurrentTextDocument } from './workspaceUtility';
 
 export class VariableProcessor {
-    private static readonly providers: [HttpVariableProvider, boolean][] = [
+    private static readonly providers: [any, boolean][] = [
         [SystemVariableProvider.Instance, false],
         [RequestVariableProvider.Instance, true],
         [FileVariableProvider.Instance, true],
         [EnvironmentVariableProvider.Instance, true],
     ];
+
+    public static async resolveVariable(
+        name: string, 
+        document: TextDocument, 
+        context?: HttpVariableContext
+    ): Promise<HttpVariable | undefined> {
+        for (const [provider, hasContext] of this.providers) {
+            try {
+                const currentContext = hasContext ? context : undefined;
+                if (await provider.has(name, document, currentContext)) {
+                    const variable = await provider.get(name, document, currentContext);
+                    if (variable) {
+                        return variable;
+                    }
+                }
+            } catch {
+                continue; // Fail-safe
+            }
+        }
+        return undefined;
+    }
 
     public static async processRawRequest(
         request: string,
