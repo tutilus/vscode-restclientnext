@@ -733,22 +733,6 @@
       }
     }
   },
-  "standard-version": {
-    "types": [
-      {
-        "type": "feat",
-        "section": "Features"
-      },
-      {
-        "type": "fix",
-        "section": "Bug Fixes"
-      },
-      {
-        "type": "chore",
-        "section": "Maintenance"
-      }
-    ]
-  },
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "webpack",
@@ -759,10 +743,7 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "oxlint src",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check",
-    "release": "standard-version",
-    "release:minor": "standard-version --release-as minor",
-    "release:major": "standard-version --release-as major"
+    "fmt:check": "oxfmt --check"
   },
   "devDependencies": {
     "@types/aws4": "^1.11.6",
@@ -779,7 +760,6 @@
     "knip": "^5.86.0",
     "oxfmt": "^0.43.0",
     "oxlint": "^1.66.0",
-    "standard-version": "^9.5.0",
     "ts-loader": "^9.5.4",
     "typescript": "^6.0.2",
     "webpack": "^5.107.0",
