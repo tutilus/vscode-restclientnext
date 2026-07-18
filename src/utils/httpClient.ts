@@ -9,7 +9,6 @@ import { RequestHeaders, ResponseHeaders } from '../models/base';
 import { IRestClientSettings, SystemSettings } from '../models/configurationSettings';
 import { HttpRequest } from '../models/httpRequest';
 import { HttpResponse } from '../models/httpResponse';
-import { awsCognito } from './auth/awsCognito';
 import { awsSignature } from './auth/awsSignature';
 import { digest } from './auth/digest';
 import { MimeUtility } from './mimeUtility';
@@ -219,6 +218,7 @@ export class HttpClient {
                 case 'cognito':
                     if (args.length >= 4) {
                         removeHeader(options.headers!, 'Authorization');
+                        const { awsCognito } = await import('./auth/awsCognito');
                         options.hooks!.beforeRequest!.push(await awsCognito(authorization));
                     } else {
                         window.showWarningMessage(
