@@ -1,6 +1,7 @@
 import { Position, Range, TextDocument } from 'vscode';
 import * as Constants from '../common/constants';
 import { Selector } from './selector';
+import { VariableReferenceMatch, VariableReference } from '../models/variableReference';
 
 export class VariableUtility {
     private static readonly environmentOrFileVariableReferenceRegex = /\{{2}[^{}]+\}{2}/;
@@ -11,6 +12,58 @@ export class VariableUtility {
         /\{{2}(\w+)\.(response|request)?(\.body(\..*?)?|\.headers(\.[\w-]+)?)?\}{2}/;
 
     private static readonly partialRequestVariableReferenceRegex = /\{{2}(\w+)\.(.*?)?\}{2}/;
+
+    private static readonly baseVariableRegex = /\{\{\s*([^{}]+?)\s*\}\}/g;
+
+    public static extractVariables(text: string): VariableReferenceMatch[] {
+        const matches: VariableReferenceMatch[] = [];
+        let match: RegExpExecArray | null;
+        
+        this.baseVariableRegex.lastIndex = 0;
+
+        while ((match = this.baseVariableRegex.exec(text)) !== null) {
+            const fullMatch = match[0]; // ex: "{{testXml.response.body}}" or "{{host}}"
+            const rawContent = match[1]; // ex: "testXml.response.body" or "host"
+            
+            // Take only the first part in case there are properties
+            // ex: "testXml.response.body" -> "testXml"
+            const varName = rawContent.split('.')[0].trim();
+
+            if (!varName || !/^[a-zA-Z0-9_$-]+$/.test(varName)) {
+                continue;
+            }
+
+            const start = match.index;
+            const end = start + fullMatch.length;
+            
+            const nameStart = start + fullMatch.indexOf(varName);
+            const nameEnd = nameStart + varName.length;
+
+            matches.push({
+                name: varName,
+                start,
+                end,
+                nameStart,
+                nameEnd
+            });
+        }
+
+        return matches;
+    }
+
+    public static getDocumentVariables(document: TextDocument): VariableReference[] {
+        const text = document.getText();
+        const matches = this.extractVariables(text);
+        
+        return matches.map(match => {
+            const startPos = document.positionAt(match.start);
+            const endPos = document.positionAt(match.end);
+            return {
+                name: match.name,
+                range: new Range(startPos, endPos)
+            };
+        });
+    }
 
     public static getEnvironmentOrFileVariableReferenceNameRange(
         document: TextDocument,

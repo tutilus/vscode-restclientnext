@@ -10,7 +10,7 @@ import {
 import { VariableType } from '../../models/variableType';
 import { RequestVariableCache } from '../requestVariableCache';
 import { RequestVariableCacheValueProcessor } from '../requestVariableCacheValueProcessor';
-import { HttpVariable, HttpVariableProvider } from './httpVariableProvider';
+import { HttpVariable, HttpVariableProvider } from '../../models/httpVariable';
 
 export class RequestVariableProvider implements HttpVariableProvider {
     private static _instance: RequestVariableProvider;

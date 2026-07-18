@@ -30,12 +30,13 @@ import { RequestVariableDefinitionProvider } from './providers/requestVariableDe
 import { RequestVariableHoverProvider } from './providers/requestVariableHoverProvider';
 import { ConfigurationDependentRegistration } from './utils/dependentRegistration';
 import { UserDataManager } from './utils/userDataManager';
+import { UnresolvedVariableDiagnosticProvider } from './providers/unresolvedVariableDiagnosticProvider'
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export async function activate(context: ExtensionContext) {
     await UserDataManager.initialize();
-
+    
     const requestController = new RequestController(context);
     const historyController = new HistoryController();
     const codeSnippetController = new CodeSnippetController(context);
@@ -171,6 +172,11 @@ export async function activate(context: ExtensionContext) {
     );
     context.subscriptions.push(
         languages.registerDocumentSymbolProvider(documentSelector, new HttpDocumentSymbolProvider())
+    );
+
+    // Register Diagnostic manager
+    context.subscriptions.push(
+        new UnresolvedVariableDiagnosticProvider()
     );
 }
 
