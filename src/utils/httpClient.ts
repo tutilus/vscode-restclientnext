@@ -50,21 +50,18 @@ export class HttpClient {
         const requestUrl = encodeUrl(httpRequest.url);
         const request: CancelableRequest<Response<Buffer>> = got(requestUrl, options);
         httpRequest.setUnderlyingRequest(request);
-        (request as any).on(
-            'response',
-            (res: {
-                rawHeaders: any[];
-                on: (arg0: string, arg1: (chunk: any) => void) => void;
-            }) => {
-                if (res.rawHeaders) {
-                    headersSize += res.rawHeaders.map(h => h.length).reduce((a, b) => a + b, 0);
-                    headersSize += res.rawHeaders.length / 2;
-                }
-                res.on('data', chunk => {
-                    bodySize += chunk.length;
-                });
+
+        request.on('response', (res: any) => {
+            if (res.rawHeaders) {
+                headersSize += res.rawHeaders
+                    .map((h: string) => h.length)
+                    .reduce((a: number, b: number) => a + b, 0);
+                headersSize += res.rawHeaders.length / 2;
             }
-        );
+            res.on('data', (chunk: Buffer) => {
+                bodySize += chunk.length;
+            });
+        });
 
         const response = await request;
 
@@ -109,7 +106,7 @@ export class HttpClient {
                 options.method!,
                 requestUrl,
                 HttpClient.normalizeHeaderNames(
-                    (response as any).request.options.headers as RequestHeaders,
+                    response.request.options.headers as RequestHeaders,
                     Object.keys(httpRequest.headers)
                 ),
                 Buffer.isBuffer(requestBody)
@@ -181,17 +178,21 @@ export class HttpClient {
                 case 'basic':
                     // No password means user is basé64 encoded user:password
                     if (args.length > 0) {
+                        const firstArg = args[0];
                         removeHeader(options.headers!, 'Authorization');
                         // Issue #8 : Check if the username contains ":", if yes, split it into username and password
-                        var leftSide = args.shift()!;
-                        var rightSide = args.join(' ');
-                        if (args.length === 0 && leftSide.includes(':')) {
-                            const [userPart, ...firstChunkPass] = leftSide.split(':');
-                            leftSide = userPart;
-                            rightSide = [...firstChunkPass, ...args].join(' ');
+                        // Case 1 : "Basic user:password"
+                        if (firstArg.includes(':')) {
+                            const fullArg = args.join(' ');
+                            const colonIndex = fullArg.indexOf(':');
+                            options.username = fullArg.substring(0, colonIndex);
+                            options.password = fullArg.substring(colonIndex + 1);
                         }
-                        options.username = leftSide;
-                        options.password = rightSide;
+                        // Case 2: "Basic user password" if no password, it works anyway
+                        else {
+                            options.username = args.shift()!;
+                            options.password = args.join(' ');
+                        }
                     }
                     break;
                 case 'digest':
@@ -218,7 +219,7 @@ export class HttpClient {
                 case 'cognito':
                     if (args.length >= 4) {
                         removeHeader(options.headers!, 'Authorization');
-                        const { awsCognito } = await import('./auth/awsCognito');
+                        const { awsCognito } = await require('./auth/awsCognito');
                         options.hooks!.beforeRequest!.push(await awsCognito(authorization));
                     } else {
                         window.showWarningMessage(
@@ -235,9 +236,11 @@ export class HttpClient {
 
         // set certificate
         const certificate = this.getRequestCertificate(httpRequest.url, settings);
-        Object.assign(options, certificate);
+        if (certificate) {
+            Object.assign(options, certificate);
+        }
 
-        // set proxy
+        // Set proxy with `got`
         if (
             settings.proxy &&
             !HttpClient.ignoreProxy(httpRequest.url, settings.excludeHostsForProxy)
