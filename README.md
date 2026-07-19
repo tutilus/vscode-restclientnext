@@ -1,11 +1,11 @@
 # REST Client Next
 
-[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/tutilus.rest-client-next?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=tutilus.rest-client-next) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![VS Code Marketplace](https://img.shields.io/vscode-marketplace/v/tutilus.rest-client-next?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=tutilus.rest-client-next) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 REST Client Next lets you send HTTP requests and view responses directly
 inside VS Code --- no external tools required.
 
-REST Client Next continues the maintenance of the popular [REST Client](https://github.com/Huachao/vscode-restclient) extension for Visual Studio Code, originally created by Huachao. This project focuses on keeping dependencies up to date while preserving compatibility and ensuring a seamless experience for existing users. 
+REST Client Next continues the maintenance of the popular [REST Client](https://github.com/Huachao/vscode-restclient) extension for Visual Studio Code, originally created by [Huachao](https://github.com/Huachao). This project focuses on keeping dependencies up to date while preserving compatibility and ensuring a seamless experience for existing users. 
 
 ------------------------------------------------------------------------
 
@@ -112,7 +112,8 @@ Authorization: Basic user pass
 
 ## Why REST Client Next?
 
-There is already an excellent fork called [http-yac](https://github.com/anweber/vscode-httpyac), but my goal with REST Client Next is to preserve the simplicity of the original REST Client and continue using its lightweight approach while modernizing it for recent VS Code versions. So, meaning:
+Mainly because I use REST Client.
+There is already excellent forks especially one called [http-yac](https://github.com/anweber/vscode-httpyac), but my goal with REST Client Next is to preserve the original behaviour of REST Client and continue using its lightweight approach. So, meaning:
 
 - Updated dependencies
 - Modern TypeScript support
@@ -154,6 +155,7 @@ This project includes contributions originally made to the upstream repository:
 
 | Pull Request                                                         | Title            | Version |
 |----------------------------------------------------------------------|------------------|---------|
+| [PR #1422](https://github.com/Huachao/vscode-restclient/pull/1422) | feat: Add new @set metadata directive | 1.3.0 |
 | [PR #1388](https://github.com/Huachao/vscode-restclient/pull/1388) | feat: Implement "Run All Requests Sequentially" command | V1.3.0 |
 | [PR #1104](https://github.com/Huachao/vscode-restclient/pull/1104) | Chore: CORS comment | V1.3.0 |
 | [PR #¹#1356](https://github.com/Huachao/vscode-restclient/pull/1356) | Chore: README Graphql syntax | V1.3.0 |

@@ -1,8 +1,7 @@
-import { EventEmitter, QuickPickItem, window } from 'vscode';
+import { EventEmitter, ExtensionContext, QuickPickItem, window } from 'vscode';
 import * as Constants from '../common/constants';
 import { SystemSettings } from '../models/configurationSettings';
 import { EnvironmentStatusEntry } from '../utils/environmentStatusBarEntry';
-import { UserDataManager } from '../utils/userDataManager';
 
 type EnvironmentPickItem = QuickPickItem & { name: string };
 
@@ -15,24 +14,35 @@ export class EnvironmentController {
 
     public static readonly sharedEnvironmentName: string = '$shared';
 
+    // 🟢 Clé unique pour stocker l'environnement de manière étanche dans le dossier courant
+
+    private static readonly WORKSPACE_ENV_KEY = 'rest-client-next.selectedEnvironment';
+
     private static readonly _onDidChangeEnvironment = new EventEmitter<string>();
 
     public static readonly onDidChangeEnvironment =
         EnvironmentController._onDidChangeEnvironment.event;
 
+    private static _instance: EnvironmentController | undefined;
+
     private readonly settings: SystemSettings = SystemSettings.Instance;
-
     private environmentStatusEntry: EnvironmentStatusEntry;
-
     private currentEnvironment: EnvironmentPickItem;
 
-    private constructor(initEnvironment: EnvironmentPickItem) {
+    private readonly context: ExtensionContext;
+
+    private constructor(initEnvironment: EnvironmentPickItem, context: ExtensionContext) {
         this.currentEnvironment = initEnvironment;
+        this.context = context;
         this.environmentStatusEntry = new EnvironmentStatusEntry(initEnvironment.label);
+        EnvironmentController._instance = this;
+    }
+
+    public static get Instance(): EnvironmentController | undefined {
+        return EnvironmentController._instance;
     }
 
     public async switchEnvironment() {
-        // Add no environment at the top
         const userEnvironments: EnvironmentPickItem[] = Object.keys(
             this.settings.environmentVariables
         )
@@ -59,22 +69,40 @@ export class EnvironmentController {
         EnvironmentController._onDidChangeEnvironment.fire(item.label);
         this.environmentStatusEntry.update(item.label);
 
-        await UserDataManager.setEnvironment(item);
+        await this.context.workspaceState.update(EnvironmentController.WORKSPACE_ENV_KEY, item);
     }
 
-    public static async create(): Promise<EnvironmentController> {
+    /**
+     * Force synchronization of the memory and status bar with window's active workspace.
+     */
+    public async refreshEnvironment(): Promise<void> {
+        const workspaceEnv = this.context.workspaceState.get<EnvironmentPickItem>(
+            EnvironmentController.WORKSPACE_ENV_KEY
+        );
+        this.currentEnvironment = workspaceEnv || EnvironmentController.noEnvironmentPickItem;
+        this.environmentStatusEntry.update(this.currentEnvironment.label);
+    }
+
+    public static async create(context: ExtensionContext): Promise<EnvironmentController> {
         const environment = await this.getCurrentEnvironment();
-        return new EnvironmentController(environment);
+        return new EnvironmentController(environment, context);
     }
 
     public static async getCurrentEnvironment(): Promise<EnvironmentPickItem> {
-        const currentEnvironment = (await UserDataManager.getEnvironment()) as
-            | EnvironmentPickItem
-            | undefined;
-        return currentEnvironment || this.noEnvironmentPickItem;
+        if (EnvironmentController._instance) {
+            const context = EnvironmentController._instance.context;
+            const workspaceEnv = context.workspaceState.get<EnvironmentPickItem>(
+                EnvironmentController.WORKSPACE_ENV_KEY
+            );
+            if (workspaceEnv) {
+                return workspaceEnv;
+            }
+        }
+        return this.noEnvironmentPickItem;
     }
 
     public dispose() {
         this.environmentStatusEntry.dispose();
+        EnvironmentController._instance = undefined;
     }
 }

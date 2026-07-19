@@ -7,6 +7,31 @@ REST Client Next provides extensive configuration options to customize its behav
 
 ## Global Settings
 
+---
+
+title: Settings
+description: Complete reference for REST Client Next configuration settings.
+
+---
+
+REST Client Next provides extensive configuration options to customize its behavior.
+
+## Global Settings
+
+### Data Storage & Isolation
+
+| Setting                                | Type                          | Default   | Description                                                                                                                                                                     |
+| -------------------------------------- | ----------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rest-client-next.dataStorageStrategy` | `project`, `shared`, `legacy` | `project` | Defines where user data (history, cookies, responses) is stored. `project` isolates data inside a local `.rest-client/` folder. `shared` uses clean global storage. (See below) |
+
+#### Storage Strategy Details
+
+- **`project` (Recommended):** Creates a `.rest-client/` folder at the root of your active workspace directory. This isolates history, cookies, and tokens per project, keeping your environment perfectly clean and prevent data leakage between projects. You should add `/.rest-client/` to your `.gitignore`.
+- **`shared`:** Uses VS Code's official `globalStorageUri` directory. This keeps your data global across all windows but guarantees zero pollution in your OS home profile directory (`~`).
+- **`legacy`:** Keeps the historical backward-compatible behavior by reading/writing directly inside the centralized `~/.rest-client/` user home folder.
+
+_Note: The active **Environment state** is always strictly isolated per window using native VS Code workspace state, regardless of this setting, to prevent accidental production executions._
+
 ### Network & Request
 
 | Setting                                            | Type     | Default    | Description                                                            |
@@ -257,7 +282,8 @@ When using `{% raw %}{{$processEnv %varName}}{% endraw %}`, the variable name lo
     "rest-client.codeLensSendRequestTitle": "Send Request",
     "rest-client.codeLensSendAllRequestTitle": "Send All Requests Sequentially",
     "rest-client.showEnvironmentInCodeLensTitle": false,
-    "rest-client.proxySupport": "system"
+    "rest-client.proxySupport": "system",
+    "rest-client-next.dataStorageStrategy": "project"
 }
 ```
 

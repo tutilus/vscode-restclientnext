@@ -720,6 +720,16 @@
           "default": false,
           "scope": "resource",
           "description": "Show current environment name in code lens title"
+        },
+        "rest-client-next.dataStorageStrategy": {
+          "type": "string",
+          "enum": [
+            "project",
+            "shared",
+            "legacy"
+          ],
+          "default": "project",
+          "description": "Defines where user data is stored. 'project' isolates data inside a local .rest-client/ folder at the root of your project. 'shared' uses VS Code's official clean global storage. 'legacy' keeps using the old home directory (~/.rest-client)."
         }
       }
     },

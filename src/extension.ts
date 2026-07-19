@@ -30,18 +30,46 @@ import { RequestVariableDefinitionProvider } from './providers/requestVariableDe
 import { RequestVariableHoverProvider } from './providers/requestVariableHoverProvider';
 import { ConfigurationDependentRegistration } from './utils/dependentRegistration';
 import { UserDataManager } from './utils/userDataManager';
-import { UnresolvedVariableDiagnosticProvider } from './providers/unresolvedVariableDiagnosticProvider'
+import { UnresolvedVariableDiagnosticProvider } from './providers/unresolvedVariableDiagnosticProvider';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export async function activate(context: ExtensionContext) {
-    await UserDataManager.initialize();
-    
+    await UserDataManager.initialize(context);
+
     const requestController = new RequestController(context);
     const historyController = new HistoryController();
     const codeSnippetController = new CodeSnippetController(context);
-    const environmentController = await EnvironmentController.create();
+    const environmentController = await EnvironmentController.create(context);
     const swaggerController = new SwaggerController(context);
+
+    await UserDataManager.initialize(context);
+
+    context.subscriptions.push(environmentController);
+
+    // Listen: if user change or update environment
+    context.subscriptions.push(
+        window.onDidChangeActiveTextEditor(async editor => {
+            if (editor) {
+                await UserDataManager.initialize(context);
+
+                if (EnvironmentController.Instance) {
+                    await EnvironmentController.Instance.refreshEnvironment();
+                }
+            }
+        })
+    );
+
+    // Listen : If user change strategy
+    context.subscriptions.push(
+        workspace.onDidChangeConfiguration(async e => {
+            if (e.affectsConfiguration('rest-client-next.dataStorageStrategy')) {
+                // Ré-initialise les chemins vers la nouvelle cible choisie
+                await UserDataManager.initialize(context);
+            }
+        })
+    );
+
     context.subscriptions.push(requestController);
     context.subscriptions.push(historyController);
     context.subscriptions.push(codeSnippetController);
@@ -175,9 +203,7 @@ export async function activate(context: ExtensionContext) {
     );
 
     // Register Diagnostic manager
-    context.subscriptions.push(
-        new UnresolvedVariableDiagnosticProvider()
-    );
+    context.subscriptions.push(new UnresolvedVariableDiagnosticProvider());
 }
 
 // this method is called when your extension is deactivated
