@@ -6,6 +6,7 @@ node_modules
 *.vsix
 **/.env
 NOTE.md
+.rest-client/
 
 # Jekyll / GitHub Pages
 docs/_site/
