@@ -3,7 +3,6 @@ import * as iconv from 'iconv-lite';
 import * as path from 'path';
 import { CookieJar } from 'tough-cookie';
 import FileCookieStore from 'tough-cookie-file-store';
-import * as url from 'url';
 import { Uri, window } from 'vscode';
 import { RequestHeaders, ResponseHeaders } from '../models/base';
 import { IRestClientSettings, SystemSettings } from '../models/configurationSettings';
@@ -273,7 +272,7 @@ export class HttpClient {
         requestUrl: string,
         settings: IRestClientSettings
     ): Certificate | null {
-        const host = url.parse(requestUrl).host;
+        const host = new URL(requestUrl).host;
         if (!host || !(host in settings.hostCertificates)) {
             return null;
         }
@@ -295,7 +294,7 @@ export class HttpClient {
             return false;
         }
 
-        const resolvedUrl = url.parse(requestUrl);
+        const resolvedUrl = new URL(requestUrl);
         const hostName = resolvedUrl.hostname?.toLowerCase();
         const port = resolvedUrl.port;
         const excludeHostsProxyList = Array.from(
