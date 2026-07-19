@@ -34,10 +34,10 @@ export class SystemVariableProvider implements HttpVariableProvider {
         `\\${Constants.TimeStampVariableName}(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`
     );
     private readonly datetimeRegex: RegExp = new RegExp(
-        `\\${Constants.DateTimeVariableName}\\s(rfc1123|iso8601|\'.+\'|\".+\")(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`
+        `\\${Constants.DateTimeVariableName}\\s(rfc1123|iso8601|'.+'|".+")(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`
     );
     private readonly localDatetimeRegex: RegExp = new RegExp(
-        `\\${Constants.LocalDateTimeVariableName}\\s(rfc1123|iso8601|\'.+\'|\".+\")(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`
+        `\\${Constants.LocalDateTimeVariableName}\\s(rfc1123|iso8601|'.+'|".+")(?:\\s(\\-?\\d+)\\s(y|Q|M|w|d|h|m|s|ms))?`
     );
     private readonly randomIntegerRegex: RegExp = new RegExp(
         `\\${Constants.RandomIntVariableName}\\s(\\-?\\d+)\\s(\\-?\\d+)`
