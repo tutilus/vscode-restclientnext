@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/tutilus/vscode-restclientnext/compare/v1.3.1...v1.4.0) (2026-07-19)
+
+
+### Features
+
+* Add 2 new settings to hide Status or Headers in preview response ([7603ce0](https://github.com/tutilus/vscode-restclientnext/commit/7603ce0bc1c84e2b5a92c67a65e5bc9237c1f420))
+* Isolate environment state and isolate user data per workspace or extension GlobalStorage ([d890c8c](https://github.com/tutilus/vscode-restclientnext/commit/d890c8c5069f8306f15c7575b788f29e4853175e)), closes [#71](https://github.com/tutilus/vscode-restclientnext/issues/71)
+* **ui:** Add Diagnostic behavior for variables ([9634890](https://github.com/tutilus/vscode-restclientnext/commit/96348902a7a47b72f34ae8ef2f9b6a60d335fa8f))
+
+
+### Bug Fixes
+
+* Fix basic auth with spaces into password and remove few old TS writing ([71def8b](https://github.com/tutilus/vscode-restclientnext/commit/71def8bfb2a105df49d617fc34775e8dcef671f7)), closes [#8](https://github.com/tutilus/vscode-restclientnext/issues/8)
+
 ## [1.3.1](https://github.com/tutilus/vscode-restclientnext/compare/v1.3.0...v1.3.1) (2026-05-13)
 
 
