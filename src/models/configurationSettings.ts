@@ -63,6 +63,8 @@ export interface IRestClientSettings {
     readonly codeLensSendRequestTitle?: string;
     readonly codeLensSendAllRequestTitle?: string;
     readonly showEnvironmentInCodeLensTitle: boolean;
+    readonly previewResponseShowStatus: boolean;
+    readonly previewResponseShowHeaders: boolean;
 }
 
 export class SystemSettings implements IRestClientSettings {
@@ -101,6 +103,8 @@ export class SystemSettings implements IRestClientSettings {
     private _codeLensSendRequestTitle?: string;
     private _codeLensSendAllRequestTitle?: string;
     private _showEnvironmentInCodeLensTitle: boolean = false;
+    private _previewResponseShowStatus: boolean = false;
+    private _previewResponseShowHeaders: boolean = false;
 
     public get followRedirect() {
         return this._followRedirect;
@@ -240,6 +244,14 @@ export class SystemSettings implements IRestClientSettings {
 
     public get showEnvironmentInCodeLensTitle() {
         return this._showEnvironmentInCodeLensTitle;
+    }
+
+    public get previewResponseShowStatus() {
+        return this._previewResponseShowStatus;
+    }
+
+    public get previewResponseShowHeaders() {
+        return this._previewResponseShowHeaders;
     }
 
     private readonly brackets: CharacterPair[];
@@ -387,6 +399,14 @@ export class SystemSettings implements IRestClientSettings {
         this._showEnvironmentInCodeLensTitle = restClientSettings.get<boolean>(
             'showEnvironmentInCodeLensTitle',
             false
+        );
+        this._previewResponseShowStatus = restClientSettings.get<boolean>(
+            'previewResponse.showStatus',
+            true
+        );
+        this._previewResponseShowHeaders = restClientSettings.get<boolean>(
+            'previewResponse.showHeaders',
+            true
         );
         languages.setLanguageConfiguration('http', {
             brackets: this._addRequestBodyLineIndentationAroundBrackets ? this.brackets : [],
@@ -573,6 +593,14 @@ export class RestClientSettings implements IRestClientSettings {
 
     public get showEnvironmentInCodeLensTitle() {
         return this.systemSettings.showEnvironmentInCodeLensTitle;
+    }
+
+    public get previewResponseShowStatus() {
+        return this.systemSettings.previewResponseShowStatus;
+    }
+
+    public get previewResponseShowHeaders() {
+        return this.systemSettings.previewResponseShowHeaders;
     }
 
     private readonly systemSettings = SystemSettings.Instance;

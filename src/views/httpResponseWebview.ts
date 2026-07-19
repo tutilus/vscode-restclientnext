@@ -357,12 +357,21 @@ ${formatHeaders(request.headers)}`;
         }
 
         if (previewOption !== PreviewOption.Body) {
-            const responseNonBodyPart = `HTTP/${response.httpVersion} ${response.statusCode} ${response.statusMessage}
-${formatHeaders(response.headers)}`;
-            code += hljs.highlight(
-                'http',
-                responseNonBodyPart + (previewOption !== PreviewOption.Headers ? '\r\n' : '')
-            ).value;
+            let responseNonBodyPart = '';
+
+            if (this.settings.previewResponseShowStatus) {
+                responseNonBodyPart += `HTTP/${response.httpVersion} ${response.statusCode} ${response.statusMessage}\n`;
+            }
+
+            if (this.settings.previewResponseShowHeaders) {
+                responseNonBodyPart += formatHeaders(response.headers);
+            }
+
+            // No need to had syntaxic colorization if nothing to print
+            if (responseNonBodyPart.length > 0) {
+                const suffix = previewOption !== PreviewOption.Headers ? '\r\n' : '';
+                code += hljs.highlight('http', responseNonBodyPart + suffix).value;
+            }
         }
 
         if (previewOption !== PreviewOption.Headers) {

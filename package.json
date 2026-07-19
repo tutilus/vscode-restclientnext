@@ -730,6 +730,16 @@
           ],
           "default": "project",
           "description": "Defines where user data is stored. 'project' isolates data inside a local .rest-client/ folder at the root of your project. 'shared' uses VS Code's official clean global storage. 'legacy' keeps using the old home directory (~/.rest-client)."
+        },
+        "rest-client.previewResponse.showStatus": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indicates whether the HTTP status line (e.g., HTTP/1.1 200 OK) should be displayed in the response preview."
+        },
+        "rest-client.previewResponse.showHeaders": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indicates whether the HTTP response headers should be displayed in the response preview."
         }
       }
     },

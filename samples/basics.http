@@ -58,3 +58,10 @@ Content-Type: application/json
     "name": "{{$faker name.firstName}}",
     "email": "{{$faker internet.email}}"
 }
+
+### Head Request
+HEAD {{host}}/get
+
+### 404 request
+GET {{host}}/status/404
+

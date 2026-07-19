@@ -60,6 +60,8 @@ Default:
 | Setting                                         | Type                                          | Default    | Description                                                                               |
 | ----------------------------------------------- | --------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------- |
 | `rest-client.previewOption`                     | `"full" \| "headers" \| "body" \| "exchange"` | `"full"`   | What to preview: full response, headers only, body only, or both request and response     |
+| `rest-client.previewResponse.showStatus`        | boolean                                       | `true`     | Indicates whether the HTTP status line (e.g., HTTP/1.1 200 OK) should be displayed        |
+| `rest-client.previewResponse.showHeaders`       | boolean                                       | `true`     | Indicates whether the HTTP response headers should be displayed                           |
 | `rest-client.previewResponseInUntitledDocument` | boolean                                       | `false`    | Preview response in untitled document (allows VS Code search/select) instead of HTML view |
 | `rest-client.previewResponsePanelTakeFocus`     | boolean                                       | `true`     | Response panel takes focus after receiving response                                       |
 | `rest-client.previewColumn`                     | `"current" \| "beside"`                       | `"beside"` | Where to show response: current column or side-by-side                                    |
@@ -273,6 +275,8 @@ When using `{% raw %}{{$processEnv %varName}}{% endraw %}`, the variable name lo
     "rest-client.largeResponseBodySizeLimitInMB": 5,
     "rest-client.previewColumn": "beside",
     "rest-client.previewResponsePanelTakeFocus": true,
+    "rest-client.previewResponse.showStatus": true,
+    "rest-client.previewResponse.showHeaders": true,
     "rest-client.formParamEncodingStrategy": "automatic",
     "rest-client.addRequestBodyLineIndentationAroundBrackets": true,
     "rest-client.decodeEscapedUnicodeCharacters": false,
