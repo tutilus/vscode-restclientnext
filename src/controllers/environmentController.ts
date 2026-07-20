@@ -14,8 +14,6 @@ export class EnvironmentController {
 
     public static readonly sharedEnvironmentName: string = '$shared';
 
-    // 🟢 Clé unique pour stocker l'environnement de manière étanche dans le dossier courant
-
     private static readonly WORKSPACE_ENV_KEY = 'rest-client-next.selectedEnvironment';
 
     private static readonly _onDidChangeEnvironment = new EventEmitter<string>();
@@ -84,13 +82,22 @@ export class EnvironmentController {
     }
 
     public static async create(context: ExtensionContext): Promise<EnvironmentController> {
-        const environment = await this.getCurrentEnvironment();
+        const environment = await this.getCurrentEnvironment(context);
         return new EnvironmentController(environment, context);
     }
 
-    public static async getCurrentEnvironment(): Promise<EnvironmentPickItem> {
+    public static async getCurrentEnvironment(
+        context?: ExtensionContext
+    ): Promise<EnvironmentPickItem> {
         if (EnvironmentController._instance) {
-            const context = EnvironmentController._instance.context;
+            const workspaceEnv =
+                EnvironmentController._instance.context.workspaceState.get<EnvironmentPickItem>(
+                    EnvironmentController.WORKSPACE_ENV_KEY
+                );
+            if (workspaceEnv) {
+                return workspaceEnv;
+            }
+        } else if (context) {
             const workspaceEnv = context.workspaceState.get<EnvironmentPickItem>(
                 EnvironmentController.WORKSPACE_ENV_KEY
             );
@@ -98,6 +105,7 @@ export class EnvironmentController {
                 return workspaceEnv;
             }
         }
+
         return this.noEnvironmentPickItem;
     }
 

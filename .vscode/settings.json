@@ -12,5 +12,17 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.rulers": [100],
-  "rest-client.previewOption": "exchange"
+  "rest-client.previewOption": "exchange",
+  "rest-client.environmentVariables": {
+    "$shared": {},
+    "dev": {
+      "env": "dev"
+    },
+    "staging": {
+      "env": "staging"
+    },
+    "prod": {
+      "env": "prod"
+    }
+  }
 }
