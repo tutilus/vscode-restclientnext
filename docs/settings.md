@@ -20,9 +20,9 @@ REST Client Next provides extensive configuration options to customize its behav
 
 ### Data Storage & Isolation
 
-| Setting                                | Type                          | Default   | Description                                                                                                                                                                     |
-| -------------------------------------- | ----------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rest-client-next.dataStorageStrategy` | `project`, `shared`, `legacy` | `project` | Defines where user data (history, cookies, responses) is stored. `project` isolates data inside a local `.rest-client/` folder. `shared` uses clean global storage. (See below) |
+| Setting                                | Type                          | Default  | Description                                                                                                                                                                     |
+| -------------------------------------- | ----------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rest-client-next.dataStorageStrategy` | `project`, `shared`, `legacy` | `shared` | Defines where user data (history, cookies, responses) is stored. `project` isolates data inside a local `.rest-client/` folder. `shared` uses clean global storage. (See below) |
 
 #### Storage Strategy Details
 

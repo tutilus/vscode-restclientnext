@@ -728,7 +728,7 @@
             "shared",
             "legacy"
           ],
-          "default": "project",
+          "default": "shared",
           "description": "Defines where user data is stored. 'project' isolates data inside a local .rest-client/ folder at the root of your project. 'shared' uses VS Code's official clean global storage. 'legacy' keeps using the old home directory (~/.rest-client)."
         },
         "rest-client.previewResponse.showStatus": {

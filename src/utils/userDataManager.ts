@@ -39,7 +39,7 @@ export class UserDataManager {
      */
     private static getTargetPaths(): { cachePath: string; statePath: string } {
         const config = workspace.getConfiguration('rest-client-next');
-        const strategy = config.get<string>('dataStorageStrategy', 'project');
+        const strategy = config.get<string>('dataStorageStrategy', 'shared');
 
         const workspaceFolders = workspace.workspaceFolders;
 
