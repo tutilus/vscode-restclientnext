@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.1](https://github.com/tutilus/vscode-restclientnext/compare/v1.4.0...v1.4.1) (2026-07-21)
+
+
+### Bug Fixes
+
+* dataStorageStrategy with 'shared' by default ([138eaa1](https://github.com/tutilus/vscode-restclientnext/commit/138eaa1cb1c224ba2cbefd70a8328063bd87c916))
+* **diagnostic:** Extend diagnostic to all variables to prevent errors ([709e757](https://github.com/tutilus/vscode-restclientnext/commit/709e7571af2d307f8e9f12f0581d690384d9e9c3))
+* Environment reinit each time with start VSCode to 'no-environment' ([a6bea86](https://github.com/tutilus/vscode-restclientnext/commit/a6bea86db96cf3fb214c19ee6679b2b8e544338f)), closes [#72](https://github.com/tutilus/vscode-restclientnext/issues/72)
+* **variables:** Show message error if one of the variable into the request doesn't exist ([6e44c0f](https://github.com/tutilus/vscode-restclientnext/commit/6e44c0f3eef0f6170363b98e3dbc9c2155534c44))
+
 ## [1.4.0](https://github.com/tutilus/vscode-restclientnext/compare/v1.3.1...v1.4.0) (2026-07-19)
 
 
