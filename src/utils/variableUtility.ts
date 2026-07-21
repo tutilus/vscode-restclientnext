@@ -18,13 +18,13 @@ export class VariableUtility {
     public static extractVariables(text: string): VariableReferenceMatch[] {
         const matches: VariableReferenceMatch[] = [];
         let match: RegExpExecArray | null;
-        
+
         this.baseVariableRegex.lastIndex = 0;
 
         while ((match = this.baseVariableRegex.exec(text)) !== null) {
             const fullMatch = match[0]; // ex: "{{testXml.response.body}}" or "{{host}}"
             const rawContent = match[1]; // ex: "testXml.response.body" or "host"
-            
+
             // Take only the first part in case there are properties
             // ex: "testXml.response.body" -> "testXml"
             const varName = rawContent.split('.')[0].trim();
@@ -35,7 +35,7 @@ export class VariableUtility {
 
             const start = match.index;
             const end = start + fullMatch.length;
-            
+
             const nameStart = start + fullMatch.indexOf(varName);
             const nameEnd = nameStart + varName.length;
 
@@ -44,7 +44,7 @@ export class VariableUtility {
                 start,
                 end,
                 nameStart,
-                nameEnd
+                nameEnd,
             });
         }
 
@@ -53,16 +53,32 @@ export class VariableUtility {
 
     public static getDocumentVariables(document: TextDocument): VariableReference[] {
         const text = document.getText();
-        const matches = this.extractVariables(text);
-        
-        return matches.map(match => {
-            const startPos = document.positionAt(match.start);
-            const endPos = document.positionAt(match.end);
-            return {
-                name: match.name,
-                range: new Range(startPos, endPos)
-            };
-        });
+        const references: VariableReference[] = [];
+
+        // Catch everything between {{ and }} includes $, space, points and so.
+        const variableReferenceRegex = /\{\{\s*(.+?)\s*\}\}/g;
+        let match: RegExpExecArray | null;
+
+        while ((match = variableReferenceRegex.exec(text)) !== null) {
+            const startPos = document.positionAt(match.index);
+
+            const lineText = document.lineAt(startPos.line).text.trimStart();
+
+            // Ignore comments
+            if (lineText.startsWith('#') || lineText.startsWith('//')) {
+                continue;
+            }
+            const rawName = match[1].trim();
+            const endPos = document.positionAt(match.index + match[0].length);
+            const range = new Range(startPos, endPos);
+
+            references.push({
+                name: rawName, // e.g. "myVar" or "$dotenv MY_VAR" or "$faker.internet.email"
+                range: range,
+            });
+        }
+
+        return references;
     }
 
     public static getEnvironmentOrFileVariableReferenceNameRange(

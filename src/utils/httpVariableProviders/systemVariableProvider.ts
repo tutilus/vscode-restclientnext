@@ -278,7 +278,9 @@ export class SystemVariableProvider implements HttpVariableProvider {
                     dotEnvVarName = await this.resolveSettingsEnvironmentVariable(key);
                 }
                 if (!(dotEnvVarName in parsed)) {
-                    return { warning: `${ResolveWarningMessage.DotenvVariableNotFound} [${key}]` };
+                    return {
+                        warning: `${ResolveWarningMessage.DotenvVariableNotFound}: '${key}'.`,
+                    };
                 }
 
                 return { value: parsed[dotEnvVarName] };
