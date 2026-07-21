@@ -264,7 +264,7 @@ Generate fake data using `Faker.js`.
 ### Environment Variables
 
 - `{% raw %}{{$processEnv [%]envVarName}}{% endraw %}` - Look up local machine environment variable
-- `{% raw %}{{$dotenv [%]variableName}}{% endraw %}` - Read from `.env` file in same directory
+- `{% raw %}{{$dotenv [%]variableName}}{% endraw %}` - Read from `.env` file or for `.env.[envName]` in same directory
 
 **processEnv Examples:**
 

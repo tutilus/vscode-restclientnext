@@ -16,8 +16,8 @@ export class VariableProcessor {
     ];
 
     public static async resolveVariable(
-        name: string, 
-        document: TextDocument, 
+        name: string,
+        document: TextDocument,
         context?: HttpVariableContext
     ): Promise<HttpVariable | undefined> {
         for (const [provider, hasContext] of this.providers) {
@@ -44,33 +44,47 @@ export class VariableProcessor {
         let result = '';
         let match: RegExpExecArray | null;
         let lastIndex = 0;
+
         variable: while ((match = variableReferenceRegex.exec(request))) {
             result += request.substring(lastIndex, match.index);
             lastIndex = variableReferenceRegex.lastIndex;
             const name = match[1].trim();
             const document = getCurrentTextDocument();
             const context = { rawRequest: request, parsedRequest: result };
+
+            let isResolved = false;
+
             for (const [provider, cacheable] of this.providers) {
                 if (resolvedVariables.has(name)) {
                     result += resolvedVariables.get(name);
+                    isResolved = true;
                     continue variable;
                 }
+
                 if (await provider.has(name, document, context)) {
                     const { value, error, warning } = await provider.get(name, document, context);
-                    if (!error && !warning) {
+
+                    if (error || warning) {
+                        const failReason = error || warning;
+                        throw new Error(failReason);
+                    }
+
+                    if (value !== undefined) {
                         if (cacheable) {
                             resolvedVariables.set(name, value as string);
                         }
                         result += value;
+                        isResolved = true;
                         continue variable;
-                    } else {
-                        break;
                     }
                 }
             }
 
-            result += `{{${name}}}`;
+            if (!isResolved) {
+                throw new Error(`Variable '${name}' is undefined.`);
+            }
         }
+
         result += request.substring(lastIndex);
         return result;
     }

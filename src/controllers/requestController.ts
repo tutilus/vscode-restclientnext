@@ -99,35 +99,40 @@ export class RequestController {
             return;
         }
 
-        const selectedRequest = await Selector.getRequest(editor, range);
-        if (!selectedRequest) {
-            return;
-        }
-
-        const { text, metadatas } = selectedRequest;
-        const name = metadatas.get(RequestMetadata.Name);
-
-        if (metadatas.has(RequestMetadata.Note)) {
-            const note = name
-                ? `Are you sure you want to send the request "${name}"?`
-                : 'Are you sure you want to send this request?';
-            const userConfirmed = await window.showWarningMessage(note, 'Yes', 'No');
-            if (userConfirmed !== 'Yes') {
+        try {
+            const selectedRequest = await Selector.getRequest(editor, range);
+            if (!selectedRequest) {
                 return;
             }
+
+            const { text, metadatas } = selectedRequest;
+            const name = metadatas.get(RequestMetadata.Name);
+
+            if (metadatas.has(RequestMetadata.Note)) {
+                const note = name
+                    ? `Are you sure you want to send the request "${name}"?`
+                    : 'Are you sure you want to send this request?';
+                const userConfirmed = await window.showWarningMessage(note, 'Yes', 'No');
+                if (userConfirmed !== 'Yes') {
+                    return;
+                }
+            }
+
+            const requestSettings = new RequestSettings(metadatas);
+            const settings: IRestClientSettings = new RestClientSettings(requestSettings);
+
+            // parse http request
+            const activeColumn = window.activeTextEditor!.viewColumn;
+            const httpRequest = await RequestParserFactory.createRequestParser(
+                text,
+                settings
+            ).parseHttpRequest(name);
+
+            await this.runCore(httpRequest, settings, activeColumn, document, metadatas);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            window.showErrorMessage(`Cannot execute request: ${message}`);
         }
-
-        const requestSettings = new RequestSettings(metadatas);
-        const settings: IRestClientSettings = new RestClientSettings(requestSettings);
-
-        // parse http request
-        const activeColumn = window.activeTextEditor!.viewColumn;
-        const httpRequest = await RequestParserFactory.createRequestParser(
-            text,
-            settings
-        ).parseHttpRequest(name);
-
-        await this.runCore(httpRequest, settings, activeColumn, document, metadatas);
     }
 
     public async rerun() {
