@@ -782,7 +782,7 @@
     "https-proxy-agent": "^9.0.0",
     "knip": "^5.86.0",
     "oxfmt": "^0.43.0",
-    "oxlint": "^1.66.0",
+    "oxlint": "^1.75.0",
     "ts-loader": "^9.5.4",
     "typescript": "^6.0.2",
     "webpack": "^5.107.0",
