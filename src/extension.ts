@@ -23,6 +23,7 @@ import { FileVariableReferenceProvider } from './providers/fileVariableReference
 import { FileVariableReferencesCodeLensProvider } from './providers/fileVariableReferencesCodeLensProvider';
 import { HttpCodeLensProvider } from './providers/httpCodeLensProvider';
 import { HttpCompletionItemProvider } from './providers/httpCompletionItemProvider';
+import { HttpDirectiveCompletionItemProvider } from './providers/HttpDirectiveCompletionItemProvider';
 import { HttpDocumentSymbolProvider } from './providers/httpDocumentSymbolProvider';
 import { MarkdownCodeLensProvider } from './providers/markdownCodeLensProvider';
 import { RequestVariableCompletionItemProvider } from './providers/requestVariableCompletionItemProvider';
@@ -135,9 +136,13 @@ export async function activate(context: ExtensionContext) {
 
     const mdDocumentSelector = [{ language: 'markdown', scheme: '*' }];
 
+    /**
+     * Completion provider
+     */
     context.subscriptions.push(
         languages.registerCompletionItemProvider(documentSelector, new HttpCompletionItemProvider())
     );
+
     context.subscriptions.push(
         languages.registerCompletionItemProvider(
             documentSelector,
@@ -145,6 +150,17 @@ export async function activate(context: ExtensionContext) {
             '.'
         )
     );
+
+    context.subscriptions.push(
+        languages.registerCompletionItemProvider(
+            documentSelector,
+            new HttpDirectiveCompletionItemProvider(),
+            '#',
+            '@',
+            '.'
+        )
+    );
+
     context.subscriptions.push(
         languages.registerHoverProvider(
             documentSelector,
