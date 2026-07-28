@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.2](https://github.com/tutilus/vscode-restclientnext/compare/v1.4.1...v1.4.2) (2026-07-28)
+
+
+### Bug Fixes
+
+* **completion:** Directive [@set](https://github.com/set) completion doesn't work properly ([ba4ecc2](https://github.com/tutilus/vscode-restclientnext/commit/ba4ecc2e1b198a467e149175e340d5cef91f1b77))
+* **completion:** Picking up an item in completion list replace the whole variable ([1e8e076](https://github.com/tutilus/vscode-restclientnext/commit/1e8e076b70ea088d9c275497b56c24323fe21168))
+
 ## [1.4.1](https://github.com/tutilus/vscode-restclientnext/compare/v1.4.0...v1.4.1) (2026-07-21)
 
 
