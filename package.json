@@ -2,7 +2,7 @@
   "name": "rest-client-next",
   "displayName": "REST Client Next",
   "description": "REST Client Next allows you to send HTTP requests and view the responses in Visual Studio Code",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "publisher": "tutilus",
   "author": {
     "name": "Aurélien",
@@ -782,7 +782,7 @@
     "https-proxy-agent": "^9.0.0",
     "knip": "^5.86.0",
     "oxfmt": "^0.43.0",
-    "oxlint": "^1.75.0",
+    "oxlint": "^1.66.0",
     "ts-loader": "^9.5.4",
     "typescript": "^6.0.2",
     "webpack": "^5.107.0",
