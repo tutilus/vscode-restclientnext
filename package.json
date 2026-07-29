@@ -780,7 +780,7 @@
     "@vscode/test-electron": "^3.0.0",
     "http-proxy-agent": "^9.0.0",
     "https-proxy-agent": "^9.0.0",
-    "knip": "^5.86.0",
+    "knip": "^6.29.0",
     "oxfmt": "^0.61.0",
     "oxlint": "^1.75.0",
     "ts-loader": "^9.5.4",
