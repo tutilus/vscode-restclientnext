@@ -785,7 +785,7 @@
     "oxlint": "^1.75.0",
     "ts-loader": "^9.5.4",
     "typescript": "^7.0.2",
-    "webpack": "^5.107.0",
+    "webpack": "^5.109.2",
     "webpack-cli": "^7.0.2"
   },
   "dependencies": {
